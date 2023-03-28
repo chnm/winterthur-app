@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "winterthur-app"
+version = "0.1.0"
+description = "Web application for Winterthur"
+authors = ["Jason Heppler <jason.heppler@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "winterthur_app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.1.7"
+django-tailwind = "^3.5.0"
+django-htmx = "^1.14.0"
+django-extensions = "^3.2.1"
+django-environ = "^0.10.0"
+humanfriendly = "^10.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,25 @@
+{
+  "name": "winterthur-app",
+  "version": "0.3.0",
+  "description": "The web application for the Denig Manuscript",
+  "main": "index.js",
+  "scripts": {
+    "serve": "poetry run python manage.py runserver",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chnm/winterthur-app.git"
+  },
+  "author": "Roy Rosenzweig Center for History and New Media",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chnm/winterthur-app/issues"
+  },
+  "homepage": "https://github.com/chnm/winterthur-app#readme",
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.1",
+    "@hotwired/stimulus-webpack-helpers": "^1.0.1",
+    "@hotwired/turbo": "^7.3.0"
+  }
+}

@@ -13,3 +13,5 @@ Change Log
 -   The model also tracks translations (original German, modern German, and English)
     and the relationships between the translations. These are also tied to the 
     pages.
+-   The project runs a custom AuthUserModel for getting started, provided by
+    django-authuser (github.com/sesh/django-authuser).

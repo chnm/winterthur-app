@@ -1,10 +1,20 @@
-{% load static tailwind_tags %}
+{% load static tailwind_tags i18n %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Denig Manuscript{% endblock %}</title>
+
+        {# open graph metadata #}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="{% translate "Denig Manuscript Project" %}"/>
+        {% firstof page_title page.title as meta_title %}
+        <meta property="og:title" content="{{ meta_title|escape }}" />
+        {% firstof page_description page.description as meta_description %}
+        <meta property="og:description" content="{{ meta_description|escape }}" />
+        <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+
         {% tailwind_css %}
     </head>
     <body>

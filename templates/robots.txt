@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: {% if "SHOW_WARNING_BANNER" in FEATURE_FLAGS %}/{% else %}/admin{% endif %}
+{# Link to sitemap #}
+Sitemap: http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/sitemap.xml

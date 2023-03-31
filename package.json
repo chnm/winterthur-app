@@ -1,10 +1,10 @@
 {
-  "name": "winterthur-app",
+  "name": "denig-manuscript",
   "version": "0.3.0",
   "description": "The web application for the Denig Manuscript",
-  "main": "index.js",
   "scripts": {
     "serve": "poetry run python manage.py runserver",
+    "build": "poetry run python3 manage.py tailwind start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/chnm/winterthur-app.git"
   },
   "author": "Roy Rosenzweig Center for History and New Media",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/chnm/winterthur-app/issues"
   },
@@ -21,5 +21,9 @@
     "@hotwired/stimulus": "^3.2.1",
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
     "@hotwired/turbo": "^7.3.0"
+  },
+  "volta": {
+    "node": "18.15.0",
+    "npm": "9.6.3"
   }
 }

@@ -126,7 +126,7 @@ class Fragment(TrackChangesModel):
     languages = models.ManyToManyField(
         Language,
         blank=True,
-        help_text="Language(s) of the fragment.",
+        help_text="Select the language of this fragment.",
     )
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -237,11 +237,6 @@ class Document(models.Model):
         upload_to="documents",
         blank=True,
         help_text="Upload an image of the document.",
-    )
-    languages = models.ManyToManyField(
-        Language,
-        blank=True,
-        help_text="Select the language(s) of this document.",
     )
     notes = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)

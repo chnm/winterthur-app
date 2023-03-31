@@ -12,8 +12,9 @@ class Footnote(TrackChangesModel):
     """a footnote that links from a denig.models.Document to a class:Fragment"""
 
     source = models.ForeignKey(
-        "denig.Document",
+        "denig.Fragment",
         on_delete=models.CASCADE,
+        help_text="Select a fragment that is associated with this footnote.",
     )
     location = models.CharField(
         max_length=255,

@@ -21,6 +21,7 @@ django-multiselectfield = "^0.1.12"
 psycopg2 = "^2.9.5"
 pillow = "^9.4.0"
 django-admin-interface = "^0.24.2"
+python-dotenv = "^1.0.0"
 
 
 [tool.poetry.group.dev.dependencies]

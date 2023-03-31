@@ -34,3 +34,41 @@ A Makefile exists to make life a little more convenient. The common commands are
 - `make tailwind`: compile the CSS; this runs `poetry run python manage.py tailwind start` and will reload the browser anytime updates happen.
 - `make mm`: performs Django's `makemigration`
 - `make migrate`: performs Django's `migrate`
+
+## Setting up configuration in environment
+
+For security, we store configurations in a local `.env` file. To get a local environment file to work with `django-environ`, we install `python-dotenv`:
+
+```sh
+% poetry add python-dotenv
+```
+
+Then add relevant files to an `.env` file:
+
+```
+% echo DEBUG=True >> .env
+% echo DJANGO_SECRET_KEY=$(poetry run python -c "import secrets; print(secrets.token_urlsafe())") >> .env
+```
+
+Update `config/settings.py` to read the `.env` file.
+
+```python
+import environ
+from dotenv import load_dotenv
+
+load_dotenv()
+
+env = environ.FileAwareEnv(
+    DEBUG=(bool, False)
+)
+
+[...]
+
+# Update this existing value
+DEBUG = env('DEBUG')
+
+# Update this existing value
+SECRET_KEY = env('DJANGO_SECRET_KEY')
+```
+
+When it comes time to connect to Postgres, we also store the [Postgres connection string](https://django-environ.readthedocs.io/en/latest/types.html) in `.env`.

@@ -2,9 +2,8 @@ from django.db import models
 
 
 class TrackChangesModel(models.Model):
-    """:class:`~django.models.Model` mixin that keeps a copy of initial
-    data in order to check if fields have been changed. Change detection
-    only works on the current instance of an object."""
+    """mixin that keeps a copy of initial data in order to check if fields
+    have been changed."""
 
     class Meta:
         abstract = True

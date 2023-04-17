@@ -1,14 +1,10 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models.functions import NullIf
 from multiselectfield import MultiSelectField
 
-from common.models import TrackChangesModel
-
 
 # Create your models here.
-class Footnote(TrackChangesModel):
+class Footnote(models.Model):
     """a footnote that links from a denig.models.Document to a class:Fragment"""
 
     source = models.ForeignKey(

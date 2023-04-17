@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Denig Manuscript
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - affiliation: Roy Rosenzweig Center for History and New Media
+    email: jheppler@gmu.edu
+repository-code: 'https://github.com/chnm/winterthur-app'
+abstract: >-
+  A Django application for the Denig Manuscript, created in
+  partnership between the Roy Rosenzweig Center for History
+  and New Media and the Winterthur Museum, Garden &
+  Library. 
+keywords:
+  - digital history
+  - manuscript
+  - django
+license: MIT
+version: 0.1.0
+

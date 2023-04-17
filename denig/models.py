@@ -3,7 +3,6 @@ from functools import cached_property
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models.functions.text import Lower
 from django.templatetags.static import static
@@ -13,13 +12,12 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 from taggit.managers import TaggableManager
 
-from common.models import TrackChangesModel
 from footnotes.models import Footnote
 
 logger = logging.getLogger(__name__)
 
 
-class CollectionManager(models.Model):
+class CollectionManager(models.Manager):
     """Manager for Collection model."""
 
     def get_by_natural_key(self, library):
@@ -38,6 +36,18 @@ class Collection(models.Model):
 
     objects = CollectionManager()
 
+    @classmethod
+    def populate(cls):
+        """Pre-populate the database with the library"""
+        library = [
+            {
+                "library": "Winterthur Museum, Garden & Library",
+                "location": "Winterthur, DE",
+            },
+        ]
+        for library in library:
+            cls.objects.get_or_create(**library)
+
     def __str__(self):
         return self.library
 
@@ -55,7 +65,7 @@ class LanguageManager(models.Model):
 
 
 class Language(models.Model):
-    """Language of an archival item."""
+    """Language of a page item."""
 
     language = models.CharField(max_length=55, blank=True)
     display_name = models.CharField(
@@ -81,6 +91,25 @@ class Language(models.Model):
         """natural key"""
         return self.language
 
+    @classmethod
+    def populate(cls):
+        """Pre-populate the database with the translation languages."""
+        languages = [
+            {"language": "English", "display_name": "English", "iso_code": "eng"},
+            {
+                "language": "German (modern)",
+                "display_name": "German (modern)",
+                "iso_code": "deu",
+            },
+            {
+                "language": "German (old)",
+                "display_name": "German (old)",
+                "iso_code": "gmh",
+            },
+        ]
+        for language in languages:
+            cls.objects.get_or_create(**language)
+
     class Meta:
         verbose_name = "Language"
         verbose_name_plural = "Languages"
@@ -91,11 +120,9 @@ class Language(models.Model):
             )
         ]
 
-    def __str__(self):
-        return self.display_name or self.language
 
-    def natural_key(self):
-        return (self.language, self.display_name)
+""" Populate the database with the translation languages """
+Language.populate()
 
 
 class FragmentManager(models.Manager):
@@ -103,7 +130,7 @@ class FragmentManager(models.Manager):
         return self.get(collection=collection)
 
 
-class Fragment(TrackChangesModel):
+class Fragment(models.Model):
     """A single fragment of the text."""
 
     id = models.AutoField(primary_key=True)

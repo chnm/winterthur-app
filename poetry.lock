@@ -581,17 +581,6 @@ files = [
 ]
 
 [[package]]
-name = "pygraphviz"
-version = "1.10"
-description = "Python interface to Graphviz"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pygraphviz-1.10.zip", hash = "sha256:457e093a888128903251a266a8cc16b4ba93f3f6334b3ebfed92c7471a74d867"},
-]
-
-[[package]]
 name = "pyreadline3"
 version = "3.4.1"
 description = "A python implementation of GNU readline."
@@ -785,4 +774,4 @@ test = ["covdefaults (>=2.2.2)", "coverage (>=7.1)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "391008083c8813ba5395566f02a30924050953c8541f0d7d2744157124f021f2"
+content-hash = "45bc91fc5b1b2779c281500564fdc2d2fcc4ba5deaae0e85cc9c616765766ff5"

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "taggit_selectize",
     "tailwind",
     "theme",
+    "import_export",
     "common.apps.CommonConfig",
     "pages.apps.PagesConfig",
     "denig.apps.DenigConfig",

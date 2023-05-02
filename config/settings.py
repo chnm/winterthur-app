@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "taggit_selectize",
     "tailwind",
     "theme",
-    "django_extensions",
     "common.apps.CommonConfig",
     "pages.apps.PagesConfig",
     "denig.apps.DenigConfig",
@@ -83,10 +82,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": env.db(),
 }
 
 AUTH_USER_MODEL = "authuser.User"

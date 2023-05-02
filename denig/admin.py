@@ -5,8 +5,10 @@ from django.db import models
 from django.forms.widgets import HiddenInput, Textarea, TextInput
 from django.urls import reverse
 from django.utils.html import format_html
-from import_export import resources
+from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
+from taggit.models import Tag as Taggit
 
 from footnotes.models import Footnote
 
@@ -26,6 +28,12 @@ class DocumentResource(resources.ModelResource):
 
 
 class FragmentResource(resources.ModelResource):
+    document = fields.Field(
+        column_name="document",
+        attribute="document",
+        widget=ForeignKeyWidget(Document, "id"),
+    )
+
     class Meta:
         model = Fragment
 

@@ -5,6 +5,8 @@ from django.db import models
 from django.forms.widgets import HiddenInput, Textarea, TextInput
 from django.urls import reverse
 from django.utils.html import format_html
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from footnotes.models import Footnote
 
@@ -13,11 +15,32 @@ from .models import Collection, Document, Fragment, Language
 admin.site.register(Collection)
 admin.site.register(Language)
 
+"""
+Setup export resource classes
+"""
 
-class FragmentAdmin(admin.ModelAdmin):
+
+class DocumentResource(resources.ModelResource):
+    class Meta:
+        model = Document
+
+
+class FragmentResource(resources.ModelResource):
+    class Meta:
+        model = Fragment
+
+
+"""
+Setup admin classes
+"""
+
+
+class FragmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ("__str__", "line_number", "document", "last_modified")
     list_filter = ("document", "languages")
     search_fields = ("transcription", "notes")
+
+    resource_classes = [FragmentResource]
 
 
 admin.site.register(Fragment, FragmentAdmin)
@@ -35,7 +58,7 @@ class DocumentForm(forms.ModelForm):
         }
 
 
-class DocumentAdmin(admin.ModelAdmin):
+class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = DocumentForm
     list_display = (
         "docside",
@@ -59,6 +82,8 @@ class DocumentAdmin(admin.ModelAdmin):
         "notes",
         "id",
     )
+
+    resource_classes = [DocumentResource]
 
 
 class FragmentInline(admin.TabularInline):
@@ -95,11 +120,12 @@ class FragmentInline(admin.TabularInline):
 
 DocumentAdmin.inlines = [FragmentInline]
 
+
 admin.site.register(Document, DocumentAdmin)
 
 
 class FootnoteInline(admin.TabularInline):
-    """Add footnotes within the Document form."""
+    """Add footnotes within the Fragment form."""
 
     model = Footnote
     extra = 0

@@ -1,0 +1,18 @@
+- model: denig.language
+  pk: 1
+  fields:
+    language: "English"
+    display_name: "English"
+    iso_code: "en"
+- model: denig.language
+  pk: 2
+  fields:
+    language: "German (modern)"
+    display_name: "German (modern)"
+    iso_code: "de"
+- model: denig.language
+  pk: 3
+  fields:
+    language: "German (old)"
+    display_name: "German (old)"
+    iso_code: "gmh"

@@ -36,18 +36,6 @@ class Collection(models.Model):
 
     objects = CollectionManager()
 
-    @classmethod
-    def populate(cls):
-        """Pre-populate the database with the library"""
-        library = [
-            {
-                "library": "Winterthur Museum, Garden & Library",
-                "location": "Winterthur, DE",
-            },
-        ]
-        for library in library:
-            cls.objects.get_or_create(**library)
-
     def __str__(self):
         return self.library
 
@@ -91,25 +79,6 @@ class Language(models.Model):
         """natural key"""
         return self.language
 
-    @classmethod
-    def populate(cls):
-        """Pre-populate the database with the translation languages."""
-        languages = [
-            {"language": "English", "display_name": "English", "iso_code": "eng"},
-            {
-                "language": "German (modern)",
-                "display_name": "German (modern)",
-                "iso_code": "deu",
-            },
-            {
-                "language": "German (old)",
-                "display_name": "German (old)",
-                "iso_code": "gmh",
-            },
-        ]
-        for language in languages:
-            cls.objects.get_or_create(**language)
-
     class Meta:
         verbose_name = "Language"
         verbose_name_plural = "Languages"
@@ -119,10 +88,6 @@ class Language(models.Model):
                 fields=["language", "display_name"], name="unique_language_display_name"
             )
         ]
-
-
-""" Populate the database with the translation languages """
-Language.populate()
 
 
 class FragmentManager(models.Manager):

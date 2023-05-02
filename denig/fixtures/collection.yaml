@@ -1,0 +1,5 @@
+- model: denig.collection
+  pk: 1
+  fields:
+    library: "Winterthur Museum, Garden & Library"
+    location: "Winterthur, DE"

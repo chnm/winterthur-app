@@ -19,4 +19,4 @@
   and English) and the relationships between the translations. These
   are also tied to the pages.
 - The project runs a custom AuthUserModel for getting started,
-  provided by [django-authuser](github.com/sesh/django-authuser).
+  provided by [django-authuser](https://github.com/sesh/django-authuser).

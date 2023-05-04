@@ -11,6 +11,9 @@ mm :
 migrate :
 	poetry run python3 manage.py migrate
 
+test : 
+	poetry run python3 manage.py test
+
 graph_illustrate :
 	poetry run python3 manage.py graph_models -a -g -o models.png
 

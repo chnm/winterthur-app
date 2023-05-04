@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import AdminFileWidget
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms.widgets import HiddenInput, Textarea, TextInput
@@ -39,6 +40,28 @@ class FragmentResource(resources.ModelResource):
 
 
 """
+Overrides for admin widgets
+"""
+
+
+class CustomAdminFileWidget(AdminFileWidget):
+    def render(self, name, value, attrs=None, renderer=None):
+        result = []
+        if hasattr(value, "url"):
+            result.append(
+                f"""<a href="{value.url}" target="_blank">
+                      <img 
+                        src="{value.url}" alt="{value}" 
+                        width="500" height="500"
+                        style="object-fit: cover;"
+                      />
+                    </a>"""
+            )
+        result.append(super().render(name, value, attrs, renderer))
+        return format_html("".join(result))
+
+
+"""
 Setup admin classes
 """
 
@@ -71,11 +94,10 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = (
         "docside",
         "page",
-        "description",
+        "notes",
         "doctype",
         "all_tags",
         "last_modified",
-        "id",
     )
     readonly_fields = (
         "created",
@@ -90,7 +112,13 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         "notes",
         "id",
     )
+    list_filter = (
+        "docside",
+        "doctype",
+        "tags",
+    )
 
+    formfield_overrides = {models.ImageField: {"widget": CustomAdminFileWidget}}
     resource_classes = [DocumentResource]
 
 

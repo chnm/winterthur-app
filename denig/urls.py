@@ -6,4 +6,5 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("about/", views.about, name="about"),
+    path("manuscript/", views.DocumentListView.as_view(), name="manuscript"),
 ]

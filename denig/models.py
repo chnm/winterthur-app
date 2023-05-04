@@ -25,7 +25,7 @@ class CollectionManager(models.Manager):
 
 
 class Collection(models.Model):
-    """Collection that holds an archival item."""
+    """Collection or library that holds an archival item."""
 
     library = models.CharField(
         max_length=55, blank=True, default="Winterthur Museum, Garden & Library"
@@ -235,8 +235,6 @@ class Document(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = FragmentManager()
-
-    footnotes = GenericRelation(Footnote, related_query_name="document")
 
     PLACEHOLDER_CANVAS = {
         "image": {

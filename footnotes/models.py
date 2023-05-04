@@ -37,6 +37,8 @@ class Footnote(models.Model):
     notes = models.TextField(
         blank=True,
     )
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = [

@@ -70,5 +70,4 @@ and prettier for Javascript, CSS, and related files.
 
 ## Unit Tests
 
-Python tests are written with [py.test](http://doc.pytest.org/) and
-should be run with `pytest`.
+Python tests are called with `make test`.

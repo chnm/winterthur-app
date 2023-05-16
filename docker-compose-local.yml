@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+    command: >
+        sh -c "poetry run python manage.py wait_for_db &&
+               poetry run python manage.py migrate &&
+               poetry run python manage.py collectstatic --no-input &&
+               poetry run uwsgi --http :8000 --chdir /app --module config.wsgi --static-map /static=/app/staticfiles"
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=1
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+      - DATABASE_URL=postgres://devuser:changeme@db:5432/devdb
+      - DJANGO_SECRET_KEY=bO8bw31U1nVbXPXZ0R6lzSlloMuKxd-QyWjpMo7vYyE
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+
+volumes:
+  pg-data:

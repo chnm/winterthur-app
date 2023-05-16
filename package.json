@@ -4,7 +4,7 @@
   "description": "The web application for the Denig Manuscript",
   "scripts": {
     "serve": "poetry run python manage.py runserver",
-    "build": "poetry run python3 manage.py tailwind start",
+    "build": "poetry run python3 manage.py tailwind build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -17,7 +17,6 @@ services:
       - DB_USER=devuser
       - DB_PASS=changeme
       - DATABASE_URL=postgres://devuser:changeme@db:5432/devdb
-      - DJANGO_SECRET_KEY=bO8bw31U1nVbXPXZ0R6lzSlloMuKxd-QyWjpMo7vYyE
     depends_on:
       - db
 

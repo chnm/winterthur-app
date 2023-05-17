@@ -43,24 +43,12 @@ RUN node -v && npm -v
 RUN npm install
 RUN cd theme/static_src && npm install
 
-#RUN npm install --save-dev cross-env
-#RUN npm install --save-dev rimraf
-#RUN npm install --save-dev @tailwindcss/aspect-ratio
-#RUN npm install --save-dev @tailwindcss/line-clamp
-#RUN npm install --save-dev @tailwindcss/typography
-#RUN npm install --save-dev @tailwindcss/forms
-#RUN npm install --save-dev tailwindcss
-#RUN npm install --save-dev postcss-simple-vars
-
 # build: poetry run python3 manage.py tailwindcss build
 #ENV TAILWIND_CSS_PATH='../../static/css/dist/styles.css'
 RUN npm run build
 
 
 FROM --platform=x86_64 python:3.11
-
-#RUN apt-get update 
-#RUN apt-get install -y curl
 
 RUN adduser --disabled-password django
 USER django

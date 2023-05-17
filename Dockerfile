@@ -41,11 +41,11 @@ COPY . .
 RUN node -v && npm -v
 
 RUN npm install
-RUN cd theme/static_src && npm install
 
-# build: poetry run python3 manage.py tailwindcss build
 #ENV TAILWIND_CSS_PATH='../../static/css/dist/styles.css'
-RUN npm run build
+RUN poetry run python3 manage.py tailwind install
+RUN poetry run python3 manage.py tailwind build
+RUN poetry run python3 manage.py collectstatic --no-input
 
 
 FROM --platform=x86_64 python:3.11
@@ -56,9 +56,9 @@ USER django
 WORKDIR /app
 COPY . .
 COPY --from=py-build-stage /venv /venv
-COPY --from=npm-build-stage /src/static/css /app/static/css
+COPY --from=npm-build-stage /src/staticfiles /app/staticfiles
 
 ENV PATH="/venv/bin:$PATH"
 ENV VIRTUAL_ENV="/venv"
 
-CMD poetry run uwsgi --http :8000 --chdir /app --module config.wsgi
+CMD poetry run uwsgi --http :8000 --static-map /static=/app/stati    cfiles --chdir /app --module config.wsgi

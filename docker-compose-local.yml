@@ -7,7 +7,6 @@ services:
     command: >
         sh -c "poetry run python manage.py wait_for_db &&
                poetry run python manage.py migrate &&
-               poetry run python manage.py collectstatic --no-input &&
                poetry run uwsgi --http :8000 --chdir /app --module config.wsgi --static-map /static=/app/staticfiles"
     ports:
       - 8000:8000

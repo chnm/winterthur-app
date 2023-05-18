@@ -8,7 +8,7 @@ COPY poetry.lock .
 
 #ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
 
-RUN python -m venv /venv
+RUN python3 -m venv /venv
 
 ENV PATH="/venv/bin:$PATH"
 ENV VIRTUAL_ENV="/venv"
@@ -16,7 +16,11 @@ ENV VIRTUAL_ENV="/venv"
 # install poetry
 RUN pip3 install poetry
 
-RUN poetry install --no-root --no-dev
+# dynamically adding uWSGI
+RUN poetry add --lock uwsgi@^2.0.21
+
+# install dependencies
+RUN poetry install --no-root #--no-dev
 
 FROM --platform=x86_64 python:3.11 as npm-build-stage
 
@@ -61,4 +65,4 @@ COPY --from=npm-build-stage /src/staticfiles /app/staticfiles
 ENV PATH="/venv/bin:$PATH"
 ENV VIRTUAL_ENV="/venv"
 
-CMD poetry run uwsgi --http :8000 --static-map /static=/app/stati    cfiles --chdir /app --module config.wsgi
+CMD poetry run uwsgi --http :8000 --static-map /static=/app/staticfiles --chdir /app --module config.wsgi

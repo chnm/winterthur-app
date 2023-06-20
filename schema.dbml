@@ -1,0 +1,246 @@
+Table LogEntry {
+  id auto [pk, unique]
+  action_time date_time 
+  user foreign_key 
+  content_type foreign_key [null]
+  object_id text [null]
+  object_repr char 
+  action_flag positive_small_integer 
+  change_message text 
+  Note: '''LogEntry(id, action_time, user, content_type, object_id, object_repr, action_flag, change_message)'''
+}
+ref: LogEntry.user > User.id
+ref: LogEntry.content_type > ContentType.id
+
+
+Table Permission {
+  id auto [pk, unique]
+  name char 
+  content_type foreign_key 
+  codename char 
+  Note: '''
+    The permissions system provides a way to assign permissions to specific
+    users and groups of users.
+
+    The permission system is used by the Django admin site, but may also be
+    useful in your own code. The Django admin site uses permissions as follows:
+
+        - The "add" permission limits the user's ability to view the "add" form
+          and add an object.
+        - The "change" permission limits a user's ability to view the change
+          list, view the "change" form and change an object.
+        - The "delete" permission limits the ability to delete an object.
+        - The "view" permission limits the ability to view an object.
+
+    Permissions are set globally per type of object, not per specific object
+    instance. It is possible to say "Mary may change news stories," but it's
+    not currently possible to say "Mary may change news stories, but only the
+    ones she created herself" or "Mary may only change news stories that have a
+    certain status or publication date."
+
+    The permissions listed above are automatically created for each model.
+    '''
+}
+ref: Permission.content_type > ContentType.id
+
+
+Table Group {
+  id auto [pk, unique]
+  name char [unique]
+  Note: '''
+    Groups are a generic way of categorizing users to apply permissions, or
+    some other label, to those users. A user can belong to any number of
+    groups.
+
+    A user in a group automatically has all the permissions granted to that
+    group. For example, if the group 'Site editors' has the permission
+    can_edit_home_page, any user in that group will have that permission.
+
+    Beyond permissions, groups are a convenient way to categorize users to
+    apply some label, or extended functionality, to them. For example, you
+    could create a group 'Special users', and you could write code that would
+    do special things to those users -- such as giving them access to a
+    members-only portion of your site, or sending them members-only email
+    messages.
+    '''
+}
+
+
+Table auth_group_permissions {
+  permission_id auto [pk]
+  group_id auto [pk]
+}
+ref: Group.id > auth_group_permissions.group_id
+ref: Permission.id > auth_group_permissions.permission_id
+
+
+Table User {
+  id big_auto [pk, unique]
+  password char 
+  email email [unique]
+  name char 
+  is_active boolean 
+  is_staff boolean 
+  is_superuser boolean 
+  last_login date_time [null]
+  date_joined date_time 
+  Note: '''
+    User model that uses email addresses instead of usernames, and
+    name instead of first / last name fields.
+
+    All other fields from the Django auth.User model are kept to
+    ensure maximum compatibility with the built in management
+    commands.
+    '''
+}
+
+
+Table authuser_user_groups {
+  group_id auto [pk]
+  user_id auto [pk]
+}
+ref: User.id > authuser_user_groups.user_id
+ref: Group.id > authuser_user_groups.group_id
+
+
+Table authuser_user_user_permissions {
+  permission_id auto [pk]
+  user_id auto [pk]
+}
+ref: User.id > authuser_user_user_permissions.user_id
+ref: Permission.id > authuser_user_user_permissions.permission_id
+
+
+Table ContentType {
+  id auto [pk, unique]
+  app_label char 
+  model char 
+  Note: '''ContentType(id, app_label, model)'''
+}
+
+
+Table Session {
+  session_key char [pk, unique]
+  session_data text 
+  expire_date date_time 
+  Note: '''
+    Django provides full support for anonymous sessions. The session
+    framework lets you store and retrieve arbitrary data on a
+    per-site-visitor basis. It stores data on the server side and
+    abstracts the sending and receiving of cookies. Cookies contain a
+    session ID -- not the data itself.
+
+    The Django sessions framework is entirely cookie-based. It does
+    not fall back to putting session IDs in URLs. This is an intentional
+    design decision. Not only does that behavior make URLs ugly, it makes
+    your site vulnerable to session-ID theft via the "Referer" header.
+
+    For complete documentation on using Sessions in your code, consult
+    the sessions documentation that is shipped with Django (also available
+    on the Django web site).
+    '''
+}
+
+
+Table Tag {
+  id auto [pk, unique]
+  name char [unique]
+  slug slug [unique]
+  Note: '''Tag(id, name, slug)'''
+}
+
+
+Table TaggedItem {
+  id auto [pk, unique]
+  tag foreign_key 
+  content_type foreign_key 
+  object_id integer 
+  content_object None 
+  Note: '''TaggedItem(id, tag, content_type, object_id)'''
+}
+ref: TaggedItem.tag > Tag.id
+ref: TaggedItem.content_type > ContentType.id
+
+
+Table Collection {
+  id big_auto [pk, unique]
+  library char 
+  location char [note:"Location of the library."]
+  Note: '''Collection or library that holds an archival item.'''
+}
+
+
+Table LanguageManager {
+  id big_auto [pk, unique]
+  Note: '''Manager for Language model.'''
+}
+
+
+Table Language {
+  id big_auto [pk, unique]
+  language char 
+  display_name char [note:"Option to override the autogenerated language-script name", null, unique]
+  iso_code char [note:"ISO 639 code for this language (2 or 3 letters)"]
+  Note: '''Language of a page item.'''
+}
+
+
+Table Fragment {
+  id auto [pk, unique]
+  line_number integer [note:"Line number of the fragment.", null]
+  document foreign_key [note:"Link to a document for this fragment.", null]
+  transcription text [note:"Transcription of the fragment."]
+  notes text [note:"Notes about the fragment. These will not be public."]
+  created date_time 
+  last_modified date_time 
+  Note: '''A single fragment of the text.'''
+}
+ref: Fragment.document > Document.id
+
+
+Table denig_fragment_languages {
+  language_id auto [pk]
+  fragment_id auto [pk]
+}
+ref: Fragment.id > denig_fragment_languages.fragment_id
+ref: Language.id > denig_fragment_languages.language_id
+
+
+Table DocumentType {
+  id big_auto [pk, unique]
+  name char [unique]
+  display_labels char [note:"Optional label to display on the public site."]
+  Note: '''Controlled vocabulary for document types.'''
+}
+
+
+Table Document {
+  id auto [pk, unique]
+  description text 
+  docside char 
+  doctype char 
+  page integer [note:"Page number of the document."]
+  image image [note:"Upload an image of the document."]
+  notes text 
+  created date_time 
+  last_modified date_time 
+  tags None [note:"A comma-separated list of tags.", null]
+  tagged_items None [null]
+  Note: '''Document(id, description, docside, doctype, page, image, notes, created, last_modified)'''
+}
+
+
+Table Footnote {
+  id big_auto [pk, unique]
+  source foreign_key [note:"Select a fragment that is associated with this footnote."]
+  location char [note:"Location of the footnote in the source document (e.g., page number or page range)."]
+  footnote_type char [note:"Footnote type", null]
+  content text [null]
+  notes text 
+  created date_time 
+  last_modified date_time 
+  Note: '''a footnote that links from a denig.models.Document to a class:Fragment'''
+}
+ref: Footnote.source > Fragment.id
+
+

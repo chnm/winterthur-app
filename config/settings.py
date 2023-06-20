@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "django_dbml",
     "admin_interface",
     "colorfield",
     "django.contrib.admin",

@@ -102,7 +102,7 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     readonly_fields = (
         "created",
         "last_modified",
-        "admin_thumbnails",
+        # "admin_thumbnails",
         "id",
     )
     search_fields = (
@@ -118,7 +118,7 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         "tags",
     )
 
-    formfield_overrides = {models.ImageField: {"widget": CustomAdminFileWidget}}
+    formfield_overrides = {models.FileField: {"widget": CustomAdminFileWidget}}
     resource_classes = [DocumentResource]
 
 
@@ -132,9 +132,8 @@ class FragmentInline(admin.TabularInline):
         "transcription",
         "languages",
         "notes",
-        "admin_thumbnails",
     )
-    readonly_fields = ("admin_thumbnails",)
+    # readonly_fields = ("admin_thumbnails",)
     formfield_overrides = {
         models.ManyToManyField: {"widget": forms.CheckboxSelectMultiple},
     }
@@ -148,10 +147,10 @@ class FragmentInline(admin.TabularInline):
             kwargs["initial"] = request.resolver_match.kwargs["object_id"]
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-    def admin_thumbnails(self, obj):
-        return format_html("<img src='{}' />", obj.image.url)
+    # def admin_thumbnails(self, obj):
+    #     return format_html("<img src='{}' />", obj.image.url)
 
-    admin_thumbnails.short_description = "Image"
+    # admin_thumbnails.short_description = "Image"
 
 
 DocumentAdmin.inlines = [FragmentInline]

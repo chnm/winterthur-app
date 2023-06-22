@@ -12,6 +12,7 @@ class FootnoteAdmin(admin.ModelAdmin):
 class FootnoteInline(admin.TabularInline):
     model = Footnote
     fields = ("content", "footnote_type", "notes")
+    extra = 0
 
 
 admin.site.register(Footnote, FootnoteAdmin)

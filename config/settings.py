@@ -136,6 +136,9 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
+TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 

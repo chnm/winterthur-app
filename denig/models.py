@@ -2,7 +2,6 @@ import logging
 from functools import cached_property
 
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models.functions.text import Lower
 from django.templatetags.static import static
@@ -10,9 +9,12 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
-from taggit.managers import TaggableManager
+from taggit_selectize.managers import TaggableManager
 
 from footnotes.models import Footnote
+
+# from taggit.managers import TaggableManager
+
 
 logger = logging.getLogger(__name__)
 
@@ -163,7 +165,8 @@ class DocumentTypeManager(models.Manager):
 
 
 class DocumentType(models.Model):
-    """Controlled vocabulary for document types."""
+    """A document indicates an individual page (recto/verso) or a page spread
+    (recto and verso)."""
 
     name = models.CharField(max_length=255, unique=True)
     display_labels = models.CharField(
@@ -220,10 +223,13 @@ class Document(models.Model):
         choices=DOCTYPE_CHOICES,
         default="text",
     )
-    page = models.IntegerField(
-        blank=True, help_text="Page number of the document.", default=0
+    page_range = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Page",
+        help_text="Page or page range of the document.",
     )
-    tags = TaggableManager(blank=True, related_name="tagged_document")
+    tags = TaggableManager(blank=True)
     item_file = models.FileField(
         upload_to="files/",
         blank=True,
@@ -249,7 +255,7 @@ class Document(models.Model):
         pass
 
     def __str__(self):
-        return "Page" + " " + str(self.page) + " " + str(self.docside)
+        return "Page" + " " + str(self.page_range) + " " + str(self.docside)
 
     def save(self, *args, **kwargs):
         """Save the document."""

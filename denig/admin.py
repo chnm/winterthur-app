@@ -9,11 +9,15 @@ from django.utils.html import format_html
 from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
-from taggit.models import Tag as Taggit
 
 from footnotes.models import Footnote
 
 from .models import Collection, Document, Fragment, Language
+
+# from taggit.models import Tag as Taggit
+
+# from taggit_selectize.managers import TaggableManager
+
 
 admin.site.register(Collection)
 admin.site.register(Language)
@@ -52,7 +56,7 @@ class CustomAdminFileWidget(AdminFileWidget):
                 f"""<a href="{value.url}" target="_blank">
                       <img 
                         src="{value.url}" alt="{value}" 
-                        width="500" height="500"
+                        width="700" height="auto"
                         style="object-fit: cover;"
                       />
                     </a>"""
@@ -93,7 +97,7 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = DocumentForm
     list_display = (
         "docside",
-        "page",
+        "page_range",
         "notes",
         "doctype",
         "all_tags",

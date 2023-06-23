@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "pages.apps.PagesConfig",
     "denig.apps.DenigConfig",
+    "denig.apps.EssaysConfig",
     "footnotes.apps.FootnotesConfig",
 ]
 

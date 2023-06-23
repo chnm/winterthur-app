@@ -24,11 +24,11 @@ class DocumentListView(generic.ListView):
     template_name = "manuscript.html"
 
     def get_queryset(self):
-        return Document.objects.all().order_by("-page")
+        return Document.objects.all().order_by("-page_range")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["document_list"] = Document.objects.all().order_by("-page")
+        context["document_list"] = Document.objects.all().order_by("-page_range")
         return context
 
     def get_absolute_url(self):
@@ -42,9 +42,9 @@ class DocumentDetailView(generic.DetailView):
     template_name = "manuscript_page.html"
 
     def get_queryset(self):
-        return Document.objects.all().order_by("-page")
+        return Document.objects.all().order_by("-page_range")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["document_list"] = Document.objects.all().order_by("-page")
+        context["document_list"] = Document.objects.all().order_by("-page_range")
         return context

@@ -1,3 +1,7 @@
 from django.contrib import admin
+from django.urls import include, path
 
-# Register your models here.
+from essays.models import Author, Essay
+
+admin.site.register(Author)
+admin.site.register(Essay)

@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "admin_interface",
     "colorfield",
     "django.contrib.admin",
+    "prose",
     "django.contrib.auth",
     "authuser",
     "django.contrib.contenttypes",
@@ -60,6 +61,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------

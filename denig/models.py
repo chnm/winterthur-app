@@ -14,9 +14,6 @@ from taggit_selectize.managers import TaggableManager
 
 from footnotes.models import Footnote
 
-# from taggit.managers import TaggableManager
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -115,7 +112,9 @@ class Fragment(ImportExportMixin, models.Model):
         blank=True, help_text="Transcription of the fragment."
     )
     notes = models.TextField(
-        blank=True, help_text="Notes about the fragment. These will not be public."
+        blank=True,
+        verbose_name="Internal notes",
+        help_text="Notes about the fragment. These will not be public.",
     )
     languages = models.ManyToManyField(
         Language,
@@ -209,7 +208,7 @@ class Document(ImportExportMixin, models.Model):
         ("text", "Text"),
     )
 
-    id = models.AutoField("ID", primary_key=True)
+    id = models.AutoField(editable=False, primary_key=True)
     description = models.TextField(blank=True)
     docside = models.CharField(
         max_length=255,
@@ -234,11 +233,14 @@ class Document(ImportExportMixin, models.Model):
     item_file = models.FileField(
         upload_to="files/",
         blank=True,
+        null=True,
         help_text="Upload a file. Click to open a larger image.",
         verbose_name="File preview",
     )
     notes = models.TextField(
-        blank=True, help_text="Internal notes about the item. These are not public."
+        blank=True,
+        verbose_name="Internal notes",
+        help_text="Internal notes about the item. These are not public.",
     )
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -293,6 +295,11 @@ class Document(ImportExportMixin, models.Model):
     def title(self):
         return self.description
 
+    @property
+    def file_url(self):
+        if self.item_file and hasattr(self.item_file, "url"):
+            return self.item_file.url
+
     # def admin_thumbnails(self):
     #     """Return a thumbnail for the document."""
     #     return Fragment.admin_thumbnails(
@@ -301,3 +308,37 @@ class Document(ImportExportMixin, models.Model):
     #     )
 
     # admin_thumbnails.short_description = "Images"
+
+
+class MusicScore(ImportExportMixin, models.Model):
+    title = models.CharField(max_length=255, blank=True)
+    composer = models.CharField(max_length=255, blank=True)
+    year_composed = models.IntegerField(null=True, blank=True)
+    description = models.TextField(blank=True)
+    page_range = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Page",
+        help_text="Page or page range of the document.",
+    )
+    sheet_music = models.FileField(
+        upload_to="files/",
+        blank=True,
+        null=True,
+        help_text="Upload a file (PDF or PNG). Click to open a larger image.",
+        verbose_name="Sheet music",
+    )
+    audio_recordig_file = models.FileField(
+        upload_to="files/",
+        blank=True,
+        null=True,
+        help_text="Upload a file.",
+        verbose_name="Audio recording",
+    )
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.composer} - {self.title}"

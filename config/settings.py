@@ -64,8 +64,9 @@ MIDDLEWARE = [
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
-# django-debug-toolbar
+# DEBUG
 # ------------------------------------------------------------------------------
+# django-debug-toolbar
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
 INSTALLED_APPS += ["debug_toolbar"]  # noqa: F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#middleware

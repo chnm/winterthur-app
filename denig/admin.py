@@ -12,15 +12,11 @@ from import_export.widgets import ForeignKeyWidget
 
 from footnotes.models import Footnote
 
-from .models import Collection, Document, Fragment, Language
-
-# from taggit.models import Tag as Taggit
-
-# from taggit_selectize.managers import TaggableManager
-
+from .models import Collection, Document, Fragment, Language, MusicScore
 
 admin.site.register(Collection)
 admin.site.register(Language)
+admin.site.register(MusicScore)
 
 """
 Setup export resource classes

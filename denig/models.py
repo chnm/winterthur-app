@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
+from import_export.admin import ImportExportMixin
 from taggit_selectize.managers import TaggableManager
 
 from footnotes.models import Footnote
@@ -96,7 +97,7 @@ class FragmentManager(models.Manager):
         return self.get(collection=collection)
 
 
-class Fragment(models.Model):
+class Fragment(ImportExportMixin, models.Model):
     """A single fragment of the text."""
 
     id = models.AutoField(primary_key=True)
@@ -191,7 +192,7 @@ class DocumentType(models.Model):
         }
 
 
-class Document(models.Model):
+class Document(ImportExportMixin, models.Model):
     RECTO = "recto"
     VERSO = "verso"
     RECTO_VERSO = "recto and verso"
@@ -288,6 +289,10 @@ class Document(models.Model):
         lang = get_language() or settings.LANGUAGE_CODE
         return self.get_absolute_url().replace(f"/{lang}/", "/")
 
+    @property
+    def title(self):
+        return self.description
+
     # def admin_thumbnails(self):
     #     """Return a thumbnail for the document."""
     #     return Fragment.admin_thumbnails(
@@ -296,7 +301,3 @@ class Document(models.Model):
     #     )
 
     # admin_thumbnails.short_description = "Images"
-
-    @property
-    def title(self):
-        return self.description

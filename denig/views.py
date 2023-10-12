@@ -18,6 +18,22 @@ def manuscript(request: HttpRequest):
     return render(request, "manuscript.html", {})
 
 
+def scholarship(request: HttpRequest):
+    return render(request, "scholarship.html", {})
+
+
+def forensics(request: HttpRequest):
+    return render(request, "forensics.html", {})
+
+
+def music(request: HttpRequest):
+    return render(request, "music.html", {})
+
+
+def education(request: HttpRequest):
+    return render(request, "education.html", {})
+
+
 class DocumentListView(generic.ListView):
     model = Document
     context_object_name = "document_list"

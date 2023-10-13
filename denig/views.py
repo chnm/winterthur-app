@@ -57,10 +57,7 @@ class DocumentDetailView(generic.DetailView):
     context_object_name = "manuscript_page"
     template_name = "manuscript_page.html"
 
-    def get_queryset(self):
-        return Document.objects.all().order_by("-page_range")
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["document_list"] = Document.objects.all().order_by("-page_range")
+        context["manuscript_page"] = Document.objects.all()
         return context

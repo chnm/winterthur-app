@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Manuscript
+{% endblock title %}
+
+{% block extrahead %}{% endblock extrahead %}
+
+{% block content %}
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+        <h1 class="text-2xl pb-4 mb-4">
+            Viewing page {{ document.page_range }} of the {{ document.doctype }}
+        </h1>
+
+        <div class="mt-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <img src="{{ document.item_file.url }}" alt="" height="300" width="300" />
+                </div>
+
+                <div>
+                    <!-- transcription text -->
+                    <p class="text-gray-500 text-sm">transcription....</p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h3 class="text-xl pb-4 mb-4">Metadata</h3>
+                <ul>
+                    <li>Metadata 1</li>
+                    <li>Metadata 2</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

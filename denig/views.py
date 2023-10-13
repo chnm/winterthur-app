@@ -56,8 +56,3 @@ class DocumentDetailView(generic.DetailView):
     model = Document
     context_object_name = "manuscript_page"
     template_name = "manuscript_page.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["manuscript_page"] = Document.objects.all()
-        return context

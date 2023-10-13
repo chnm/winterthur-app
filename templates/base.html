@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{% block title %}Denig Manuscript{% endblock %}</title>
+        <title>{% block title %}Denig Manuscript{% endblock title %}</title>
 
         {# open graph metadata #}
         <meta property="og:type" content="website" />
@@ -15,7 +15,14 @@
         <meta property="og:description" content="{{ meta_description|escape }}" />
         <meta property="og:url" content="{{ request.build_absolute_uri }}" />
 
+        <script
+            type="text/javascript"
+            src="/static/openseadragon/openseadragon.min.js"
+        ></script>
+
+
         {% tailwind_css %}
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
     </head>
     <body class="font-serif">
         <!-- Navigation bar -->

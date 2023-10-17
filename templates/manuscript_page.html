@@ -28,15 +28,24 @@
                     </script>
                 </div>
                 <div>
-                    <!-- transcription text -->
-                    <p class="text-gray-500 text-sm">transcription....</p>
+                    <nav class="flex -mb-px">
+                        <a href="#english-tab" class="w-1/3 py-2 px-4 inline-block text-center border-b-2 border-transparent font-semibold text-gray-600 hover:text-blue-600 hover:border-blue-600 focus:outline-none" data-toggle="tab">English</a>
+                        <a href="#german-modern-tab" class="w-1/3 py-2 px-4 inline-block text-center border-b-2 border-transparent font-semibold text-gray-600 hover:text-blue-600 hover:border-blue-600 focus:outline-none" data-toggle="tab">German (Modern)</a>
+                        <a href="#german-old-tab" class="w-1/3 py-2 px-4 inline-block text-center border-b-2 border-transparent font-semibold text-gray-600 hover:text-blue-600 hover:border-blue-600 focus:outline-none" data-toggle="tab">German (Old)</a>
+                    </nav>
+
+                    <div id="english-tab" class="tab-content">
+                        <p>text here</p>
+
+                    </div>
+
                 </div>
             </div>
 
             <div class="mt-4">
-                <h3 class="text-xl pb-4 mb-4">Metadata</h3>
+                <h3 class="text-2xl pb-4 mb-4">Metadata</h3>
                 <ul>
-                    <li>Metadata 1</li>
+                    <li><strong>Document type</strong>: {{ manuscript_page.doctype }}</li>
                     <li>Metadata 2</li>
                 </ul>
             </div>

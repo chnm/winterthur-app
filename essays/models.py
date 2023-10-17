@@ -19,6 +19,7 @@ class Author(models.Model):
         blank=True,
         help_text="A short biography of the author. Max characters is 600.",
     )
+    institution = models.TextField()  # TODO fill this out
     email = models.EmailField(help_text="The author's email address.")
 
     def __str__(self):

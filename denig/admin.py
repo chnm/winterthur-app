@@ -39,11 +39,7 @@ class FragmentResource(resources.ModelResource):
         model = Fragment
 
 
-"""
-Overrides for admin widgets
-"""
-
-
+# Overrides for admin widgets
 class CustomAdminFileWidget(AdminFileWidget):
     def render(self, name, value, attrs=None, renderer=None):
         result = []
@@ -61,11 +57,7 @@ class CustomAdminFileWidget(AdminFileWidget):
         return format_html("".join(result))
 
 
-"""
-Setup admin classes
-"""
-
-
+# Setup admin classes
 class FragmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ("__str__", "line_number", "document", "last_modified")
     list_filter = ("document", "languages")
@@ -94,7 +86,6 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = (
         "docside",
         "page_range",
-        "notes",
         "doctype",
         "all_tags",
         "last_modified",
@@ -122,43 +113,6 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_classes = [DocumentResource]
 
 
-class FragmentInline(admin.TabularInline):
-    model = Fragment
-    extra = 0
-    verbose_name = "Fragment"
-    verbose_name_plural = "Fragments"
-    fields = (
-        "line_number",
-        "transcription",
-        "languages",
-        "notes",
-    )
-    # readonly_fields = ("admin_thumbnails",)
-    formfield_overrides = {
-        models.ManyToManyField: {"widget": forms.CheckboxSelectMultiple},
-    }
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.order_by("line_number")
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "document":
-            kwargs["initial"] = request.resolver_match.kwargs["object_id"]
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-    # def admin_thumbnails(self, obj):
-    #     return format_html("<img src='{}' />", obj.image.url)
-
-    # admin_thumbnails.short_description = "Image"
-
-
-DocumentAdmin.inlines = [FragmentInline]
-
-
-admin.site.register(Document, DocumentAdmin)
-
-
 class FootnoteInline(admin.TabularInline):
     """Add footnotes within the Fragment form."""
 
@@ -182,6 +136,35 @@ class FootnoteInline(admin.TabularInline):
         return format_html("<a href='{}'>{}</a>", obj.get_absolute_url(), obj)
 
     footnote.short_description = "Footnote"
+    footnote.long_description = "Footnotes"
 
 
-FragmentAdmin.inlines = [FootnoteInline]
+class FragmentInline(admin.StackedInline):
+    model = Fragment
+    extra = 0
+    verbose_name = "Fragment"
+    verbose_name_plural = "Fragments"
+    fields = (
+        "line_number",
+        "transcription",
+        "languages",
+        "notes",
+    )
+    formfield_overrides = {
+        models.ManyToManyField: {"widget": forms.CheckboxSelectMultiple},
+    }
+    inlines = [FootnoteInline]
+    show_change_link = True
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.order_by("line_number")
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "document":
+            kwargs["initial"] = request.resolver_match.kwargs["object_id"]
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+DocumentAdmin.inlines = [FragmentInline]
+admin.site.register(Document, DocumentAdmin)

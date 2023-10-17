@@ -312,8 +312,6 @@ class Document(ImportExportMixin, models.Model):
 
 class MusicScore(ImportExportMixin, models.Model):
     title = models.CharField(max_length=255, blank=True)
-    composer = models.CharField(max_length=255, blank=True)
-    year_composed = models.IntegerField(null=True, blank=True)
     description = models.TextField(blank=True)
     page_range = models.CharField(
         max_length=255,

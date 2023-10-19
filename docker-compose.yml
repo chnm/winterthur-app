@@ -5,9 +5,9 @@ services:
     build:
       context: .
     command: >
-        sh -c "poetry run python manage.py wait_for_db &&
-               poetry run python manage.py migrate &&
-               poetry run uwsgi --http :8000 --chdir /app --module config.wsgi --static-map /static=/app/staticfiles"
+        sh -c "poetry run python3 manage.py wait_for_db &&
+               poetry run python3 manage.py migrate &&
+               poetry run python3 manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
     environment:
@@ -20,7 +20,7 @@ services:
       - db
 
   db:
-    image: postgres:13-alpine
+    image: postgres:16
     volumes:
       - pg-data:/var/lib/postgresql/data
     environment:

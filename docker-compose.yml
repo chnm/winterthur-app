@@ -5,16 +5,7 @@ services:
     build: .
     ports:
       - 8000:8000
-    environment:
-      - DEBUG=True
-      - DJANGO_SECRET_KEY=thisisnotasecret
-      - DJANGO_ALLOWED_HOSTS=localhost,"",127.0.0.1,0.0.0.0
-      - DJANGO_CSRF_TRUSTED_ORIGINS='http://localhost'
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_NAME=winterthur
-      - DB_USER=winterthur
-      - DB_PASSWORD=postgres
+    env_file: .env
     command: >
         sh -c "poetry run python3 manage.py wait_for_db &&
                poetry run python3 manage.py migrate &&
@@ -26,11 +17,7 @@ services:
     image: postgres:16
     volumes:
       - pg-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=winterthur
-      - POSTGRES_USER=winterthur
-      - POSTGRES_PASSWORD=postgres
+    env_file: .env
 
 volumes:
   pg-data:

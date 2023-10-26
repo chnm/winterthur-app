@@ -5,16 +5,7 @@ services:
     build: .
     ports:
       - "{{ template.env.host_app_port }}:8000"
-    environment:
-      - DEBUG={{ template.env.debug_flag }}
-      - DJANGO_SECRET_KEY={{ template.env.secret_key }}
-      - DJANGO_ALLOWED_HOSTS={{ template.env.allowed_hosts }}
-      - DJANGO_CSRF_TRUSTED_ORIGINS={{ template.env.trusted_origins }}
-      - DB_HOST=db
-      - DB_PORT={{ template.env.host_db_port }}
-      - DB_NAME={{ template.env.db_name }}
-      - DB_USER={{ template.env.db_user }}
-      - DB_PASSWORD={{ template.env.db_pass }}
+    env_file: .env
     command: >
         sh -c "poetry run python3 manage.py wait_for_db &&
                poetry run python3 manage.py migrate &&
@@ -24,15 +15,11 @@ services:
 
   db:
     image: postgres:16
-    volumes:
-      - pg-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB={{ template.env.db_name }}
-      - POSTGRES_USER={{ template.env.db_user }}
-      - POSTGRES_PASSWORD={{ template.env.db_pass }}
+    env_file: .env
     ports:
       - "{{ template.env.host_db_port }}:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
 
 volumes:
   pg-data:

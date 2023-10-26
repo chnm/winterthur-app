@@ -2,20 +2,23 @@ version: '3.9'
 
 services:
   app:
-    build:
-      context: .
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=True
+      - DJANGO_SECRET_KEY=thisisnotasecret
+      - DJANGO_ALLOWED_HOSTS=localhost,"",127.0.0.1,0.0.0.0
+      - DJANGO_CSRF_TRUSTED_ORIGINS='http://localhost'
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=winterthur
+      - DB_USER=winterthur
+      - DB_PASSWORD=postgres
     command: >
         sh -c "poetry run python3 manage.py wait_for_db &&
                poetry run python3 manage.py migrate &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
-    ports:
-      - 8000:8000
-    environment:
-      - DEBUG=1
-      - DB_NAME=devdb
-      - DB_USER=devuser
-      - DB_PASS=changeme
-      - DATABASE_URL=postgres://devuser:changeme@db:5432/devdb
     depends_on:
       - db
 
@@ -24,9 +27,11 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=winterthur
+      - POSTGRES_USER=winterthur
+      - POSTGRES_PASSWORD=postgres
 
 volumes:
   pg-data:
+  dj-data:

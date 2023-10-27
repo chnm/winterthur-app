@@ -9,14 +9,14 @@ from django.utils.html import format_html
 from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
-from taggit.models import Tag as Taggit
 
 from footnotes.models import Footnote
 
-from .models import Collection, Document, Fragment, Language
+from .models import Collection, Document, Fragment, Language, MusicScore
 
 admin.site.register(Collection)
 admin.site.register(Language)
+admin.site.register(MusicScore)
 
 """
 Setup export resource classes
@@ -39,11 +39,7 @@ class FragmentResource(resources.ModelResource):
         model = Fragment
 
 
-"""
-Overrides for admin widgets
-"""
-
-
+# Overrides for admin widgets
 class CustomAdminFileWidget(AdminFileWidget):
     def render(self, name, value, attrs=None, renderer=None):
         result = []
@@ -52,7 +48,7 @@ class CustomAdminFileWidget(AdminFileWidget):
                 f"""<a href="{value.url}" target="_blank">
                       <img 
                         src="{value.url}" alt="{value}" 
-                        width="500" height="500"
+                        width="700" height="auto"
                         style="object-fit: cover;"
                       />
                     </a>"""
@@ -61,11 +57,7 @@ class CustomAdminFileWidget(AdminFileWidget):
         return format_html("".join(result))
 
 
-"""
-Setup admin classes
-"""
-
-
+# Setup admin classes
 class FragmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ("__str__", "line_number", "document", "last_modified")
     list_filter = ("document", "languages")
@@ -93,8 +85,7 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = DocumentForm
     list_display = (
         "docside",
-        "page",
-        "notes",
+        "page_range",
         "doctype",
         "all_tags",
         "last_modified",
@@ -102,7 +93,7 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     readonly_fields = (
         "created",
         "last_modified",
-        "admin_thumbnails",
+        # "admin_thumbnails",
         "id",
     )
     search_fields = (
@@ -118,46 +109,8 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         "tags",
     )
 
-    formfield_overrides = {models.ImageField: {"widget": CustomAdminFileWidget}}
+    formfield_overrides = {models.FileField: {"widget": CustomAdminFileWidget}}
     resource_classes = [DocumentResource]
-
-
-class FragmentInline(admin.TabularInline):
-    model = Fragment
-    extra = 0
-    verbose_name = "Fragment"
-    verbose_name_plural = "Fragments"
-    fields = (
-        "line_number",
-        "transcription",
-        "languages",
-        "notes",
-        "admin_thumbnails",
-    )
-    readonly_fields = ("admin_thumbnails",)
-    formfield_overrides = {
-        models.ManyToManyField: {"widget": forms.CheckboxSelectMultiple},
-    }
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.order_by("line_number")
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "document":
-            kwargs["initial"] = request.resolver_match.kwargs["object_id"]
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-    def admin_thumbnails(self, obj):
-        return format_html("<img src='{}' />", obj.image.url)
-
-    admin_thumbnails.short_description = "Image"
-
-
-DocumentAdmin.inlines = [FragmentInline]
-
-
-admin.site.register(Document, DocumentAdmin)
 
 
 class FootnoteInline(admin.TabularInline):
@@ -183,6 +136,35 @@ class FootnoteInline(admin.TabularInline):
         return format_html("<a href='{}'>{}</a>", obj.get_absolute_url(), obj)
 
     footnote.short_description = "Footnote"
+    footnote.long_description = "Footnotes"
 
 
-FragmentAdmin.inlines = [FootnoteInline]
+class FragmentInline(admin.StackedInline):
+    model = Fragment
+    extra = 0
+    verbose_name = "Fragment"
+    verbose_name_plural = "Fragments"
+    fields = (
+        "line_number",
+        "transcription",
+        "languages",
+        "notes",
+    )
+    formfield_overrides = {
+        models.ManyToManyField: {"widget": forms.CheckboxSelectMultiple},
+    }
+    inlines = [FootnoteInline]
+    show_change_link = True
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.order_by("line_number")
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "document":
+            kwargs["initial"] = request.resolver_match.kwargs["object_id"]
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+DocumentAdmin.inlines = [FragmentInline]
+admin.site.register(Document, DocumentAdmin)

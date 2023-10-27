@@ -1,0 +1,6 @@
+#openseadragon_viewer {
+  width: 90%;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+}

@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{% block title %}Denig Manuscript{% endblock %}</title>
+        <title>{% block title %}Denig Manuscript{% endblock title %}</title>
 
         {# open graph metadata #}
         <meta property="og:type" content="website" />
@@ -15,7 +15,14 @@
         <meta property="og:description" content="{{ meta_description|escape }}" />
         <meta property="og:url" content="{{ request.build_absolute_uri }}" />
 
+        <script
+            type="text/javascript"
+            src="/static/openseadragon/openseadragon.min.js"
+        ></script>
+
+
         {% tailwind_css %}
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
     </head>
     <body class="font-serif">
         <!-- Navigation bar -->
@@ -84,73 +91,93 @@
                                 >Manuscript</a
                                     >
                                     <a
-                                        href="{% url 'about' %}"
+                                        href="{% url 'scholarship' %}"
                                         class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                                    >About</a
+                                    >Scholarship</a
                                         >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Mobile menu, toggle classNamees based on menu state -->
-                        <div class="sm:hidden" id="mobile-menu">
-                            <div class="px-2 pt-2 pb-3 space-y-1">
-                                <a
-                                    href="{% url 'manuscript' %}"
-                                    class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                                >Manuscript</a
-                                    >
-                                    <a
-                                        href="{% url 'about' %}"
-                                        class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                                    >About</a
-                                        >
-                                    </div>
-                                </div>
-                            </nav>
-                            {% block content %}{% endblock %}
-
-                            <!-- footer -->
-                            <footer class="bg-gray-900">
-                                <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-                                    <div class="md:flex md:items-center md:justify-between">
-                                        <div class="flex justify-center md:order-2">
-                                            <img
-                                                class="h-12 mx-4"
-                                                src="{% static 'rrchnm-logo.png' %}"
-                                                alt="Roy Rosenzweig Center for History and New Media"
-                                            />
-                                            <img
-                                                class="h-12 mx-4"
-                                                src="{% static 'winterthur-logo.svg' %}"
-                                                alt="Winterthur Library, Museum and Garden"
-                                            />
-                                        </div>
-                                        <div class="mt-8 md:mt-0 md:order-1">
-                                            <nav class="flex justify-center flex-wrap">
+                                        <a
+                                            href="{% url 'forensics' %}"
+                                            class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                        >Forensics</a
+                                            >
+                                            <a
+                                                href="{% url 'music' %}"
+                                                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                            >Music</a
+                                                >
                                                 <a
-                                                    href="#"
-                                                    class="px-4 py-2 text-gray-300 hover:text-white font-sans"
+                                                    href="{% url 'education' %}"
+                                                    class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                                >Education Resources</a
+                                                    >
+                                                    <a
+                                                        href="{% url 'about' %}"
+                                                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                                    >About</a
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Mobile menu, toggle classNamees based on menu state -->
+                                        <div class="sm:hidden" id="mobile-menu">
+                                            <div class="px-2 pt-2 pb-3 space-y-1">
+                                                <a
+                                                    href="{% url 'manuscript' %}"
+                                                    class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                                                 >Manuscript</a
                                                     >
                                                     <a
                                                         href="{% url 'about' %}"
-                                                        class="px-4 py-2 text-gray-300 hover:text-white font-sans"
+                                                        class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                                                     >About</a
                                                         >
-                                                    </nav>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-8 md:mt-0 md:order-3 pb-3">
-                                            <p class="text-center text-gray-300">
-                                                The Denig Manuscript Project was created by the
-                                                <a class="underline" href="https://rrchnm.org"
-                                                >Roy Rosenzweig Center for History and New Media</a
-                                                    >
-                                                    at George Mason University.
-                                                </p>
-                                            </div>
-                                        </footer>
-                                    </body>
-                                </html>
+                                            </nav>
+                                            {% block content %}{% endblock %}
+
+                                            <!-- footer -->
+                                            <footer class="bg-gray-900">
+                                                <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                                                    <div class="md:flex md:items-center md:justify-between">
+                                                        <div class="flex justify-center md:order-2">
+                                                            <img
+                                                                class="h-12 mx-4"
+                                                                src="{% static 'rrchnm-logo.png' %}"
+                                                                alt="Roy Rosenzweig Center for History and New Media"
+                                                            />
+                                                            <img
+                                                                class="h-12 mx-4"
+                                                                src="{% static 'winterthur-logo.svg' %}"
+                                                                alt="Winterthur Library, Museum and Garden"
+                                                            />
+                                                        </div>
+                                                        <div class="mt-8 md:mt-0 md:order-1">
+                                                            <nav class="flex justify-center flex-wrap">
+                                                                <a
+                                                                    href="#"
+                                                                    class="px-4 py-2 text-gray-300 hover:text-white font-sans"
+                                                                >Manuscript</a
+                                                                    >
+                                                                    <a
+                                                                        href="{% url 'about' %}"
+                                                                        class="px-4 py-2 text-gray-300 hover:text-white font-sans"
+                                                                    >About</a
+                                                                        >
+                                                                    </nav>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-8 md:mt-0 md:order-3 pb-3">
+                                                            <p class="text-center text-gray-300">
+                                                                The Denig Manuscript Project was created by the
+                                                                <a class="underline" href="https://rrchnm.org"
+                                                                >Roy Rosenzweig Center for History and New Media</a
+                                                                    >
+                                                                    at George Mason University.
+                                                                </p>
+                                                            </div>
+                                                        </footer>
+                                                    </body>
+                                                </html>

@@ -31,9 +31,11 @@ CRSF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 INSTALLED_APPS = [
     "daphne",
+    "django_dbml",
     "admin_interface",
     "colorfield",
     "django.contrib.admin",
+    "prose",
     "django.contrib.auth",
     "authuser",
     "django.contrib.contenttypes",
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "pages.apps.PagesConfig",
     "denig.apps.DenigConfig",
+    "essays.apps.EssaysConfig",
     "footnotes.apps.FootnotesConfig",
 ]
 
@@ -61,8 +64,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# django-debug-toolbar
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
+# DEBUG
 # ------------------------------------------------------------------------------
+# django-debug-toolbar
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
 INSTALLED_APPS += ["debug_toolbar"]  # noqa: F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#middleware
@@ -143,6 +149,9 @@ TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
+TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

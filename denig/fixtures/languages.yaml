@@ -16,3 +16,9 @@
     language: "German (old)"
     display_name: "German (old)"
     iso_code: "gmh"
+- model: deig.language
+  pk: 4
+  fields:
+    language: "Marginalia"
+    display_name: "Marginalia"
+    iso_code: "marg"

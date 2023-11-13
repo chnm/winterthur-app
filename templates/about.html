@@ -1,32 +1,60 @@
 {% extends 'base.html' %} {% block content %}
-    <div class="prose relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-        <h1>About.</h1>
+  <div class="prose relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    <h1>About.</h1>
+    <div class="grid grid-cols-3 gap-0 p-8">
+    <!-- Left Section (2/3) -->
+      <div class="col-span-2 bg-white p-4">
+        <p>Ludwig Denig was an eighteenth-century shoemaker and apothecary living in colonial and revolutionary
+          Pennsylvania. Denig was a Pietist who drew on the devotional and biblical spirituality of the Lutheran and Dutch
+          Reformed churches. He created a devotional text—an illuminated manuscript—by mixing an array of Christian
+          elements with his own creativity. He copied passages from the Gospels in German with devotional reflections on
+          the Passion. He painted watercolor scenes from the Passion that combined the stories of the Gospels with scenes
+          from his own experience, including the brutal violence against the Conestoga Indians in Lancaster, Pennsylvania,
+          and his own experiences of warfare in the Revolutionary War. And he added Christian hymns to his watercolors and
+          biblical texts. This manuscript combines a number of devotional, theological and artistic traditions, but that
+          combination created a manuscript and work of art that is unique to early America.</p>
+      </div>
 
-        <p>
-            Ludwig Denig was an eighteenth-century shoemaker and apothecary living in
-            colonial and revolutionary Pennsylvania. Denig was a Pietist who drew on the
-            devotional and biblical spirituality of the Lutheran and Dutch Reformed
-            churches. He created a devotional text—an illuminated manuscript—by mixing
-            an array of Christian elements with his own creativity. He copied passages
-            from the Gospels in German with devotional reflections on the Passion. He
-            painted watercolor scenes from the Passion that combined the stories of the
-            Gospels with scenes from his own experience, including the brutal violence
-            against the Conestoga Indians in Lancaster, Pennsylvania, and his own
-            experiences of warfare in the Revolutionary War. And he added Christian
-            hymns to his watercolors and biblical texts. This manuscript combines a
-            number of devotional, theological and artistic traditions, but that
-            combination created a manuscript and work of art that is unique to early
-            America.
-        </p>
+    <!-- Right Section (1/3) -->
+      <div class="col-span-1 bg-white border-l border-gray-300">
+      <!-- About Section -->
+        <div class="p-4 mb-4">
+          <p class="text-sm">The Denig Manuscript Project is a collaboration between the <a
+            href="https://www.winterthur.org/">Winterthur Museum, Garden and Library</a> and the <a
+              href="https://rrchnm.org">Roy Rosenzweig Center for History and New Media</a>.</p>
+        </div>
 
-        <h2>Project team.</h2>
-        <ul>
-            <li>John Turner</li>
-            <li>Lincoln Mullen</li>
-            <li>Marie Stephanie Delamaire</li>
-            <li>Jason Heppler</li>
-            <li>Rebecca Parmer</li>
-            <li>Danielle Dougherty</li>
-        </ul>
+        <hr class="w-full border-gray-300">
+
+      <!-- Authors Section -->
+        <div class="p-4">
+          <h3 class="text-lg font-semibold mb-2">Authors</h3>
+          <ul class="list-none pl-0">
+            <li class="text-sm pl-0">Author 1</li>
+            <li class="text-sm pl-0">Author 2</li>
+            <li class="text-sm pl-0">Author 3</li>
+          </ul>
+        </div>
+
+        <hr class="w-full border-gray-300">
+
+      <!-- Team Section -->
+        <div class="p-4">
+          <h3 class="text-lg font-semibold mb-2">Project Team</h3>
+          <ul class="list-none pl-0">
+            <li class="text-sm pl-0">John Turner</li>
+            <li class="text-sm pl-0">Marie Stephanie Delamaire</li>
+            <li class="text-sm pl-0">Jason Heppler</li>
+            <li class="text-sm pl-0">Lincoln Mullen</li>
+            <li class="text-sm pl-0">Rebecca Parmer</li>
+            <li class="text-sm pl-0">Danielle Dougherty</li>
+          </ul>
+        </div>
+
+
+      </div>
     </div>
+
+  </div>
+
 {% endblock %}

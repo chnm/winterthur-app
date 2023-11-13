@@ -191,6 +191,28 @@ class DocumentType(models.Model):
         }
 
 
+class Images(models.Model):
+    IMAGE_TYPES = (
+        ("recto", "Recto"),
+        ("verso", "Verso"),
+        ("recto and verso", "Recto and Verso"),
+        ("music score", "Music Score"),
+        ("forensics", "Forensics"),
+    )
+    id = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to="images/")
+    related_document = models.ForeignKey("Document", on_delete=models.PROTECT)
+    image_type = models.CharField(
+        max_length=255,
+        blank=True,
+        choices=IMAGE_TYPES,
+        default="recto",
+    )
+
+    def __str__(self):
+        return f"{self.document} - {self.image}"
+
+
 class Document(ImportExportMixin, models.Model):
     RECTO = "recto"
     VERSO = "verso"
@@ -230,12 +252,10 @@ class Document(ImportExportMixin, models.Model):
         help_text="Page or page range of the document.",
     )
     tags = TaggableManager(blank=True)
-    item_file = models.FileField(
-        upload_to="files/",
+    item_file = models.ManyToManyField(
+        Images,
         blank=True,
-        null=True,
-        help_text="Upload a file. Click to open a larger image.",
-        verbose_name="File preview",
+        verbose_name="Image",
     )
     notes = models.TextField(
         blank=True,

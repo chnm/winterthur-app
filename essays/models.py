@@ -19,7 +19,11 @@ class Author(models.Model):
         blank=True,
         help_text="A short biography of the author. Max characters is 600.",
     )
-    institution = models.TextField()  # TODO fill this out
+    institution = models.TextField(
+        max_length=255,
+        blank=True,
+        help_text="The author's institutional affiliation.",
+    )
     email = models.EmailField(help_text="The author's email address.")
 
     def __str__(self):
@@ -59,3 +63,17 @@ class Essay(models.Model):
         if not self.published_date and self.published:
             self.published_date = timezone.now()
         super().save(*args, **kwargs)
+
+
+class Images(models.Model):
+    image = models.ImageField(upload_to="images/")
+    essay = models.ForeignKey(Essay, on_delete=models.PROTECT)
+    caption = models.CharField(max_length=255, blank=True, null=True)
+    credit = models.CharField(max_length=255, blank=True, null=True)
+    order = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.caption
+
+    class Meta:
+        ordering = ["order"]

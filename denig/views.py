@@ -6,6 +6,18 @@ from django.views import generic
 from .models import Document
 
 
+def get_page_range_sort_key(document):
+    # Custom function to extract the numeric values from page_range
+    try:
+        # Split the page_range into components (e.g., "4-5" becomes ["4", "5"])
+        components = document.page_range.split("-")
+        # Convert each component to an integer
+        return [int(component) for component in components]
+    except (ValueError, AttributeError):
+        # Handle cases where the conversion fails or page_range is None
+        return []
+
+
 def index(request: HttpRequest):
     return render(request, "index.html", {})
 
@@ -15,7 +27,9 @@ def about(request: HttpRequest):
 
 
 def manuscript(request: HttpRequest):
-    return render(request, "manuscript.html", {})
+    documents = Document.objects.all()
+    sorted_documents = sorted(documents, key=get_page_range_sort_key)
+    return render(request, "manuscript.html", {"documents": sorted_documents})
 
 
 def scholarship(request: HttpRequest):
@@ -40,11 +54,11 @@ class DocumentListView(generic.ListView):
     template_name = "manuscript.html"
 
     def get_queryset(self):
-        return Document.objects.all().order_by("-page_range")
+        return Document.objects.all().order_by("page_range")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["document_list"] = Document.objects.all().order_by("-page_range")
+        context["document_list"] = Document.objects.all().order_by("page_range")
         return context
 
     def get_absolute_url(self):

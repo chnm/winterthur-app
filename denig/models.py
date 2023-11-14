@@ -258,11 +258,6 @@ class Document(ImportExportMixin, models.Model):
         help_text="Page or page range of the document.",
     )
     tags = TaggableManager(blank=True)
-    # item_file = models.ManyToManyField(
-    #     Image,
-    #     blank=True,
-    #     verbose_name="Image",
-    # )
     notes = models.TextField(
         blank=True,
         verbose_name="Internal notes",

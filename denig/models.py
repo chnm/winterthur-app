@@ -191,7 +191,7 @@ class DocumentType(models.Model):
         }
 
 
-class Images(models.Model):
+class Image(models.Model):
     IMAGE_TYPES = (
         ("recto", "Recto"),
         ("verso", "Verso"),
@@ -201,7 +201,13 @@ class Images(models.Model):
     )
     id = models.AutoField(primary_key=True)
     image = models.ImageField(upload_to="images/")
-    related_document = models.ForeignKey("Document", on_delete=models.PROTECT)
+    related_document = models.ForeignKey(
+        "Document",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="attached_images",
+    )
     image_type = models.CharField(
         max_length=255,
         blank=True,
@@ -210,7 +216,7 @@ class Images(models.Model):
     )
 
     def __str__(self):
-        return f"{self.document} - {self.image}"
+        return f"{self.related_document} - {self.image}"
 
 
 class Document(ImportExportMixin, models.Model):
@@ -252,11 +258,11 @@ class Document(ImportExportMixin, models.Model):
         help_text="Page or page range of the document.",
     )
     tags = TaggableManager(blank=True)
-    item_file = models.ManyToManyField(
-        Images,
-        blank=True,
-        verbose_name="Image",
-    )
+    # item_file = models.ManyToManyField(
+    #     Image,
+    #     blank=True,
+    #     verbose_name="Image",
+    # )
     notes = models.TextField(
         blank=True,
         verbose_name="Internal notes",

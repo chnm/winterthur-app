@@ -205,7 +205,7 @@ class Image(models.Model):
         "Document",
         blank=True,
         null=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name="attached_images",
     )
     image_type = models.CharField(

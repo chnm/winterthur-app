@@ -12,7 +12,7 @@ from import_export.widgets import ForeignKeyWidget
 
 from footnotes.models import Footnote
 
-from .models import Collection, Document, Fragment, Language, MusicScore
+from .models import Collection, Document, Fragment, Image, Language, MusicScore
 
 admin.site.register(Collection)
 admin.site.register(Language)
@@ -67,6 +67,11 @@ class FragmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 
 admin.site.register(Fragment, FragmentAdmin)
+
+
+class ImagesInline(admin.StackedInline):
+    model = Image
+    extra = 0
 
 
 class DocumentForm(forms.ModelForm):
@@ -166,5 +171,5 @@ class FragmentInline(admin.StackedInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-DocumentAdmin.inlines = [FragmentInline]
+DocumentAdmin.inlines = [FragmentInline, ImagesInline]
 admin.site.register(Document, DocumentAdmin)

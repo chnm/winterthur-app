@@ -14,22 +14,26 @@
                         <li class="col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200">
                             <div class="flex-1 flex flex-col p-8">
                                 <dl class="mt-1 flex-grow flex flex-col justify-between">
-                                    <!-- display file if available -->
-                                    {% if document.item_file %}
+                        {# display a file if available #}
+                                    {% if document.attached_images %}
                                         <dt class="sr-only">File</dt>
                                         <dd class="text-gray-500 text-sm">
-                                            <img src="{{ document.item_file.url }}" alt="" />
+                            <!-- <img src="{{ document.item_file.url }}" alt="" /> -->
+                                            {% if document.attached_images.all %}
+                                                <ul>
+                                                    {% for image in document.attached_images.all %}
+                                                        <li>
+                                                            <a href="{% url 'manuscript_page' document.id %}"><img src="{{ image.image.url }}"
+                                                                                                                   alt="Document Image"></a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                            <!-- Handle case where no images are attached -->
+                                                <p>No images available</p>
+                                            {% endif %}
                                         </dd>
                                     {% endif %}
-                                    <dt class="sr-only">Description</dt>
-                                    <dd class="text-gray-500 text-sm">
-                                        <a class="underline text-gray-900 hover:text-gray-600 truncate w-full block mb-2"
-                                            href="{% url 'manuscript_page' document.id %}">{{ document.description }}</a>
-                                    </dd>
-                                    <dt class="sr-only">Document type</dt>
-                                    <dd class="mt-3">
-                                        <span class="px-2 py-1 text-green-800 text-xs font-medium bg-green-100 rounded-full">{{ document.doctype }}</span>
-                                    </dd>
                                 </dl>
                             </div>
                         </li>

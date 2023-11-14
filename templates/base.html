@@ -14,6 +14,8 @@
         <meta property="og:description" content="{{ meta_description|escape }}" />
         <meta property="og:url" content="{{ request.build_absolute_uri }}" />
 
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+
         <script type="text/javascript" src="/static/openseadragon/openseadragon.min.js"></script>
 
 
@@ -80,7 +82,7 @@
                 </div>
             </div>
         </nav>
-        {% block content %}{% endblock %}
+        {% block content %}{% endblock content %}
 
     <!-- footer -->
         <footer class="bg-gradient-to-r from-winterthur-dker-blue to-winterthur-dk-blue">

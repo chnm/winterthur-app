@@ -6,37 +6,12 @@ from django.db import models
 from django.forms.widgets import HiddenInput, Textarea, TextInput
 from django.urls import reverse
 from django.utils.html import format_html
-from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget
 
+from denig.resources import DocumentResource, FragmentResource
 from footnotes.models import Footnote
 
 from .models import Collection, Document, Fragment, Image, Language, MusicScore
-
-admin.site.register(Collection)
-admin.site.register(Language)
-admin.site.register(MusicScore)
-
-"""
-Setup export resource classes
-"""
-
-
-class DocumentResource(resources.ModelResource):
-    class Meta:
-        model = Document
-
-
-class FragmentResource(resources.ModelResource):
-    document = fields.Field(
-        column_name="document",
-        attribute="document",
-        widget=ForeignKeyWidget(Document, "id"),
-    )
-
-    class Meta:
-        model = Fragment
 
 
 # Overrides for admin widgets
@@ -59,14 +34,17 @@ class CustomAdminFileWidget(AdminFileWidget):
 
 # Setup admin classes
 class FragmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ("__str__", "line_number", "document", "last_modified")
+    list_display = ("__str__", "line_number", "link_to_document", "last_modified")
     list_filter = ("document", "languages")
     search_fields = ("transcription", "notes")
 
     resource_classes = [FragmentResource]
 
+    def link_to_document(self, obj):
+        url = reverse("admin:denig_document_change", args=[obj.document.id])
+        return format_html('<a href="{}">{}</a>', url, obj.document)
 
-admin.site.register(Fragment, FragmentAdmin)
+    link_to_document.short_description = "Document"
 
 
 class ImagesInline(admin.StackedInline):
@@ -172,4 +150,11 @@ class FragmentInline(admin.StackedInline):
 
 
 DocumentAdmin.inlines = [FragmentInline, ImagesInline]
+
+
+# Register
+admin.site.register(Fragment, FragmentAdmin)
 admin.site.register(Document, DocumentAdmin)
+admin.site.register(Collection)
+admin.site.register(Language)
+admin.site.register(MusicScore)

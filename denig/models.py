@@ -237,7 +237,8 @@ class Document(ImportExportMixin, models.Model):
     )
 
     id = models.AutoField(editable=False, primary_key=True)
-    description = models.TextField(blank=True)
+    document_id = models.CharField(max_length=255, unique=True, blank=False, null=True)
+    description = models.TextField(blank=True, null=True)
     docside = models.CharField(
         max_length=255,
         blank=True,
@@ -260,6 +261,7 @@ class Document(ImportExportMixin, models.Model):
     tags = TaggableManager(blank=True)
     notes = models.TextField(
         blank=True,
+        null=True,
         verbose_name="Internal notes",
         help_text="Internal notes about the item. These are not public.",
     )

@@ -26,6 +26,7 @@ django-allauth = "^0.54.0"
 django-dbml = "^0.6.0"
 django-prose = "^1.2.2"
 psycopg2 = "^2.9.9"
+pandas = "^2.2.0"
 
 
 [tool.poetry.group.dev.dependencies]

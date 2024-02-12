@@ -76,15 +76,12 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     readonly_fields = (
         "created",
         "last_modified",
-        # "admin_thumbnails",
         "id",
     )
     search_fields = (
-        "fragments",
-        "tags__name",
+        "fragment__transcription",
         "description",
         "notes",
-        "id",
     )
     list_filter = (
         "docside",

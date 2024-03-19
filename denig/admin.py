@@ -50,6 +50,24 @@ class FragmentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class ImagesInline(admin.StackedInline):
     model = Image
     extra = 0
+    readonly_fields = ("image_preview",)
+
+
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ("id", "image_thumbnail")
+
+    list_per_page = 10
+
+    def image_thumbnail(self, obj):
+        return format_html('<img src="{}" width="50" height="50" />', obj.image.url)
+
+    image_thumbnail.short_description = "Image Thumbnail"
+
+    # def url_to_object(self, obj):
+    #     url = reverse("admin:documents_object_change", args=[obj.related_document.id])
+    #     return format_html('<a href="{}">{}</a>', url, obj.related_document.item_id)
+
+    # url_to_object.short_description = "View the page associated with this image"
 
 
 class DocumentForm(forms.ModelForm):
@@ -67,6 +85,7 @@ class DocumentForm(forms.ModelForm):
 class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = DocumentForm
     list_display = (
+        "document_id",
         "docside",
         "page_range",
         "doctype",
@@ -155,3 +174,4 @@ admin.site.register(Document, DocumentAdmin)
 admin.site.register(Collection)
 admin.site.register(Language)
 admin.site.register(MusicScore)
+admin.site.register(Image, ImageAdmin)

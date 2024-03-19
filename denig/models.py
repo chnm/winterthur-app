@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models.functions.text import Lower
 from django.templatetags.static import static
 from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
@@ -184,7 +185,7 @@ class DocumentType(models.Model):
         return (self.name,)
 
     @cached_property
-    def object_by_label(cls):
+    def object_by_label(self, cls):
         return {
             (docside.display_labels or docside.name): docside
             for docside in cls.objects.all()
@@ -217,6 +218,14 @@ class Image(models.Model):
 
     def __str__(self):
         return f"{self.related_document} - {self.image}"
+
+    def image_preview(self):
+        if self.image:
+            return mark_safe(
+                '<img src="%s" style="width:100px; height:100px;" />' % self.image.url
+            )
+        else:
+            return "No image attached"
 
 
 class Document(ImportExportMixin, models.Model):

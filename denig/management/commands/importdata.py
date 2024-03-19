@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from taggit.models import Tag
 
 from denig.models import Document, Fragment, Language
 
@@ -35,26 +36,35 @@ class Command(BaseCommand):
     def load_data(self, file_path, sheet_name=None):
         document_df = pd.read_excel(file_path, sheet_name="Documents")
         for index, row in document_df.iterrows():
-            Document.objects.create(
+            document = Document.objects.create(
                 description=row["description"],
                 document_id=row["item_image_name"],
                 docside=row["docside"],
                 doctype=row["doctype"],
                 page_range=row["page_range"],
-                tags=row["tags"],
                 notes=row["notes"],
             )
 
-        fragment_df = pd.read_excel(file_path, sheet_name="Fragments")
-        for index, row in fragment_df.iterrows():
-            document = Document.objects.get(document_id=row["item_image_name"])
-            fragment = Fragment.objects.create(
-                document=document,
-                line_number=row["line_number"],
-                transcription=row["transcription"],
-                notes=row["notes"],
-            )
-            languages = Language.objects.filter(
-                display_name__in=row["languages"].split(",")
-            )
-            fragment.languages.set(languages)
+            tags = row["tags"]
+            if pd.notna(tags):
+                tags = tags.split(",")
+                tags = [tag.strip() for tag in tags]
+            else:
+                tags = []
+            for tag_name in tags:
+                tag, created = Tag.objects.get_or_create(name=tag_name)
+                document.tags.add(tag)
+
+        # fragment_df = pd.read_excel(file_path, sheet_name="Fragments")
+        # for index, row in fragment_df.iterrows():
+        #     document = Document.objects.get(document_id=row["item_image_name"])
+        #     fragment = Fragment.objects.create(
+        #         document=document,
+        #         line_number=row["line_number"],
+        #         transcription=row["transcription"],
+        #         notes=row["notes"],
+        #     )
+        #     languages = Language.objects.filter(
+        #         display_name__in=row["languages"].split(",")
+        #     )
+        #     fragment.languages.set(languages)

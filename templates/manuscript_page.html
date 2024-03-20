@@ -77,14 +77,31 @@
                     </script>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="mt-4">
-                <h3 class="text-2xl pb-4 mb-4">Metadata</h3>
-                <ul>
-                    <li><strong>Document type</strong>: {{ manuscript_page.doctype }}</li>
-                    <li>Metadata 2</li>
-                </ul>
-            </div>
+    <div class="font-sans mt-4 bg-amber-50">
+        <div class="p-10 ml-10 mr-10">
+            <h3 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Document Details</h3>
+            <ul>
+                <li><strong>Description</strong>: {{ manuscript_page.description }}</li>
+                <li><strong>Document type</strong>: {{ manuscript_page.doctype }}</li>
+                <li><strong>Document side</strong>: {{ manuscript_page.docside }}</li>
+                <li><strong>Page range</strong>: {{ manuscript_page.page_range }}</li>
+                <li><strong>Page tagged with</strong>:
+                    {% for tag in manuscript_page.tags.all %}
+                        <span class="text-winterthur-dk-blue">{{ tag.name }}</span>
+                    {% endfor %}
+                </li>
+            </ul>
+
+            <p class="mt-4">
+                Last updated: {{ manuscript_page.last_modified | date:"Y-m-d" }}
+            </p>
+
+            <p class="mt-4">
+                <a href="{% url 'manuscript' %}" class="text-winterthur-dk-blue hover:underline">Back to Manuscript</a>
+            </p>
         </div>
     </div>
 {% endblock content %}

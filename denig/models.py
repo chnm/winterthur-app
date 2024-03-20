@@ -267,7 +267,7 @@ class Document(ImportExportMixin, models.Model):
         verbose_name="Page",
         help_text="Page or page range of the document.",
     )
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager(blank=True, related_name="document_tags")
     notes = models.TextField(
         blank=True,
         null=True,

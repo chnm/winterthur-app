@@ -40,6 +40,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail",
     "taggit",
     "taggit_selectize",
     "tailwind",
@@ -47,8 +58,8 @@ INSTALLED_APPS = [
     "import_export",
     "common.apps.CommonConfig",
     "pages.apps.PagesConfig",
-    "denig.apps.DenigConfig",
-    "essays.apps.EssaysConfig",
+    "denig",
+    "essays",
     "footnotes.apps.FootnotesConfig",
 ]
 
@@ -60,6 +71,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
@@ -141,6 +153,8 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+WAGTAILADMIN_BASE_URL = "localhost:8000"
+WAGTAIL_SITE_NAME = "Denig Essays"
 TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
 TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
 

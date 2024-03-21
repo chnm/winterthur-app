@@ -21,7 +21,24 @@ class EssayPage(Page):
     date = models.DateField("Post date")
     author = models.CharField(max_length=250)
     intro = models.CharField(max_length=250)
-    body = RichTextField(blank=True)
+    body = RichTextField(
+        blank=True,
+        features=[
+            "h2",
+            "h3",
+            "h4",
+            "bold",
+            "italic",
+            "ol",
+            "ul",
+            "link",
+            "document-link",
+            "blockquote",
+            "image",
+            "embed",
+            "hr",
+        ],
+    )
     author_bio = RichTextField(blank=True)
 
     search_fields = Page.search_fields + [

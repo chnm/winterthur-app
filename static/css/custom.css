@@ -3,3 +3,8 @@
     position: relative;
     overflow: hidden;
 }
+
+.prose details,
+.prose summary {
+    margin: 0;
+}

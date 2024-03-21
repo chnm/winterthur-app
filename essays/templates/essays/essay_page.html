@@ -2,20 +2,44 @@
 
 {% load wagtailcore_tags %}
 
-{% block body_class %}essay-page{% endblock %}
+{% block body_class %}essay-page top{% endblock %}
 
 {% block content %}
-    <div class="prose relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    <div class="prose relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    <!-- <div class="prose relative w-2/3 mr-auto px-4 sm:px-6 lg:px-8 py-32"> -->
 
         <h1>{{ page.title }}</h1>
-        <p class="meta">{{ page.date }}</p>
-        <p class="author">{{ page.author }}</p>
+        <div class="pb-3">
+            <details>
+                <summary class="author">{{ page.author }}</summary>
+                <span>{{ page.author_bio|richtext }}</span>
+                <p><a href="#essay-info" class="text-sm">Jump to essay information</a></p>
+            </details>
+        </div>
 
-        <div class="intro">{{ page.intro }}</div>
+        <div class="intro text-xl">{{ page.intro }}</div>
 
         {{ page.body|richtext }}
 
-        <p><a href="{{ page.get_parent.url }}">Return to scholarship</a></p>
     </div>
+    <div class="font-sans mt-4 bg-amber-50">
+        <div class="p-10 ml-10 mr-10">
+            <h2 class="text-lg" id="essay-info">Essay Information</h2>
+            <p class="meta">Published on {{ page.date }}</p>
+            <p class="url">URL: <a href="{{ page.full_url }}">{{ page.full_url }}</a></p>
 
+            <hr class="mt-3 mb-3 border-black" />
+
+            <p class="citation">Cite this piece:</p>
+            <blockquote>
+                {{ page.author }}. "{{ page.title }}." <em>The Denig Manuscript Project</em>. {{ page.date }}.
+                {{page.full_url }}.
+            </blockquote>
+
+            <div class="flex justify-between">
+                <p class="mt-6">&larr; <a href="{{ page.get_parent.url }}">Return to scholarship</a></p>
+                <p class="return-top"><a href="#top">&uarr; Return to top</a></p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

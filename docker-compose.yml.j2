@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    ports:
+      - "{{ template.env.host_app_port }}:8000"
+    env_file: .env
+    command: >
+        sh -c "poetry run python3 manage.py wait_for_db &&
+               poetry run python3 manage.py migrate &&
+               poetry run python3 manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    env_file: .env
+    expose:
+      - "{{ template.env.host_db_port }}"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
+  dj-data:

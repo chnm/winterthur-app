@@ -58,7 +58,9 @@ class DocumentListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["document_list"] = Document.objects.all().order_by("document_id")
+        document_list = Document.objects.all().order_by("document_id")
+        context["document_list"] = document_list
+
         return context
 
     def get_absolute_url(self):
@@ -73,5 +75,32 @@ class DocumentDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Get the current document
+        current_document = self.object
+
+        # Get previous and next pages
+        try:
+            previous_page = (
+                Document.objects.filter(document_id__lt=current_document.document_id)
+                .order_by("-document_id")
+                .first()
+            )
+        except Document.DoesNotExist:
+            previous_page = None
+
+        try:
+            next_page = (
+                Document.objects.filter(document_id__gt=current_document.document_id)
+                .order_by("document_id")
+                .first()
+            )
+        except Document.DoesNotExist:
+            next_page = None
+
+        context["previous_page"] = previous_page
+        context["next_page"] = next_page
+        context["all_pages"] = Document.objects.all().order_by("document_id")
         context["fragments"] = self.object.fragment_set.order_by("line_number")
+
         return context

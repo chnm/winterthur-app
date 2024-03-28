@@ -23,38 +23,31 @@
                 Fermentum odio eu feugiat pretium nibh. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus.</p>
 
             {% if document_list %}
-                <ul class="grid grid-col-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <ul class="grid grid-cols-2 gap-4">
                     {% for document in document_list %}
-                        <li class="col-span-1 flex flex-col text-center bg-white">
-                            <div class="flex-1 flex flex-col p-1">
-                                <dl class="mt-1 flex-grow flex flex-col justify-between">
-                        {# display a file if available #}
-                                    <dt class="sr-only">File</dt>
-                                    <dd class="text-gray-500 text-sm">
-                                        {% if document.attached_images.all %}
-                                            <ul>
-                                                {% for image in document.attached_images.all %}
-                                                    <li>
-                                                        <a href="{% url 'manuscript_page' document.id %}"><img src="{{ image.image.url }}"
-                                                                                                               alt="Document Image" load="lazy"></a>
-                                                        <p class="prose-figcaption font-sans">
-                                                            page {{ document.page_range }} of {{document.docside}}
-                                                        </p>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% else %}
-                            {# Handle case where no images are attached #}
-                                            <p>No images available</p>
-                                        {% endif %}
-                                    </dd>
-                                </dl>
-                            </div>
+                        {% if forloop.first %}
+                            <li></li> {# Empty element for the left side #}
+                        {% endif %}
+                        <li class="flex space-x-4">
+                            {% if document.attached_images.all %}
+                                <ul>
+                                    {% for image in document.attached_images.all %}
+                                        <li>
+                                            <a href="{% url 'manuscript_page' document.id %}"><img src="{{ image.image.url }}"
+                                                                                                   alt="Document Image" load="lazy"></a>
+                                            <p class="prose-figcaption font-sans">
+                                                page {{ document.page_range }} of {{document.docside}}
+                                            </p>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                {# Handle case where no images are attached #}
+                                <p>No images available</p>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>
-            {% else %}
-                <p>No documents are available.</p>
             {% endif %}
         </div>
     </div>

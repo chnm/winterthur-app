@@ -1,53 +1,114 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/denig.js' %}"></script>
+{% endblock extrahead %}
 
 {% block title %}
-    Manuscript
+    Manuscript page for {{ manuscript_page.page_range }} {{ manuscript_page.docside }}
 {% endblock title %}
 
-{% block extrahead %}{% endblock extrahead %}
-
 {% block content %}
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-
-        <h1 class="text-2xl pb-4 mb-4">
-            Viewing page {{ manuscript_page.page_range }} {{ manuscript_page.docside }}
-        </h1>
-
-        <div class="mt-12">
-
-            <div class="grid grid-cols-2 gap-0 mx-auto">
-                <div class="p-4 border">
-                    <h2 class="mb-2">English</h2>
-                    <hr class="w-full border-gray-300 mt-2 mb-2">
-                    {% for fragment in fragments %}
-                        {% for language in fragment.languages.all %}
-                            {% if language.display_name == 'English' %}
-                                <p>
-                                    <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                        {{ fragment.line_number }}
-                                    </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                </p>
-                            {% endif %}
-                        {% endfor %}
+    {% for image in manuscript_page.attached_images.all %}
+        <div class="w-full h-64 overflow-hidden shadow-inner relative">
+            <img class="w-full h-full object-cover" src="{{ image.image.url }}" alt="Manuscript Page Image" load="lazy">
+            <h1 class="text-2xl pb-4 mb-4 absolute bottom-0 left-0 p-4 bg-white bg-opacity-50">
+                Viewing page {{ manuscript_page.page_range }} {{ manuscript_page.docside }}
+            </h1>
+        </div>
+    {% endfor %}
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div class="flex justify-between items-center my-4 border-2 border-gray-200 p-4 rounded-lg">
+            {% if previous_page %}
+                <a href="{% url 'manuscript_page' previous_page.id %}">
+                    <img class="w-32 h-32 object-cover" src="{{ previous_page.attached_images.first.image.url }}"
+                         alt="Previous Page">
+                    <caption>Previous Page</caption>
+                </a>
+            {% endif %}
+            <div id="hamburger-menu" class="cursor-pointer relative">
+            <!-- SVG for hamburger menu icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                     class="h-6 w-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            <!-- Dropdown menu -->
+                <div id="dropdown-menu"
+                     class="hidden overflow-auto max-h-64 absolute left-1/2 transform -translate-x-1/2 w-64 bg-white border-2 border-gray-200 rounded-lg shadow-lg z-50">
+                    {% for page in all_pages %}
+                        <a href="{% url 'manuscript_page' page.id %}" class="flex items-center space-x-2 p-2 hover:bg-gray-100">
+                            <img class="w-32 h-32 object-cover" src="{{ page.attached_images.first.image.url }}"
+                                 alt="Page {{ page.page_range }}">
+                            <span>Page {{ page.page_range }}</span>
+                        </a>
                     {% endfor %}
                 </div>
-                <div class="p-4 border-r border-b border-t">
-                    <div x-data="{ activeTab: 'modernGerman' }">
-                        <div class="mb-2">
-                            <button class="tab-btn mr-14 hover:text-winterthur-dk-blue hover:underline"
-                                    :class="{ 'underline': activeTab === 'modernGerman', 'text-winterthur-dk-blue': activeTab === 'modernGerman' }"
-                                    x-on:click="activeTab = 'modernGerman'">
-                                German (modern)
-                            </button>
-                            <button class="tab-btn hover:text-winterthur-dk-blue hover:underline"
-                                    :class="{ 'underline': activeTab === 'oldGerman', 'text-winterthur-dk-blue': activeTab === 'oldGerman' }"
-                                    x-on:click="activeTab = 'oldGerman'">
-                                German (old)
-                            </button>
-                        </div>
+            </div>
+            {% if next_page %}
+                <a href="{% url 'manuscript_page' next_page.id %}">
+                    <img class="w-32 h-32 object-cover" src="{{ next_page.attached_images.first.image.url }}" alt="Next Page">
+                    <caption>Next Page</caption>
+                </a>
+            {% endif %}
+        </div>
 
-                        <hr class="w-full border-gray-300 mt-2 mb-2">
+        <div class="mt-12 grid grid-cols-3 gap-4">
+            <div class="col-span-2">
+                <div id="openseadragon_viewer" class="openseadragon">
+                    <script type="text/javascript">
+                        let viewer = OpenSeadragon({
+                            id: "openseadragon_viewer",
+                            prefixUrl: "/static/openseadragon/images/",
+                            tileSources: {
+                                type: "image",
+                                url: "{{ manuscript_page.attached_images.all.0.image.url }}",
+                            },
+                            defaultZoomLevel: 1,
+                            homeFillsViewer: false,
+                            visibilityRatio: 1,
+                        })
+                    </script>
+                </div>
+            </div>
+            <div class="col-span-1 grid gap-4">
+                <div class="row-span-1 p-4 border">
+                    <div class="mb-2">
+                        <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                              :class="{ 'underline': activeTab === 'english', 'text-winterthur-dk-blue': activeTab === 'english' }"
+                              x-on:click="activeTab = 'english'">
+                            English
+                        </span>
+                        <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                              :class="{ 'underline': activeTab === 'modernGerman', 'text-winterthur-dk-blue': activeTab === 'modernGerman' }"
+                              x-on:click="activeTab = 'modernGerman'">
+                            German (modern)
+                        </span>
+                        <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                              :class="{ 'underline': activeTab === 'oldGerman', 'text-winterthur-dk-blue': activeTab === 'oldGerman' }"
+                              x-on:click="activeTab = 'oldGerman'">
+                            German (old)
+                        </span>
+                    </div>
 
+                    <hr class="w-full border-gray-300 mt-2 mb-2">
+
+                    <div x-show="activeTab === 'english'">
+                        {% for fragment in fragments %}
+                            {% for language in fragment.languages.all %}
+                                {% if language.display_name == 'English' %}
+                                    <p>
+                                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                                            {{ fragment.line_number }}
+                                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+
+                    <div x-show="activeTab === 'modernGerman'">
                         {% for fragment in fragments %}
                             {% for language in fragment.languages.all %}
                                 {% if language.display_name == 'German (modern)' %}
@@ -60,21 +121,10 @@
                             {% endfor %}
                         {% endfor %}
                     </div>
-                </div>
-            </div>
 
-            <div class="mx-auto my-4 w-full border">
-                <div id="openseadragon_viewer" class="openseadragon">
-                    <script type="text/javascript">
-                        let viewer = OpenSeadragon({
-                            id: "openseadragon_viewer",
-                            prefixUrl: "/static/openseadragon/images/",
-                            tileSources: {
-                                type: "image",
-                                url: "{{ manuscript_page.attached_images.all.0.image.url }}",
-                            },
-                        })
-                    </script>
+                    <div x-show="activeTab === 'oldGerman'">
+                    <!-- Add your German (old) fragments here -->
+                    </div>
                 </div>
             </div>
         </div>

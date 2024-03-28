@@ -3,21 +3,27 @@ version: '3.9'
 services:
   app:
     build: .
+    image: "rrchnm/winterthur"
+    container_name: "winterthur-app"
     ports:
       - 8000:8000
-    env_file: .env
     command: >
-        sh -c "poetry run python3 manage.py wait_for_db &&
-               poetry run python3 manage.py migrate &&
+        sh -c "poetry run python3 manage.py migrate &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     depends_on:
-      - db
-
+      db:
+        condition: service_healthy
   db:
-    image: postgres:16
+    image: postgres:12
+    container_name: "winterthur-db"
+    env_file: .env
     volumes:
       - pg-data:/var/lib/postgresql/data
-    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U winterthur"]
+      interval: 2s
+      timeout: 5s
+      retries: 3
 
 volumes:
   pg-data:

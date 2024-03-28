@@ -22,6 +22,7 @@
 
         {% tailwind_css %}
         <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+        {% block extrahead %}{% endblock extrahead %}
     </head>
 
     <body class="font-serif">

@@ -1,24 +1,24 @@
 - model: denig.language
   pk: 1
   fields:
-    language: "English"
-    display_name: "English"
-    iso_code: "en"
+      language: "English"
+      display_name: "English"
+      iso_code: "en"
 - model: denig.language
   pk: 2
   fields:
-    language: "German (modern)"
-    display_name: "German (modern)"
-    iso_code: "de"
+      language: "German (modern)"
+      display_name: "German (modern)"
+      iso_code: "de"
 - model: denig.language
   pk: 3
   fields:
-    language: "German (old)"
-    display_name: "German (old)"
-    iso_code: "gmh"
-- model: deig.language
+      language: "German (old)"
+      display_name: "German (old)"
+      iso_code: "gmh"
+- model: denig.language
   pk: 4
   fields:
-    language: "Marginalia"
-    display_name: "Marginalia"
-    iso_code: "marg"
+      language: "Marginalia"
+      display_name: "Marginalia"
+      iso_code: "marg"

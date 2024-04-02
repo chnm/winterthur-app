@@ -6,16 +6,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+env = environ.Env()
+READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=True)
+if READ_DOT_ENV_FILE:
+    # OS environment variables take precedence over variables from .env
+    env.read_env(str(BASE_DIR / ".env"))
+
 env = environ.FileAwareEnv(
     DEBUG=(bool, False),
 )
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+# GENERAL
+# ------------------------------------------------------------------------------
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("DJANGO_SECRET_KEY")
@@ -58,11 +62,11 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "import_export",
-    "common.apps.CommonConfig",
-    "pages.apps.PagesConfig",
+    "common",
+    "pages",
     "denig",
     "essays",
-    "footnotes.apps.FootnotesConfig",
+    "footnotes",
 ]
 
 MIDDLEWARE = [

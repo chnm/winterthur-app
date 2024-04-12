@@ -1,8 +1,6 @@
 # this is a Jinja2 template file used during the Ansible deployment
 # environment specific configuration can be found in our Ansble scripts
-
-version: '3.9'
-
+---
 services:
   app:
     build: .
@@ -13,9 +11,12 @@ services:
       - "{{ template.env.host_app_port }}:8000"
     command: >
         sh -c "poetry run python3 manage.py migrate &&
+               poetry run python3 manage.py tailwind install --no-input &&
+               poetry run python3 manage.py tailwind build --no-input &&
+               poetry run python3 manage.py collectstatic --no-input &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - dj-data:/app/media
+      - dj-data:/app/staticfiles
     depends_on:
       db:
         condition: service_healthy

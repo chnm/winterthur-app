@@ -1,14 +1,17 @@
-version: '3.9'
-
+---
 services:
   app:
     build: .
     image: "rrchnm/winterthur"
     container_name: "winterthur-app"
+    env_file: .env
     ports:
       - 8000:8000
     command: >
         sh -c "poetry run python3 manage.py migrate &&
+               poetry run python3 manage.py tailwind install --no-input &&
+               poetry run python3 manage.py tailwind build --no-input &&
+               poetry run python3 manage.py collectstatic --no-input &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     depends_on:
       db:

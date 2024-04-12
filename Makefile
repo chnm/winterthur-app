@@ -18,8 +18,8 @@ test :
 loadlanguages :
 	poetry run python manage.py loaddata languages.yaml
 
-loadcollections :
-	poetry run python manage.py loaddata collections.yaml
+loadcollection :
+	poetry run python manage.py loaddata collection.yaml
 
 loaddocument :
 	poetry run python manage.py importdata --filepath="/Spreadsheet_Sample_2024-02-08.xlsx" --sheetname="Documents"

@@ -98,8 +98,24 @@ class DocumentDetailView(generic.DetailView):
         except Document.DoesNotExist:
             next_page = None
 
+        # Get current page
+        try:
+            current_page = Document.objects.get(
+                document_id=current_document.document_id
+            )
+        except Document.DoesNotExist:
+            current_page = None
+
+        # Get the page number of the current document
+        try:
+            page_number = current_document.page_range.split("-")[0]
+        except AttributeError:
+            page_number = None
+
         context["previous_page"] = previous_page
         context["next_page"] = next_page
+        context["current_page"] = current_page
+        context["page_number"] = page_number
         context["all_pages"] = Document.objects.all().order_by("document_id")
         context["fragments"] = self.object.fragment_set.order_by("line_number")
 

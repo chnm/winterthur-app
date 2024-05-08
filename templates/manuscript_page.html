@@ -6,56 +6,22 @@
 {% endblock extrahead %}
 
 {% block title %}
-    Manuscript page for {{ manuscript_page.page_range }} {{ manuscript_page.docside }}
+    Denig Manuscript page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }})
 {% endblock title %}
 
 {% block content %}
     {% for image in manuscript_page.attached_images.all %}
-        <div class="w-full h-64 overflow-hidden shadow-inner relative">
-            <img class="w-full h-full object-cover" src="{{ image.image.url }}" alt="Manuscript Page Image" load="lazy">
-            <h1 class="text-2xl pb-4 mb-4 absolute bottom-0 left-0 p-4 bg-white bg-opacity-50">
-                Viewing page {{ manuscript_page.page_range }} {{ manuscript_page.docside }}
+        <div class="w-full h-16 overflow-hidden shadow-inner relative">
+            <img class="w-full h-full object-cover" src="{% static 'denig_signature.jpg' %}" alt="Manuscript Page Image"
+                 load="lazy">
+            <h1 class="text-2xl mb-4 absolute bottom-0 left-0 p-4 bg-white bg-opacity-50">
+                Viewing page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }})
             </h1>
         </div>
     {% endfor %}
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-        <div class="flex justify-between items-center my-4 border-2 border-gray-200 p-4 rounded-lg">
-            {% if previous_page %}
-                <a href="{% url 'manuscript_page' previous_page.id %}">
-                    <img class="w-32 h-32 object-cover" src="{{ previous_page.attached_images.first.image.url }}"
-                         alt="Previous Page">
-                    <caption>Previous Page</caption>
-                </a>
-            {% endif %}
-            <div id="hamburger-menu" class="cursor-pointer relative">
-            <!-- SVG for hamburger menu icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                     class="h-6 w-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
-                    </path>
-                </svg>
-            <!-- Dropdown menu -->
-                <div id="dropdown-menu"
-                     class="hidden overflow-auto max-h-64 absolute left-1/2 transform -translate-x-1/2 w-64 bg-white border-2 border-gray-200 rounded-lg shadow-lg z-50">
-                    {% for page in all_pages %}
-                        <a href="{% url 'manuscript_page' page.id %}" class="flex items-center space-x-2 p-2 hover:bg-gray-100">
-                            <img class="w-32 h-32 object-cover" src="{{ page.attached_images.first.image.url }}"
-                                 alt="Page {{ page.page_range }}">
-                            <span>Page {{ page.page_range }}</span>
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
-            {% if next_page %}
-                <a href="{% url 'manuscript_page' next_page.id %}">
-                    <img class="w-32 h-32 object-cover" src="{{ next_page.attached_images.first.image.url }}" alt="Next Page">
-                    <caption>Next Page</caption>
-                </a>
-            {% endif %}
-        </div>
-
-        <div class="mt-12 grid grid-cols-3 gap-4">
-            <div class="col-span-2">
+    <div class="relative max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div class="mt-12 grid grid-cols-4 gap-2">
+            <div class="col-span-3">
                 <div id="openseadragon_viewer" class="openseadragon">
                     <script type="text/javascript">
                         let viewer = OpenSeadragon({
@@ -71,60 +37,97 @@
                         })
                     </script>
                 </div>
+                {% if previous_page %}
+                    <a href="{% url 'manuscript_page' previous_page.id %}">
+                        <p>&larr; Previous Page</p>
+                    </a>
+                {% endif %}
+
             </div>
-            <div class="col-span-1 grid gap-4">
-                <div class="row-span-1 p-4 border">
-                    <div class="mb-2">
-                        <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                              :class="{ 'underline': activeTab === 'english', 'text-winterthur-dk-blue': activeTab === 'english' }"
-                              x-on:click="activeTab = 'english'">
-                            English
-                        </span>
-                        <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                              :class="{ 'underline': activeTab === 'modernGerman', 'text-winterthur-dk-blue': activeTab === 'modernGerman' }"
-                              x-on:click="activeTab = 'modernGerman'">
-                            German (modern)
-                        </span>
-                        <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                              :class="{ 'underline': activeTab === 'oldGerman', 'text-winterthur-dk-blue': activeTab === 'oldGerman' }"
-                              x-on:click="activeTab = 'oldGerman'">
-                            German (old)
-                        </span>
+            <div class="col-span-1 grid gap-2">
+
+                <div class="row-span-1 p-4">
+                    {% if next_page %}
+                        <a href="{% url 'manuscript_page' next_page.id %}">
+                            <img class="w-32 h-32 object-cover" src="{{ next_page.attached_images.first.image.url }}"
+                                 alt="Next Page">
+                            <caption>Next Page &rarr;</caption>
+                        </a>
+                    {% endif %}
+
+                    <div class="page-selector">
+                        <div class="relative">
+                            <div class="inline-block relative w-64">
+                                <div class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">
+                                    <span class="px-4 py-2">Viewing page</span>
+                                    <select onchange="location = this.value;" class="appearance-none bg-transparent py-2 pr-8 pl-2">
+                                        {% for page in all_pages %}
+                                            <option value="{% url 'manuscript_page' page.id %}" {% if page.id == current_page.id %}selected{% endif %}>
+                                                {{ page.page_range }} ({{page.docside}})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <hr class="w-full border-gray-300 mt-2 mb-2">
 
-                    <div x-show="activeTab === 'english'">
-                        {% for fragment in fragments %}
-                            {% for language in fragment.languages.all %}
-                                {% if language.display_name == 'English' %}
-                                    <p>
-                                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                            {{ fragment.line_number }}
-                                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                    </p>
-                                {% endif %}
-                            {% endfor %}
+        <div class="p-10 ml-10 mr-10">
+            <div class="row-span-1 p-4 border">
+                <div class="mb-2">
+                    <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                          :class="{ 'underline': activeTab === 'english', 'text-winterthur-dk-blue': activeTab === 'english' }"
+                          x-on:click="activeTab = 'english'">
+                        English
+                    </span>
+                    <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                          :class="{ 'underline': activeTab === 'modernGerman', 'text-winterthur-dk-blue': activeTab === 'modernGerman' }"
+                          x-on:click="activeTab = 'modernGerman'">
+                        German (modern)
+                    </span>
+                    <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                          :class="{ 'underline': activeTab === 'oldGerman', 'text-winterthur-dk-blue': activeTab === 'oldGerman' }"
+                          x-on:click="activeTab = 'oldGerman'">
+                        German (old)
+                    </span>
+                </div>
+
+                <hr class="w-full border-gray-300 mt-2 mb-2">
+
+                <div x-show="activeTab === 'english'">
+                    {% for fragment in fragments %}
+                        {% for language in fragment.languages.all %}
+                            {% if language.display_name == 'English' %}
+                                <p>
+                                    <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                                        {{ fragment.line_number }}
+                                    </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                </p>
+                            {% endif %}
                         {% endfor %}
-                    </div>
+                    {% endfor %}
+                </div>
 
-                    <div x-show="activeTab === 'modernGerman'">
-                        {% for fragment in fragments %}
-                            {% for language in fragment.languages.all %}
-                                {% if language.display_name == 'German (modern)' %}
-                                    <p>
-                                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                            {{ fragment.line_number }}
-                                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                    </p>
-                                {% endif %}
-                            {% endfor %}
+                <div x-show="activeTab === 'modernGerman'">
+                    {% for fragment in fragments %}
+                        {% for language in fragment.languages.all %}
+                            {% if language.display_name == 'German (modern)' %}
+                                <p>
+                                    <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                                        {{ fragment.line_number }}
+                                    </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                </p>
+                            {% endif %}
                         {% endfor %}
-                    </div>
+                    {% endfor %}
+                </div>
 
-                    <div x-show="activeTab === 'oldGerman'">
-                    <!-- Add your German (old) fragments here -->
-                    </div>
+                <div x-show="activeTab === 'oldGerman'">
+                <!-- Add your German (old) fragments here -->
                 </div>
             </div>
         </div>
@@ -155,7 +158,8 @@
 
             <hr class="mt-3 mb-3" />
             <h2 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Cite this page</h2>
-            <p><em>The Denig Manuscript</em>, Winterthur Museum, Garden & Library and the Roy Rosenzweig Center for History
+            <p><em>The Denig Manuscript</em>, Winterthur Museum, Garden & Library and the Roy Rosenzweig Center for
+                History
                 and New Media (2024--): p. {{ manuscript_page.page_range }}. <a href="{% url 'manuscript' %}"
                                                                                 class="text-winterthur-dk-blue hover:underline">https://denig.rrchnm.org/manuscript/{{manuscript_page.id}}</a>
             </p>

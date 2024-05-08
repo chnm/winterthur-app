@@ -48,9 +48,16 @@ RUN node -v && npm -v
 
 RUN npm install
 
-ENV TAILWIND_CSS_PATH='../../static/css/dist/styles.css'
-RUN poetry run python3 manage.py tailwind install --no-input
-RUN poetry run python3 manage.py tailwind build --no-input
-RUN poetry run python3 manage.py collectstatic --no-input
+#ENV TAILWIND_CSS_PATH='../../static/css/dist/styles.css'
+#RUN poetry run python3 manage.py tailwind install --no-input
+#RUN poetry run python3 manage.py tailwind build --no-input
+#RUN poetry run python3 manage.py collectstatic --no-input
 
-CMD poetry run python3 manage.py runserver 0.0.0.0:8000
+#CMD poetry run python3 manage.py runserver 0.0.0.0:8000
+
+CMD bash -c " \
+        poetry run python3 manage.py tailwind install --no-input && \
+        poetry run python3 manage.py tailwind build --no-input && \
+        poetry run python3 manage.py collectstatic --no-input && \
+        poetry run python3 manage.py runserver 0.0.0.0:8000 \
+    "

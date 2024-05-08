@@ -1,26 +1,29 @@
 # this is a Jinja2 template file used during the Ansible deployment
 # environment specific configuration can be found in our Ansble scripts
-
-version: '3.9'
-
+---
 services:
   app:
     build: .
     image: "rrchnm/winterthur"
     container_name: "winterthur-app"
+    env_file: .env
     ports:
       - "{{ template.env.host_app_port }}:8000"
     command: >
         sh -c "poetry run python3 manage.py migrate &&
+               poetry run python3 manage.py tailwind install --no-input &&
+               poetry run python3 manage.py tailwind build --no-input &&
+               poetry run python3 manage.py collectstatic --no-input &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - dj-data:/app/media
+      - dj-data:/app/staticfiles
     depends_on:
       db:
         condition: service_healthy
   db:
     image: postgres:12
     container_name: "winterthur-db"
+    env_file: .env
     volumes:
       - pg-data:/var/lib/postgresql/data/
     healthcheck:
@@ -32,8 +35,8 @@ services:
 # external volumes managed and defined by ansible
 volumes:
   dj-data:
-    name: "winterthur-app-vol"
+    name: "winterthur_app-vol"
     external: true
   pg-data:
-    name: "winterthur-db-vol"
+    name: "winterthur_db-vol"
     external: true

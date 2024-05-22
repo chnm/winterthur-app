@@ -36,7 +36,7 @@
                                             <a href="{% url 'manuscript_page' document.id %}"><img src="{{ image.image.url }}"
                                                                                                    alt="Document Image" load="lazy"></a>
                                             <p class="prose-figcaption font-sans">
-                                                page {{ document.page_range }} of {{document.docside}}
+                                                Page {{ document.page_range }} ({{document.docside}})
                                             </p>
                                         </li>
                                     {% endfor %}

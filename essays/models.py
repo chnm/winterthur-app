@@ -41,6 +41,9 @@ class EssayPage(Page):
     )
     author_bio = RichTextField(blank=True)
 
+    doi = RichTextField(blank=True)
+    doi_url = RichTextField(blank=True)
+
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
         index.SearchField("author"),
@@ -50,9 +53,11 @@ class EssayPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel("date"),
         FieldPanel("author"),
+        FieldPanel("author_bio"),
+        FieldPanel("doi"),
+        FieldPanel("doi_url"),
         FieldPanel("intro"),
         FieldPanel("body"),
-        FieldPanel("author_bio"),
     ]
 
 

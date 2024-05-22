@@ -6,6 +6,7 @@ services:
     build: .
     image: "rrchnm/winterthur"
     container_name: "winterthur-app"
+    restart: unless-stopped
     env_file: .env
     ports:
       - "{{ template.env.host_app_port }}:8000"
@@ -23,6 +24,7 @@ services:
   db:
     image: postgres:12
     container_name: "winterthur-db"
+    restart: unless-stopped
     env_file: .env
     volumes:
       - pg-data:/var/lib/postgresql/data/

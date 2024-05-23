@@ -1,0 +1,23 @@
+name: "Build and Publish Docker Image"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "**"
+
+jobs:
+  workflow:
+    uses: chnm/.github/.github/workflows/django--build-publish.yml@main
+    secrets: inherit
+    with:
+
+      container-registry: "ghcr.io"
+      container-image-name: "winterthur"
+      
+      django-context-root: "."
+
+      website-devl-fqdn: "dev.winterthur.rrchnm.org"
+      website-prod-fqdn: "dev.winterthur.rrchnm.org"

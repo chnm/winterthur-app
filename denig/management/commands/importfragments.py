@@ -34,37 +34,14 @@ class Command(BaseCommand):
             )
 
     def load_data(self, file_path, sheet_name=None):
-        # fragment_df = pd.read_excel(file_path, sheet_name="Fragments")
-        wb = load_workbook(filename=file_path, read_only=True)
-        ws = wb[sheet_name]
-
-        # If there is italic text in the cell, we need to wrap it in <em> tags
-        for row in ws.iter_rows():
-            for cell in row:
-                if cell.is_date:
-                    continue
-                try:
-                    if cell.has_style and cell.font.italic:
-                        cell.value = f"<em>{cell.value}</em>"
-                    elif cell.value and "richText" in cell.data_type:
-                        new_value = ""
-                        for rt in cell.value.r:
-                            if "italic" in rt.font.name:
-                                new_value += f"<em>{rt.text}</em>"
-                            else:
-                                new_value += rt.text
-                        cell.value = new_value
-                except IllegalCharacterError:
-                    pass
-
-        # Process the data
-        for index, row in ws.rows:
+        fragment_df = pd.read_excel(file_path, sheet_name=sheet_name)
+        for index, row in fragment_df.iterrows():
             try:
-                document = Document.objects.get(document_id=row["item_image_name"])
+                document = Document.objects.get(document_id=row["item_file_name"])
             except Document.DoesNotExist:
                 self.stdout.write(
                     self.style.ERROR(
-                        f"Document {row['item_image_name']} does not exist."
+                        f"Document {row['item_file_name']} does not exist."
                     )
                 )
                 continue

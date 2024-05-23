@@ -3,9 +3,8 @@
 ---
 services:
   app:
-    build: .
-    image: "rrchnm/winterthur"
-    container_name: "winterthur-app"
+    image: ghcr.io/{{ template.git.package.image_name }}:{{ template.git.package.tag }}
+    container_name: {{ template.name }}_app
     restart: unless-stopped
     env_file: .env
     ports:
@@ -17,13 +16,14 @@ services:
                poetry run python3 manage.py collectstatic --no-input &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - dj-data:/app/staticfiles
+      - dj-static:/app/staticfiles
+      - dj-media:/app/media
     depends_on:
       db:
         condition: service_healthy
   db:
     image: postgres:12
-    container_name: "winterthur-db"
+    container_name: {{ template.name }}_db
     restart: unless-stopped
     env_file: .env
     volumes:
@@ -36,9 +36,12 @@ services:
 
 # external volumes managed and defined by ansible
 volumes:
-  dj-data:
-    name: "winterthur_app-vol"
+  dj-static:
+    name: "{{ template.name }}_app-static-vol"
+    external: true
+  dj-media:
+    name: "{{ template.name }}_app-media-vol"
     external: true
   pg-data:
-    name: "winterthur_db-vol"
+    name: "{{ template.name }}_db-vol"
     external: true

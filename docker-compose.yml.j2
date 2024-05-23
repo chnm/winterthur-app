@@ -16,7 +16,8 @@ services:
                poetry run python3 manage.py collectstatic --no-input &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - dj-data:/app/staticfiles
+      - dj-static:/app/staticfiles
+      - dj-media:/app/media
     depends_on:
       db:
         condition: service_healthy
@@ -35,8 +36,11 @@ services:
 
 # external volumes managed and defined by ansible
 volumes:
-  dj-data:
-    name: "{{ template.name }}_app-vol"
+  dj-static:
+    name: "{{ template.name }}_app-static-vol"
+    external: true
+  dj-media:
+    name: "{{ template.name }}_app-media-vol"
     external: true
   pg-data:
     name: "{{ template.name }}_db-vol"

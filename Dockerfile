@@ -46,7 +46,12 @@ RUN ln -s /root/.volta/bin/volta-shim /root/.volta/bin/yarn
 RUN node -v && npm -v
 RUN npm install
 
+# generate front end assets
 RUN poetry run python manage.py tailwind install
 RUN poetry run python manage.py tailwind build
 RUN poetry run python manage.py collectstatic --no-input
 
+# clean up
+RUN rm -rf /root/.volta
+RUN rm -rf /app/node_modules
+RUN rm -rf /app/static/*

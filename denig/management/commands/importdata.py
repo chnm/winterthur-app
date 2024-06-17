@@ -39,8 +39,8 @@ class Command(BaseCommand):
             document = Document.objects.create(
                 description=row["description"],
                 document_id=row["item_image_name"],
-                docside=row["docside"],
-                doctype=row["doctype"],
+                docside=row["document_side"],
+                doctype=row["document_type"],
                 page_range=row["page_range"],
                 notes=row["notes"],
             )

@@ -41,8 +41,6 @@ pytest-django = "^4.5.2"
 django-extensions = "^3.2.1"
 django-coverage-plugin = "^3.0.0"
 pylint-django = "^2.5.3"
-sphinx = "^7.0.0"
-sphinx-autobuild = "^2021.3.14"
 pytest-sugar = "^0.9.7"
 
 

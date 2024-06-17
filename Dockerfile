@@ -15,8 +15,10 @@ ENV PYTHONUNBUFFERED 1
 # Set working directory
 WORKDIR /app
 
+# Copy project
+COPY . /app/
+
 # Install dependencies with Poetry
-COPY poetry.lock pyproject.toml /app/
 RUN pip3 install poetry
 
 RUN poetry config virtualenvs.create false
@@ -40,24 +42,16 @@ RUN ln -s /root/.volta/bin/volta-shim /root/.volta/bin/npx
 RUN ln -s /root/.volta/bin/volta-shim /root/.volta/bin/pnpm 
 RUN ln -s /root/.volta/bin/volta-shim /root/.volta/bin/yarn
 
-# Copy project
-COPY . /app/
-
 # triggers node installation
 RUN node -v && npm -v
-
 RUN npm install
 
-#ENV TAILWIND_CSS_PATH='../../static/css/dist/styles.css'
-#RUN poetry run python3 manage.py tailwind install --no-input
-#RUN poetry run python3 manage.py tailwind build --no-input
-#RUN poetry run python3 manage.py collectstatic --no-input
+# generate front end assets
+RUN poetry run python manage.py tailwind install
+RUN poetry run python manage.py tailwind build
+RUN poetry run python manage.py collectstatic --no-input
 
-#CMD poetry run python3 manage.py runserver 0.0.0.0:8000
-
-CMD bash -c " \
-        poetry run python3 manage.py tailwind install --no-input && \
-        poetry run python3 manage.py tailwind build --no-input && \
-        poetry run python3 manage.py collectstatic --no-input && \
-        poetry run python3 manage.py runserver 0.0.0.0:8000 \
-    "
+# clean up
+RUN rm -rf /root/.volta
+RUN rm -rf /app/node_modules
+RUN rm -rf /app/static/*

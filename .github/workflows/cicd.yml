@@ -1,4 +1,4 @@
-name: "Build and Publish Docker Image"
+name: "Build and Publish, Deploy Docker Image"
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
       - "**"
 
 jobs:
-  workflow:
+  build-publish:
     uses: chnm/.github/.github/workflows/django--build-publish.yml@main
     secrets: inherit
     with:
@@ -19,5 +19,13 @@ jobs:
       
       django-context-root: "."
 
+      website-devl-fqdn: "dev.winterthur.rrchnm.org"
+      website-prod-fqdn: "dev.winterthur.rrchnm.org"
+      
+  deploy:
+    uses: chnm/.github/.github/workflows/django--deploy.yml@main
+    needs: [build-publish]
+    secrets: inherit
+    with:
       website-devl-fqdn: "dev.winterthur.rrchnm.org"
       website-prod-fqdn: "dev.winterthur.rrchnm.org"

@@ -4,24 +4,36 @@ services:
     build: .
     image: "rrchnm/winterthur"
     container_name: "winterthur-app"
-    env_file: .env
     ports:
       - 8000:8000
+    volumes:
+      - dj-data:/app
+    environment:
+      - DEBUG=True
+      - DJANGO_SECRET_KEY=thisisnotasecretkey
+      - DJANGO_ALLOWED_HOSTS=localhost
+      - DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=winterthur
+      - DB_USER=winterthur
+      - DB_PASSWORD=password
     command: >
         sh -c "poetry run python3 manage.py migrate &&
-               poetry run python3 manage.py tailwind install --no-input &&
-               poetry run python3 manage.py tailwind build --no-input &&
-               poetry run python3 manage.py collectstatic --no-input &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     depends_on:
       db:
         condition: service_healthy
   db:
-    image: postgres:12
+    image: postgres:16
     container_name: "winterthur-db"
-    env_file: .env
     volumes:
       - pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=winterthur
+      - POSTGRES_USER=winterthur
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U winterthur"]
       interval: 2s

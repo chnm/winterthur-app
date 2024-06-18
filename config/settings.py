@@ -22,13 +22,18 @@ env = environ.FileAwareEnv(
 # ------------------------------------------------------------------------------
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure cin)v(4&89%_$17s0yezo=t+^1b*mq)=+348r-bv(ms#pm2y2#")
+SECRET_KEY = env(
+    "DJANGO_SECRET_KEY",
+    default="django-insecure cin)v(4&89%_$17s0yezo=t+^1b*mq)=+348r-bv(ms#pm2y2#",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=['localhost'])
-CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=['http://localhost'])
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
+CSRF_TRUSTED_ORIGINS = env.list(
+    "DJANGO_CSRF_TRUSTED_ORIGINS", default=["http://localhost"]
+)
 
 
 # Application definition
@@ -46,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -155,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 USE_TZ = True
@@ -166,6 +172,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+# Wagtail configuration
 WAGTAILADMIN_BASE_URL = "localhost:8000"
 WAGTAIL_SITE_NAME = "Denig Essays"
 TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
@@ -173,16 +180,18 @@ TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
-
-# Extra places for collectstatic to find static files.
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+}
+STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+MEDIA_URL = "http://192.168.0.191:9000/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

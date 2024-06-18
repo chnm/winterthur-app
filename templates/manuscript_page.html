@@ -10,15 +10,6 @@
 {% endblock title %}
 
 {% block content %}
-    {% for image in manuscript_page.attached_images.all %}
-        <div class="w-full h-16 overflow-hidden shadow-inner relative">
-            <img class="w-full h-full object-cover" src="{% static 'denig_signature.jpg' %}" alt="Manuscript Page Image"
-                 load="lazy">
-            <h1 class="text-2xl mb-4 absolute bottom-0 left-0 p-4 bg-white bg-opacity-50">
-                Viewing page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }})
-            </h1>
-        </div>
-    {% endfor %}
     <div class="relative max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div class="mt-12 grid grid-cols-4 gap-2">
             <div class="col-span-3">
@@ -39,7 +30,7 @@
                 </div>
                 {% if previous_page %}
                     <a href="{% url 'manuscript_page' previous_page.id %}">
-                        <p>&larr; Previous Page</p>
+                        <p>&larr; Previous Page &middot; viewing page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }}) </p>
                     </a>
                 {% endif %}
 
@@ -57,9 +48,8 @@
 
                     <div class="page-selector">
                         <div class="relative">
-                            <div class="inline-block relative w-64">
+                            <div class="inline-block relative">
                                 <div class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">
-                                    <span class="px-4 py-2">Viewing page</span>
                                     <select onchange="location = this.value;" class="appearance-none bg-transparent py-2 pr-8 pl-2">
                                         {% for page in all_pages %}
                                             <option value="{% url 'manuscript_page' page.id %}" {% if page.id == current_page.id %}selected{% endif %}>
@@ -71,6 +61,12 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="mt-4" id="transcription-jump">
+                        <a href="#transcription">
+                            <span class="underline hover:no-underline">
+                                Jump to transcription</span></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,56 +74,49 @@
 
         <div class="p-10 ml-10 mr-10">
             <div class="row-span-1 p-4 border">
-                <div class="mb-2">
-                    <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                          :class="{ 'underline': activeTab === 'english', 'text-winterthur-dk-blue': activeTab === 'english' }"
-                          x-on:click="activeTab = 'english'">
-                        English
-                    </span>
-                    <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                          :class="{ 'underline': activeTab === 'modernGerman', 'text-winterthur-dk-blue': activeTab === 'modernGerman' }"
-                          x-on:click="activeTab = 'modernGerman'">
-                        German (modern)
-                    </span>
-                    <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                          :class="{ 'underline': activeTab === 'oldGerman', 'text-winterthur-dk-blue': activeTab === 'oldGerman' }"
-                          x-on:click="activeTab = 'oldGerman'">
-                        German (old)
-                    </span>
-                </div>
+                <div x-data="{ tab: 'english' }">
+                    <div class="mb-2" id="transcription">
+                        <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                              x-bind:class="{ 'underline': tab === 'english', 'text-winterthur-dk-blue': tab === 'english' }"
+                              x-on:click="tab = 'english'">
+                            English
+                        </span>
+                        <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                              x-bind:class="{ 'underline': tab === 'german', 'text-winterthur-dk-blue': tab === 'german' }"
+                              x-on:click="tab = 'german'">
+                            German (old)
+                        </span>
+                    </div>
 
-                <hr class="w-full border-gray-300 mt-2 mb-2">
+                    <hr class="w-full border-gray-300 mt-2 mb-2">
 
-                <div x-show="activeTab === 'english'">
-                    {% for fragment in fragments %}
-                        {% for language in fragment.languages.all %}
-                            {% if language.display_name == 'English' %}
-                                <p>
-                                    <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                        {{ fragment.line_number }}
-                                    </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                </p>
-                            {% endif %}
+                    <div x-show="tab === 'english'">
+                        {% for fragment in fragments %}
+                            {% for language in fragment.languages.all %}
+                                {% if language.display_name == 'English' %}
+                                    <p>
+                                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                                            {{ fragment.line_number }}
+                                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </div>
+                    </div>
 
-                <div x-show="activeTab === 'modernGerman'">
-                    {% for fragment in fragments %}
-                        {% for language in fragment.languages.all %}
-                            {% if language.display_name == 'German (modern)' %}
-                                <p>
-                                    <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                        {{ fragment.line_number }}
-                                    </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                </p>
-                            {% endif %}
+                    <div x-show="tab === 'german'">
+                        {% for fragment in fragments %}
+                            {% for language in fragment.languages.all %}
+                                {% if language.display_name == 'German (old)' %}
+                                    <p>
+                                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                                            {{ fragment.line_number }}
+                                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </div>
-
-                <div x-show="activeTab === 'oldGerman'">
-                <!-- Add your German (old) fragments here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,10 +129,10 @@
                 <li><strong>Description</strong>: {{ manuscript_page.description }}</li>
                 <li><strong>Document type</strong>: {{ manuscript_page.doctype }}</li>
                 <li><strong>Document side</strong>: {{ manuscript_page.docside }}</li>
-                <li><strong>Page range</strong>: {{ manuscript_page.page_range }}</li>
+                <li><strong>Page</strong>: {{ manuscript_page.page_range }}</li>
                 <li><strong>Page tagged with</strong>:
                     {% for tag in manuscript_page.tags.all %}
-                        <span class="text-winterthur-dk-blue">{{ tag.name }}</span>
+                        <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-winterthur-dk-blue ring-1 ring-inset ring-blue-700/10">{{ tag.name }}</span>
                     {% endfor %}
                 </li>
             </ul>
@@ -153,7 +142,7 @@
             </p>
 
             <p class="mt-4">
-                <a href="{% url 'manuscript' %}" class="text-winterthur-dk-blue hover:underline">Back to Manuscript</a>
+                <a href="{% url 'manuscript' %}" class="text-winterthur-dk-blue hover:underline">Back to the Manuscript</a>
             </p>
 
             <hr class="mt-3 mb-3" />

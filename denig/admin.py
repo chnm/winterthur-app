@@ -89,6 +89,11 @@ class DocumentForm(forms.ModelForm):
         }
 
 
+@admin.action(description="Mark as Music Score")
+def mark_as_music_score(modeladmin, request, queryset):
+    queryset.update(doctype="music score")
+
+
 class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = DocumentForm
     list_display = (
@@ -114,6 +119,7 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         "doctype",
         "tags",
     )
+    actions = [mark_as_music_score]
 
     formfield_overrides = {models.FileField: {"widget": CustomAdminFileWidget}}
     resource_classes = [DocumentResource]

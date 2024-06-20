@@ -71,7 +71,12 @@ class DocumentListView(generic.ListView):
 class DocumentDetailView(generic.DetailView):
     model = Document
     context_object_name = "manuscript_page"
-    template_name = "manuscript_page.html"
+
+    def get_template_names(self):
+        if self.object.doctype == "music score":
+            return ["manuscript_musicscore.html"]
+        else:
+            return ["manuscript_page.html"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -98,6 +103,12 @@ class DocumentDetailView(generic.DetailView):
         except Document.DoesNotExist:
             next_page = None
 
+        # Calculate the id of the next page for music scores
+        if current_document.doctype == "music score" and next_page:
+            next_page_id = next_page.id + 1
+        else:
+            next_page_id = next_page.id if next_page else None
+
         # Get current page
         try:
             current_page = Document.objects.get(
@@ -114,9 +125,64 @@ class DocumentDetailView(generic.DetailView):
 
         context["previous_page"] = previous_page
         context["next_page"] = next_page
+        context["next_page_id"] = next_page_id
         context["current_page"] = current_page
         context["page_number"] = page_number
         context["all_pages"] = Document.objects.all().order_by("document_id")
         context["fragments"] = self.object.fragment_set.order_by("line_number")
 
         return context
+
+
+# class DocumentDetailView(generic.DetailView):
+#     model = Document
+#     context_object_name = "manuscript_page"
+#     template_name = "manuscript_page.html"
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#
+#         # Get the current document
+#         current_document = self.object
+#
+#         # Get previous and next pages
+#         try:
+#             previous_page = (
+#                 Document.objects.filter(document_id__lt=current_document.document_id)
+#                 .order_by("-document_id")
+#                 .first()
+#             )
+#         except Document.DoesNotExist:
+#             previous_page = None
+#
+#         try:
+#             next_page = (
+#                 Document.objects.filter(document_id__gt=current_document.document_id)
+#                 .order_by("document_id")
+#                 .first()
+#             )
+#         except Document.DoesNotExist:
+#             next_page = None
+#
+#         # Get current page
+#         try:
+#             current_page = Document.objects.get(
+#                 document_id=current_document.document_id
+#             )
+#         except Document.DoesNotExist:
+#             current_page = None
+#
+#         # Get the page number of the current document
+#         try:
+#             page_number = current_document.page_range.split("-")[0]
+#         except AttributeError:
+#             page_number = None
+#
+#         context["previous_page"] = previous_page
+#         context["next_page"] = next_page
+#         context["current_page"] = current_page
+#         context["page_number"] = page_number
+#         context["all_pages"] = Document.objects.all().order_by("document_id")
+#         context["fragments"] = self.object.fragment_set.order_by("line_number")
+#
+#         return context

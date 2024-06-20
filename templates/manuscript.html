@@ -35,9 +35,15 @@
                                         <li>
                                             <a href="{% url 'manuscript_page' document.id %}"><img src="{{ image.image.url }}"
                                                                                                    alt="Document Image" load="lazy"></a>
-                                            <p class="prose-figcaption font-sans">
-                                                Page {{ document.page_range }} ({{document.docside}})
-                                            </p>
+                                            {% if document.page_range == "nan" %}
+                                                <p class="prose-figcaption font-sans">
+                                                    No page number specified.
+                                                </p>
+                                            {% else %}
+                                                <p class="prose-figcaption font-sans">
+                                                    Page {{ document.page_range }} ({{document.docside}})
+                                                </p>
+                                            {% endif %}
                                         </li>
                                     {% endfor %}
                                 </ul>

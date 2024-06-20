@@ -135,7 +135,7 @@ class Fragment(ImportExportMixin, models.Model):
             "Fragment line "
             + str(self.line_number)
             + " - "
-            + str(self.languages.first().language)
+            + str(self.languages.first().language if self.languages.first() else "")
             + " translation"
         )
 

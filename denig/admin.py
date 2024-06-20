@@ -21,8 +21,8 @@ class CustomAdminFileWidget(AdminFileWidget):
         if hasattr(value, "url"):
             result.append(
                 f"""<a href="{value.url}" target="_blank">
-                      <img 
-                        src="{value.url}" alt="{value}" 
+                      <img
+                        src="{value.url}" alt="{value}"
                         width="700" height="auto"
                         style="object-fit: cover;"
                       />
@@ -51,6 +51,7 @@ class ImagesInline(admin.StackedInline):
     model = Image
     extra = 0
     readonly_fields = ("image_preview",)
+    classes = ("collapse",)
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -68,6 +69,12 @@ class ImageAdmin(admin.ModelAdmin):
     #     return format_html('<a href="{}">{}</a>', url, obj.related_document.item_id)
 
     # url_to_object.short_description = "View the page associated with this image"
+
+
+class MusicScoreInline(admin.StackedInline):
+    model = MusicScore
+    extra = 0
+    classes = ("collapse",)
 
 
 class DocumentForm(forms.ModelForm):
@@ -117,6 +124,7 @@ class FootnoteInline(admin.TabularInline):
 
     model = Footnote
     extra = 0
+    classes = ("collapse",)
     verbose_name = "Footnote"
     verbose_name_plural = "Footnotes"
     fields = ("content", "source", "id")
@@ -141,6 +149,7 @@ class FootnoteInline(admin.TabularInline):
 class FragmentInline(admin.StackedInline):
     model = Fragment
     extra = 0
+    classes = ("collapse",)
     verbose_name = "Fragment"
     verbose_name_plural = "Fragments"
     fields = (
@@ -165,7 +174,7 @@ class FragmentInline(admin.StackedInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-DocumentAdmin.inlines = [FragmentInline, ImagesInline]
+DocumentAdmin.inlines = [FragmentInline, ImagesInline, MusicScoreInline]
 
 
 # Register

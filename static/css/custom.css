@@ -1,4 +1,16 @@
 #openseadragon_viewer {
+    height: 700px;
+    position: relative;
+    overflow: hidden;
+}
+
+#viewer1 {
+    height: 600px;
+    position: relative;
+    overflow: hidden;
+}
+
+#viewer2 {
     height: 600px;
     position: relative;
     overflow: hidden;

@@ -49,6 +49,7 @@ def education(request: HttpRequest):
 
 
 class DocumentListView(generic.ListView):
+    paginate_by = 10
     model = Document
     context_object_name = "document_list"
     template_name = "manuscript.html"

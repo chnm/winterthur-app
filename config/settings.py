@@ -22,13 +22,14 @@ env = environ.FileAwareEnv(
 # ------------------------------------------------------------------------------
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure cin)v(4&89%_$17s0yezo=t+^1b*mq)=+348r-bv(ms#pm2y2#")
-
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=['localhost'])
-CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=['http://localhost'])
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
+CSRF_TRUSTED_ORIGINS = env.list(
+    "DJANGO_CSRF_TRUSTED_ORIGINS", default=["http://localhost"]
+)
 
 
 # Application definition
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     "denig",
     "essays",
     "footnotes",
+    "imagekit",
 ]
 
 MIDDLEWARE = [
@@ -124,9 +126,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": env("DB_HOST", default="localhost"),
         "PORT": env("DB_PORT", default="5432"),
-        "NAME": env("DB_NAME", default="denig"),
-        "USER": env("DB_USER", default="denig"),
-        "PASSWORD": env("DB_PASS", default="password"),
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
     }
 }
 
@@ -165,6 +167,7 @@ TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  # needed for windows
 
 WAGTAILADMIN_BASE_URL = "localhost:8000"
 WAGTAIL_SITE_NAME = "Denig Essays"

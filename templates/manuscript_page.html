@@ -29,8 +29,13 @@
                     </script>
                 </div>
                 {% if previous_page %}
-                    <a href="{% url 'manuscript_page' previous_page.id %}">
-                        <p>&larr; Previous Page &middot; viewing page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }}) </p>
+                    <a href="{% url 'manuscript_page' previous_page.slug %}">
+                        {% if "front" in manuscript_page.page_range or "back" in manuscript_page.page_range %}
+                            <p>&larr; Previous Page &middot; viewing {{ manuscript_page.page_range }}
+                        {% else %}
+                            <p>&larr; Previous Page &middot; viewing page {{ manuscript_page.page_range }}
+                                ({{ manuscript_page.docside }}) </p>
+                        {% endif %}
                     </a>
                 {% endif %}
 
@@ -39,7 +44,7 @@
 
                 <div class="row-span-1 p-4">
                     {% if next_page %}
-                        <a href="{% url 'manuscript_page' next_page.id %}">
+                        <a href="{% url 'manuscript_page' next_page.slug %}">
                             <img class="w-32 h-32 object-cover" src="{{ next_page.attached_images.first.image.url }}"
                                  alt="Next Page">
                             <caption>Next Page &rarr;</caption>
@@ -49,10 +54,13 @@
                     <div class="page-selector">
                         <div class="relative">
                             <div class="inline-block relative">
-                                <div class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">
-                                    <select onchange="location = this.value;" class="appearance-none bg-transparent py-2 pr-8 pl-2">
+                                <div
+                                    class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">
+                                    <select onchange="location = this.value;"
+                                            class="appearance-none bg-transparent py-2 pr-8 pl-2">
                                         {% for page in all_pages %}
-                                            <option value="{% url 'manuscript_page' page.id %}" {% if page.id == current_page.id %}selected{% endif %}>
+                                            <option value="{% url 'manuscript_page' page.slug %}"
+                                                    {% if page.id == current_page.id %}selected{% endif %}>
                                                 {{ page.page_range }} ({{page.docside}})
                                             </option>
                                         {% endfor %}
@@ -132,7 +140,9 @@
                 <li><strong>Page</strong>: {{ manuscript_page.page_range }}</li>
                 <li><strong>Page tagged with</strong>:
                     {% for tag in manuscript_page.tags.all %}
-                        <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-winterthur-dk-blue ring-1 ring-inset ring-blue-700/10">{{ tag.name }}</span>
+                        <span
+                            class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-winterthur-dk-blue ring-1 ring-inset ring-blue-700/10">{{
+                            tag.name }}</span>
                     {% endfor %}
                 </li>
             </ul>

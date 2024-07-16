@@ -4,12 +4,16 @@ from functools import cached_property
 from django.conf import settings
 from django.db import models
 from django.db.models.functions.text import Lower
+from django.dispatch import receiver
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
+from django_extensions.db.fields import AutoSlugField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 from import_export.admin import ImportExportMixin
 from taggit_selectize.managers import TaggableManager
 
@@ -216,6 +220,13 @@ class Image(models.Model):
         default="recto",
     )
 
+    thumbnail = ImageSpecField(
+        source="image",
+        processors=[ResizeToFill(200, 150)],
+        format="JPEG",
+        options={"quality": 90},
+    )
+
     def __str__(self):
         return f"{self.related_document} - {self.image}"
 
@@ -286,6 +297,10 @@ class Document(ImportExportMixin, models.Model):
         "placeholder": True,
     }
 
+    slug = AutoSlugField(
+        null=True, default=None, unique=True, editable=True, populate_from="page_range"
+    )
+
     class Meta:
         pass
 
@@ -316,7 +331,8 @@ class Document(ImportExportMixin, models.Model):
 
     def get_absolute_url(self):
         """Return the URL for this document."""
-        return reverse("document", args=[str(self.id)])
+        """changed from return reverse("document", args=[str(self.id)]) """
+        return reverse("document", kwargs={"slug": self.slug})
 
     @property
     def permalink(self):

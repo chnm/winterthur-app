@@ -54,14 +54,8 @@ class DocumentListView(generic.ListView):
     template_name = "manuscript.html"
 
     def get_queryset(self):
+        # This method ensures the documents are ordered by 'document_id'
         return Document.objects.all().order_by("document_id")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        document_list = Document.objects.all().order_by("document_id")
-        context["document_list"] = document_list
-
-        return context
 
     def get_absolute_url(self):
         """Return the URL for this document."""

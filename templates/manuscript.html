@@ -28,24 +28,20 @@
                         {% if forloop.first %}
                             <li></li> {# Empty element for the left side #}
                         {% endif %}
-                        <li class="flex space-x-4">
-                            {% if document.attached_images.all %}
-                                <ul>
-                                    {% for image in document.attached_images.all %}
-                                        <li>
-                                            <a href="{% url 'manuscript_page' document.id %}"><img src="{{ image.image.url }}"
-                                                                                                   alt="Document Image" load="lazy"></a>
-                                            <p class="prose-figcaption font-sans">
-                                                Page {{ document.page_range }} ({{document.docside}})
-                                            </p>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                {# Handle case where no images are attached #}
+                        {% for image in document.attached_images.all %}
+                            <li class="flex space-x-4">
+                                <a href="{% url 'manuscript_page' document.id %}">
+                                    <img src="{{ image.image.url }}" alt="Document Image" load="lazy">
+                                    <p class="prose-figcaption font-sans">
+                                        Page {{ document.page_range }} ({{document.docside}}) ({{document.description}})
+                                    </p>
+                                </a>
+                            </li>
+                        {% empty %}
+                            <li class="flex space-x-4">
                                 <p>No images available</p>
-                            {% endif %}
-                        </li>
+                            </li>
+                        {% endfor %}
                     {% endfor %}
                 </ul>
             {% endif %}

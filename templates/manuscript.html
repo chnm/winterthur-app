@@ -28,7 +28,7 @@
                         {% if forloop.first %}
                             <li></li> {# Empty element for the left side #}
                         {% endif %}
-                        {% for image in document.attached_images.first %}
+                        {% for image in document.attached_images.all %}
                             <li class="flex space-x-4">
                                 <a href="{% url 'manuscript_page' document.id %}">
                                     <img src="{{ image.image.url }}" alt="Document Image" load="lazy">

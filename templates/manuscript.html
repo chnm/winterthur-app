@@ -33,18 +33,21 @@
                                 <ul>
                                     {% for image in document.attached_images.all %}
                                         <li>
-                                            <a href="{% url 'manuscript_page' document.slug %}"><img src="{{ image.thumbnail.url }}" alt="Document Image" load="lazy"></a>
-                                            <p class="prose-figcaption font-sans">
-                                                Page {{ document.page_range }} ({{document.docside}})
-                                            </p>
-                                        </li>
+                                            <a href="{% url 'manuscript_page' document.id %}">
+                                                <a href="{% url 'manuscript_page' document.slug %}">
+                                                    <img src="{{ image.thumbnail.url }}" alt="Document Image" load="lazy">
+                                                </a>
+                                                <p class="prose-figcaption font-sans">
+                                                    Page {{ document.page_range }} ({{document.docside}})
+                                                </p>
+                                            </li>
                                     {% endfor %}
                                 </ul>
                             {% else %}
                 {# Handle case where no images are attached #}
                                 <p>No images available</p>
+                                </li>
                             {% endif %}
-                        </li>
                     {% endfor %}
                 </ul>
             {% endif %}

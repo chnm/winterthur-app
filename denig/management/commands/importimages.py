@@ -28,14 +28,21 @@ class Command(BaseCommand):
             document_id, _ = os.path.splitext(filename)
             try:
                 document = Document.objects.get(document_id=document_id)
-                with open(os.path.join(filepath, filename), "rb") as f:
-                    image = Image(
-                        related_document=document,
-                        image=File(f, name=filename),
-                    )
-                    image.save()
+                if not Image.objects.filter(related_document=document).exists():
+                    with open(os.path.join(filepath, filename), "rb") as f:
+                        image = Image(
+                            related_document=document,
+                            image=File(f, name=filename),
+                        )
+                        image.save()
+                        self.stdout.write(
+                            self.style.SUCCESS(f"Successfully associated {filename}.")
+                        )
+                else:
                     self.stdout.write(
-                        self.style.SUCCESS(f"Successfully associated {filename}.")
+                        self.style.WARNING(
+                            f"Image for document {document_id} already exists."
+                        )
                     )
             except Document.DoesNotExist:
                 self.stdout.write(

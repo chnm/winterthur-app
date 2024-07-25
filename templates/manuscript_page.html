@@ -15,12 +15,13 @@
             <div class="col-span-3">
                 <div id="openseadragon_viewer" class="openseadragon">
                     <script type="text/javascript">
+                        let page_url = encodeURI("{{ cleaned_url }}")
                         let viewer = OpenSeadragon({
                             id: "openseadragon_viewer",
                             prefixUrl: "/static/openseadragon/images/",
                             tileSources: {
                                 type: "image",
-                                url: "{{ manuscript_page.attached_images.all.0.image.url }}",
+                                url: page_url,
                             },
                             defaultZoomLevel: 1,
                             homeFillsViewer: false,
@@ -45,8 +46,9 @@
                 <div class="row-span-1 p-4">
                     {% if next_page %}
                         <a href="{% url 'manuscript_page' next_page.slug %}">
-                            <img class="w-32 h-32 object-cover" src="{{ next_page.attached_images.first.image.url }}"
-                                 alt="Next Page">
+                            {% for image in next_page.attached_images.all %}
+                                <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" load="lazy">
+                            {% endfor %}
                             <caption>Next Page &rarr;</caption>
                         </a>
                     {% endif %}
@@ -141,8 +143,7 @@
                 <li><strong>Page tagged with</strong>:
                     {% for tag in manuscript_page.tags.all %}
                         <span
-                            class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-winterthur-dk-blue ring-1 ring-inset ring-blue-700/10">{{
-                            tag.name }}</span>
+                            class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-winterthur-dk-blue ring-1 ring-inset ring-blue-700/10">{{ tag.name }}</span>
                     {% endfor %}
                 </li>
             </ul>

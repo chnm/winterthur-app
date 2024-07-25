@@ -8,3 +8,7 @@
 .prose summary {
     margin: 0;
 }
+
+.active {
+    font-weight: bold;
+}

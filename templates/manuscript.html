@@ -23,19 +23,19 @@
                 Fermentum odio eu feugiat pretium nibh. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus.</p>
 
             {% if page_obj %} <!--document_list-->
-                <ul class="grid grid-cols-2 gap-4">
+                <ul class="grid grid-cols-2 gap-2">
                     {% for document in page_obj %}
-                        {% if forloop.first %}
+                        {% if is_first_page and forloop.first %}
                             <li></li> {# Empty element for the left side #}
                         {% endif %}
                         <li class="flex space-x-4">
                             {% if document.attached_images.all %}
                                 <ul>
                                     {% for image in document.attached_images.all %}
-                                        <li>
+                                        <li class="list-none">
                                             <a href="{% url 'manuscript_page' document.id %}">
                                                 <a href="{% url 'manuscript_page' document.slug %}">
-                                                    <img src="{{ image.thumbnail.url }}" alt="Document Image" load="lazy">
+                                                    <img src="{{ image.thumbnail.url }}" class="w-60" alt="Document Image" load="lazy">
                                                 </a>
                                                 <p class="prose-figcaption font-sans">
                                                     Page {{ document.page_range }} ({{document.docside}})

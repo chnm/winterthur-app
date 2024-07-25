@@ -51,7 +51,10 @@ def education(request: HttpRequest):
 
 
 class DocumentListView(generic.ListView):
-    paginate_by = 10
+    paginate_by = (
+        # to get the first page layout to work, we need to offset by an odd number
+        11
+    )
     model = Document
     context_object_name = "document_list"
     template_name = "manuscript.html"
@@ -63,6 +66,12 @@ class DocumentListView(generic.ListView):
     def get_absolute_url(self):
         """Return the URL for this document."""
         return reverse("document", args=[str(self.id)])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_obj = context.get("page_obj")
+        context["is_first_page"] = page_obj and page_obj.number == 1
+        return context
 
 
 class DocumentDetailView(generic.DetailView):

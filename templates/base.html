@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %}Denig Manuscript{% endblock title %}</title>
 
-    {# open graph metadata #}
+        {# open graph metadata #}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="{% translate " Denig Manuscript Project" %}" />
         <meta property="og:title" content="{{ meta_title|escape }}" />
@@ -16,8 +16,9 @@
 
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 
+        {# openseadragon #}
         <script type="text/javascript" src="/static/openseadragon/openseadragon.min.js"></script>
-        <!-- Alpinejs -->
+        {# alpineJS #}
         <script src="//unpkg.com/alpinejs" defer></script>
 
         {% tailwind_css %}

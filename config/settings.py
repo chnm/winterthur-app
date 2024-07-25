@@ -1,4 +1,5 @@
 import os
+import platform
 from pathlib import Path
 
 import environ
@@ -169,7 +170,8 @@ TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  # needed for windows
+if platform.system() == "Windows":
+    NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  # needed for windows
 
 # Wagtail configuration
 WAGTAILADMIN_BASE_URL = "localhost:8000"

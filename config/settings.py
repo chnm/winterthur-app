@@ -23,15 +23,18 @@ env = environ.FileAwareEnv(
 # ------------------------------------------------------------------------------
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY")
+SECRET_KEY = env(
+    "DJANGO_SECRET_KEY",
+    default="django-insecure cin)v(4&89%_$17s0yezo=t+^1b*mq)=+348r-bv(ms#pm2y2#",
+)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 CSRF_TRUSTED_ORIGINS = env.list(
     "DJANGO_CSRF_TRUSTED_ORIGINS", default=["http://localhost"]
 )
-
 
 # Application definition
 
@@ -129,9 +132,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": env("DB_HOST", default="localhost"),
         "PORT": env("DB_PORT", default="5432"),
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD"),
+        "NAME": env("DB_NAME", default="denig"),
+        "USER": env("DB_USER", default="denig"),
+        "PASSWORD": env("DB_PASS", default="password"),
     }
 }
 

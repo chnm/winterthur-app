@@ -1,4 +1,5 @@
 import os
+import platform
 from pathlib import Path
 
 import environ
@@ -22,15 +23,18 @@ env = environ.FileAwareEnv(
 # ------------------------------------------------------------------------------
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY")
+SECRET_KEY = env(
+    "DJANGO_SECRET_KEY",
+    default="django-insecure cin)v(4&89%_$17s0yezo=t+^1b*mq)=+348r-bv(ms#pm2y2#",
+)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 CSRF_TRUSTED_ORIGINS = env.list(
     "DJANGO_CSRF_TRUSTED_ORIGINS", default=["http://localhost"]
 )
-
 
 # Application definition
 
@@ -47,6 +51,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
+    "django_cleanup.apps.CleanupConfig",  # auto-delete files from FileField or ImageField if deleted in django-admin
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -126,9 +132,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": env("DB_HOST", default="localhost"),
         "PORT": env("DB_PORT", default="5432"),
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD"),
+        "NAME": env("DB_NAME", default="denig"),
+        "USER": env("DB_USER", default="denig"),
+        "PASSWORD": env("DB_PASS", default="password"),
     }
 }
 
@@ -157,7 +163,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 USE_TZ = True
@@ -167,25 +173,48 @@ TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  # needed for windows
+if platform.system() == "Windows":
+    NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  # needed for windows
 
+# Wagtail configuration
 WAGTAILADMIN_BASE_URL = "localhost:8000"
 WAGTAIL_SITE_NAME = "Denig Essays"
 TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
 TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
-
-# Extra places for collectstatic to find static files.
+STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Media files
+OBJ_STORAGE = env("OBJ_STORAGE", default=False)
+if OBJ_STORAGE:
+    AWS_ACCESS_KEY_ID = env("OBJ_STORAGE_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env("OBJ_STORAGE_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env("OBJ_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = env("OBJ_STORAGE_ENDPOINT_URL")
+
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+
+    # override default storage backend for media
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    }
+else:
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

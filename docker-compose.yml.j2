@@ -18,12 +18,16 @@ services:
       - DB_NAME={{ template.env.db_name }}
       - DB_USER={{ template.env.db_user }}
       - DB_PASSWORD={{ template.env.db_pass }}
+      - OBJ_STORAGE={{ template.env.obj_storage }}
+      - OBJ_STORAGE_ACCESS_KEY_ID={{ template.env.obj_storage_access_key_id }}
+      - OBJ_STORAGE_SECRET_ACCESS_KEY={{ template.env.obj_storage_secret_access_key }}
+      - OBJ_STORAGE_BUCKET_NAME={{ template.env.obj_storage_bucket_name }}
+      - OBJ_STORAGE_ENDPOINT_URL={{ template.env.obj_storage_endpoint_url }}
     command: >
         sh -c "poetry run python3 manage.py migrate &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - dj-static:/app/staticfiles
-      - dj-media:/app/media
     depends_on:
       db:
         condition: service_healthy
@@ -48,9 +52,6 @@ services:
 volumes:
   dj-static:
     name: "{{ template.name }}_app-static-vol"
-    external: true
-  dj-media:
-    name: "{{ template.name }}_app-media-vol"
     external: true
   pg-data:
     name: "{{ template.name }}_db-vol"

@@ -32,6 +32,9 @@ django-modelcluster = "^6.3"
 pandas = "^2.2.2"
 numpy = "^1.26.4"
 django-imagekit = "^5.0.0"
+boto3 = "^1.34.128"
+django-storages = "^1.14.3"
+django-cleanup = "^8.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

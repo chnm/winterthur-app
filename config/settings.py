@@ -1,4 +1,5 @@
 import os
+import platform
 from pathlib import Path
 
 import environ
@@ -35,7 +36,6 @@ CSRF_TRUSTED_ORIGINS = env.list(
     "DJANGO_CSRF_TRUSTED_ORIGINS", default=["http://localhost"]
 )
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "storages",
+    "django_cleanup.apps.CleanupConfig",  # auto-delete files from FileField or ImageField if deleted in django-admin
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     "denig",
     "essays",
     "footnotes",
+    "imagekit",
 ]
 
 MIDDLEWARE = [
@@ -171,6 +173,8 @@ TAILWIND_APP_NAME = "theme"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+if platform.system() == "Windows":
+    NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  # needed for windows
 
 # Wagtail configuration
 WAGTAILADMIN_BASE_URL = "localhost:8000"
@@ -178,19 +182,38 @@ WAGTAIL_SITE_NAME = "Denig Essays"
 TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
 TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "storages.backends.s3.S3Storage",
-#     },
-# }
 STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# MEDIA_URL = "http://192.168.0.191:9000/media/"
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Media files
+OBJ_STORAGE = env("OBJ_STORAGE", default=False)
+if OBJ_STORAGE:
+    AWS_ACCESS_KEY_ID = env("OBJ_STORAGE_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env("OBJ_STORAGE_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env("OBJ_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = env("OBJ_STORAGE_ENDPOINT_URL")
+
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+
+    # override default storage backend for media
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    }
+else:
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

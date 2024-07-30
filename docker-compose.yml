@@ -18,6 +18,11 @@ services:
       - DB_NAME=winterthur
       - DB_USER=winterthur
       - DB_PASSWORD=password
+      - OBJ_STORAGE=True
+      - OBJ_STORAGE_ACCESS_KEY_ID=test-key-id
+      - OBJ_STORAGE_SECRET_ACCESS_KEY=test-secret-key
+      - OBJ_STORAGE_BUCKET_NAME=test
+      - OBJ_STORAGE_ENDPOINT_URL=http://10.112.113.212:8000
     command: >
         sh -c "poetry run python3 manage.py migrate &&
                poetry run python3 manage.py runserver 0.0.0.0:8000"

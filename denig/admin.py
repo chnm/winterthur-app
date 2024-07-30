@@ -124,6 +124,8 @@ class DocumentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     formfield_overrides = {models.FileField: {"widget": CustomAdminFileWidget}}
     resource_classes = [DocumentResource]
 
+    # prepopulated_fields = {"slug": ("page_range",)}
+
 
 class FootnoteInline(admin.TabularInline):
     """Add footnotes within the Fragment form."""

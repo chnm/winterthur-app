@@ -1,3 +1,5 @@
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.urls import reverse
@@ -49,23 +51,27 @@ def education(request: HttpRequest):
 
 
 class DocumentListView(generic.ListView):
+    paginate_by = (
+        # to get the first page layout to work, we need to offset by an odd number
+        11
+    )
     model = Document
     context_object_name = "document_list"
     template_name = "manuscript.html"
 
     def get_queryset(self):
+        # This method ensures the documents are ordered by 'document_id'
         return Document.objects.all().order_by("document_id")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        document_list = Document.objects.all().order_by("document_id")
-        context["document_list"] = document_list
-
-        return context
 
     def get_absolute_url(self):
         """Return the URL for this document."""
         return reverse("document", args=[str(self.id)])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page_obj = context.get("page_obj")
+        context["is_first_page"] = page_obj and page_obj.number == 1
+        return context
 
 
 class DocumentDetailView(generic.DetailView):
@@ -77,6 +83,30 @@ class DocumentDetailView(generic.DetailView):
             return ["manuscript_musicscore.html"]
         else:
             return ["manuscript_page.html"]
+
+    def clean_url(self, url):
+        # Parse the URL
+        parsed_url = urlparse(url)
+        # Parse the query parameters into a dictionary
+        query_params = parse_qs(parsed_url.query)
+        # Remove the Signature and Expiration parameters
+        query_params.pop("Signature", None)
+        query_params.pop("Expires", None)
+        query_params.pop("AWSAccessKeyId", None)
+        # Reconstruct the query string without Signature and Expiration
+        new_query_string = urlencode(query_params, doseq=True)
+        # Reconstruct the URL without the Signature and Expiration parameters
+        cleaned_url = urlunparse(
+            (
+                parsed_url.scheme,
+                parsed_url.netloc,
+                parsed_url.path,
+                parsed_url.params,
+                new_query_string,
+                parsed_url.fragment,
+            )
+        )
+        return cleaned_url
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -123,11 +153,20 @@ class DocumentDetailView(generic.DetailView):
         except AttributeError:
             page_number = None
 
+        # Get the image URL and clean it
+        if current_document.attached_images.all().exists():
+            first_image_url = current_document.attached_images.all()[0].image.url
+            print("url", first_image_url)
+            cleaned_url = self.clean_url(first_image_url)
+        else:
+            cleaned_url = None
+
         context["previous_page"] = previous_page
         context["next_page"] = next_page
         context["next_page_id"] = next_page_id
         context["current_page"] = current_page
         context["page_number"] = page_number
+        context["cleaned_url"] = cleaned_url
         context["all_pages"] = Document.objects.all().order_by("document_id")
         context["fragments"] = self.object.fragment_set.order_by("line_number")
 

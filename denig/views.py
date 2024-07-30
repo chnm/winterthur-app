@@ -112,7 +112,10 @@ class DocumentDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
 
         # Get the current document
-        current_document = self.object
+        try:
+            current_document = self.get_queryset().get(slug=self.kwargs["slug"])
+        except Document.DoesNotExist:
+            current_document = None
 
         # Get previous and next pages
         try:
@@ -124,6 +127,7 @@ class DocumentDetailView(generic.DetailView):
         except Document.DoesNotExist:
             previous_page = None
 
+        # get the next page slug
         try:
             next_page = (
                 Document.objects.filter(document_id__gt=current_document.document_id)
@@ -153,13 +157,21 @@ class DocumentDetailView(generic.DetailView):
         except AttributeError:
             page_number = None
 
-        # Get the image URL and clean it
+        # Get the image URL and clean it (for using object store)
         if current_document.attached_images.all().exists():
             first_image_url = current_document.attached_images.all()[0].image.url
-            print("url", first_image_url)
             cleaned_url = self.clean_url(first_image_url)
         else:
             cleaned_url = None
+
+        if next_page.attached_images.all().exists():
+            next_image_url = next_page.attached_images.all()[0].image.url
+            cleaned_next_image_url = self.clean_url(next_image_url)
+            print(
+                f"Next image URL: {next_image_url}, Cleaned next image URL: {cleaned_next_image_url}"
+            )
+        else:
+            cleaned_next_image_url = None
 
         context["previous_page"] = previous_page
         context["next_page"] = next_page
@@ -167,61 +179,8 @@ class DocumentDetailView(generic.DetailView):
         context["current_page"] = current_page
         context["page_number"] = page_number
         context["cleaned_url"] = cleaned_url
+        context["next_image_url"] = cleaned_next_image_url
         context["all_pages"] = Document.objects.all().order_by("document_id")
         context["fragments"] = self.object.fragment_set.order_by("line_number")
 
         return context
-
-
-# class DocumentDetailView(generic.DetailView):
-#     model = Document
-#     context_object_name = "manuscript_page"
-#     template_name = "manuscript_page.html"
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#
-#         # Get the current document
-#         current_document = self.object
-#
-#         # Get previous and next pages
-#         try:
-#             previous_page = (
-#                 Document.objects.filter(document_id__lt=current_document.document_id)
-#                 .order_by("-document_id")
-#                 .first()
-#             )
-#         except Document.DoesNotExist:
-#             previous_page = None
-#
-#         try:
-#             next_page = (
-#                 Document.objects.filter(document_id__gt=current_document.document_id)
-#                 .order_by("document_id")
-#                 .first()
-#             )
-#         except Document.DoesNotExist:
-#             next_page = None
-#
-#         # Get current page
-#         try:
-#             current_page = Document.objects.get(
-#                 document_id=current_document.document_id
-#             )
-#         except Document.DoesNotExist:
-#             current_page = None
-#
-#         # Get the page number of the current document
-#         try:
-#             page_number = current_document.page_range.split("-")[0]
-#         except AttributeError:
-#             page_number = None
-#
-#         context["previous_page"] = previous_page
-#         context["next_page"] = next_page
-#         context["current_page"] = current_page
-#         context["page_number"] = page_number
-#         context["all_pages"] = Document.objects.all().order_by("document_id")
-#         context["fragments"] = self.object.fragment_set.order_by("line_number")
-#
-#         return context

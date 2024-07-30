@@ -69,6 +69,12 @@
                             </div>
                         </div>
                     </div>
+                    <br><br><br>
+                    <a href="{% url 'manuscript_page' forensic_page.related_document.slug %}">
+                        <img class="w-32 h-32 object-cover" src="{{ forensic_page.related_document.attached_images.first.image.url }}"
+                             alt="Next Image">
+                        <caption>View the manuscript page</caption>
+                    </a>
 
                     <!--Need this for forensic data?-->
                     <!--<div class="mt-4" id="transcription-jump">

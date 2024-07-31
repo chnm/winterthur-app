@@ -100,7 +100,6 @@
             {% if music_score.audio_recording_file %}
               <hr class="mt-4 mb-4 border-gray-300" />
               <div id="audio_controls" class="mt-4">
-                <p>Listen to the hymn</p>
                 <audio controls>
                   <source src="{{ music_score.audio_recording_file.url }}" type="audio/wav" />
                   Your browser does not support the audio element.
@@ -110,7 +109,7 @@
             {% if music_score.sheet_music %}
               <hr class="mt-4 mb-4 border-gray-300" />
               <div id="sheet_music" class="mt-4" x-data="{ open: false }">
-                <button @click="open = true">View sheet music PDF</button>
+                <button @click="open = true" class="underline hover:no-underline">View sheet music PDF</button>
                 <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
                      aria-modal="true">
                   <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

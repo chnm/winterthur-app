@@ -12,7 +12,7 @@ urlpatterns = [
         views.ForensicDetailView.as_view(),
         name="forensic_page",
     ),
-    path("music/", views.music, name="music"),
+    path("music/", views.MusicListView.as_view(), name="music"),
     path("education/", views.education, name="education"),
     path("scholarship/", views.scholarship, name="scholarship"),
     path("manuscript/", views.DocumentListView.as_view(), name="manuscript"),

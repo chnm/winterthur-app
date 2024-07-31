@@ -55,20 +55,15 @@ class ImagesInline(admin.StackedInline):
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("id", "image_thumbnail")
+    list_display = ("id", "image_type", "image_thumbnail")
+    list_filter = ("image_type",)
 
     list_per_page = 10
 
     def image_thumbnail(self, obj):
-        return format_html('<img src="{}" width="50" height="50" />', obj.image.url)
+        return format_html('<img src="{}" width="50" height="50" />', obj.thumbnail.url)
 
     image_thumbnail.short_description = "Image Thumbnail"
-
-    # def url_to_object(self, obj):
-    #     url = reverse("admin:documents_object_change", args=[obj.related_document.id])
-    #     return format_html('<a href="{}">{}</a>', url, obj.related_document.item_id)
-
-    # url_to_object.short_description = "View the page associated with this image"
 
 
 class MusicScoreInline(admin.StackedInline):

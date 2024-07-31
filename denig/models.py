@@ -139,7 +139,7 @@ class Fragment(ImportExportMixin, models.Model):
             "Fragment line "
             + str(self.line_number)
             + " - "
-            + str(self.languages.first().language)
+            + str(self.languages.first().language if self.languages.first() else "")
             + " translation"
         )
 
@@ -170,8 +170,8 @@ class DocumentTypeManager(models.Manager):
 
 
 class DocumentType(models.Model):
-    """A document indicates an individual page (recto/verso) or a page spread
-    (recto and verso)."""
+    """A document indicates an individual page (verso/recto) or a page spread
+    (verso and recto)."""
 
     name = models.CharField(max_length=255, unique=True)
     display_labels = models.CharField(
@@ -200,7 +200,7 @@ class Image(models.Model):
     IMAGE_TYPES = (
         ("recto", "Recto"),
         ("verso", "Verso"),
-        ("recto and verso", "Recto and Verso"),
+        ("verso and recto", "Verso and Recto"),
         ("music score", "Music Score"),
         ("forensics", "Forensics"),
     )
@@ -242,12 +242,12 @@ class Image(models.Model):
 class Document(ImportExportMixin, models.Model):
     RECTO = "recto"
     VERSO = "verso"
-    RECTO_VERSO = "recto and verso"
+    RECTO_VERSO = "verso and recto"
 
     SIDE_CHOICES = (
         (RECTO, "Recto"),
         (VERSO, "Verso"),
-        (RECTO_VERSO, "Recto and Verso"),
+        (RECTO_VERSO, "Verso and Recto"),
     )
 
     DOCTYPE_CHOICES = (
@@ -271,6 +271,7 @@ class Document(ImportExportMixin, models.Model):
         blank=True,
         choices=DOCTYPE_CHOICES,
         default="text",
+        verbose_name="Document type",
     )
     page_range = models.CharField(
         max_length=255,
@@ -368,15 +369,40 @@ class MusicScore(ImportExportMixin, models.Model):
         verbose_name="Page",
         help_text="Page or page range of the document.",
     )
-    sheet_music = models.FileField(
-        upload_to="files/",
+    composer = models.CharField(
+        max_length=255,
         blank=True,
         null=True,
-        help_text="Upload a file (PDF or PNG). Click to open a larger image.",
+        help_text="Composer of the music, if known.",
+    )
+    arrangement_by = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Name of who arranged the music score.",
+    )
+    translated_by = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Name of who translated the music score.",
+    )
+    related_document = models.ForeignKey(
+        Document,
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="music_scores",
+    )
+    sheet_music = models.FileField(
+        upload_to="media/",
+        blank=True,
+        null=True,
+        help_text="Upload a file (PDF or PNG).",
         verbose_name="Sheet music",
     )
-    audio_recordig_file = models.FileField(
-        upload_to="files/",
+    audio_recording_file = models.FileField(
+        upload_to="media/",
         blank=True,
         null=True,
         help_text="Upload a file.",

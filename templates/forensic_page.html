@@ -72,7 +72,7 @@
                     <br><br><br>
                     <a href="{% url 'manuscript_page' forensic_page.related_document.slug %}">
                         <img class="w-32 h-32 object-cover" src="{{ forensic_page.related_document.attached_images.first.image.url }}"
-                             alt="Next Image">
+                             alt="Manuscript Image">
                         <caption>View the manuscript page</caption>
                     </a>
 
@@ -141,6 +141,7 @@
 
     <div class="font-sans mt-4 bg-amber-50">
         <div class="p-10 ml-10 mr-10">
+            <!--need for forensic images? probably need reworking when we have data-->
             <h3 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Document Details</h3>
             <ul>
                 <li><strong>Description</strong>: {{ forensic_page.related_document.description }}</li>

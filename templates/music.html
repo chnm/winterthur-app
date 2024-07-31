@@ -1,10 +1,54 @@
 {% extends "base.html" %}
 
-{% block title %}Music{% endblock title %}
-{% block extrahead %}{% endblock extrahead %}
+{% block title %}
+    Music
+{% endblock title %}
+
+{% block extrahead %}
+{% endblock extrahead %}
 
 {% block content %}
     <div class="prose relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
         <h1>Music.</h1>
+        <div class="mt-12">
+            <p
+                class="text-xl pb-8 first-letter:float-left first-letter:text-7xl first-letter:pr-4 first-letter:font-black first-letter:text-winterthur-purple">
+                Introductory text to the forensics. Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque eu ultrices
+                vitae auctor eu. arcu cursus vitae congue mauris rhoncus. Integer eget aliquet nibh praesent tristique
+                magna sit amet purus. </p>
+            <p class="pb-8">Massa id neque aliquam vestibulum morbi. Diam volutpat commodo sed egestas. Habitant
+                morbi tristique senectus et. Accumsan tortor posuere ac ut. Tortor at risus viverra adipiscing at in tellus
+                integer. Sagittis aliquam malesuada bibendum arcu vitae. Semper eget duis at tellus at urna condimentum.
+                Imperdiet dui accumsan sit amet nulla facilisi morbi tempus. In ornare quam viverra orci. Malesuada fames ac
+                turpis egestas sed tempus urna et. Urna condimentum mattis pellentesque id nibh tortor id aliquet lectus.
+                Fermentum odio eu feugiat pretium nibh. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus.</p>
+
+            <h2 class="text-2xl">Pages with hymnal music</h2>
+            {% if hymnal_list %} <!--document_list-->
+                <div class="grid grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-2">
+                    {% for document in hymnal_list %}
+                        <div>
+                            {% if document.attached_images.all %}
+                                {% for image in document.attached_images.all %}
+                                    <a href="{% url 'manuscript_page' document.id %}">
+                                        {% if image.image_type == "recto" or image.image_type == "verso" %}
+                                            <a href="{% url 'manuscript_page' document.slug %}">
+                                                <img src="{{ image.thumbnail.url }}" class="h-auto w-full" alt="Document Image" load="lazy" />
+                                            </a>
+                                            <p class="prose-figcaption font-sans">
+                                                Page {{ document.page_range }} ({{document.docside}})
+                                            </p>
+                                        {% endif %}
+                                {% endfor %}
+                            {% else %}
+                    {# Handle case where no images are attached #}
+                                <p>No images available</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
     </div>
 {% endblock content %}

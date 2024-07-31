@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+
 {% block title %}
     Forensics
 {% endblock title %}
+
 {% block extrahead %}
 {% endblock extrahead %}
+
 {% block content %}
     <div class="prose relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
         <h1>Forensics.</h1>
@@ -23,7 +26,7 @@
                 Fermentum odio eu feugiat pretium nibh. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus.</p>
 
             {% if image_list %}
-                {% for document in document_list%}
+                {% for document in document_list %}
                     <h3>Forensic Images for page {{ document.page_range }}</h3>
                     <ul class="grid grid-cols-2 gap-4">
                         {% for image in image_list %}
@@ -31,7 +34,8 @@
                                 <li class="flex space-x-4">
                                     <ul style="list-style-type:none;">
                                         <li>
-                                            <a href="{% url 'forensic_page' image.id %}"><img src="{{ image.thumbnail.url }}" alt="Document Image" load="lazy"></a>
+                                            <a href="{% url 'forensic_page' image.id %}"><img src="{{ image.thumbnail.url }}"
+                                                                                              alt="Document Image" load="lazy"></a>
                                         </li>
                                     </ul>
                                 </li>

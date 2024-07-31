@@ -38,14 +38,6 @@ def scholarship(request: HttpRequest):
     return render(request, "scholarship.html", {})
 
 
-"""def forensics(request: HttpRequest):
-    return render(request, "forensics.html", {})"""
-
-
-def music(request: HttpRequest):
-    return render(request, "music.html", {})
-
-
 def education(request: HttpRequest):
     return render(request, "education.html", {})
 
@@ -201,28 +193,6 @@ class ForensicsListView(generic.View):
         )
 
 
-'''class ForensicsListView(generic.ListView):
-    model = Image
-    context_object_name = "image_list"
-    template_name = "forensics.html"
-
-    def get_queryset(self):
-        return Image.objects.all().order_by("related_document_id")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        #forensic_images = Image.objects.filter(image_type = "recto")
-        #document_list = Document.objects.all().order_by("document_id")
-        image_list = Image.objects.filter(image_type = 'forensics').order_by("related_document_id")
-        context["image_list"] = image_list
-
-        return context
-
-    def get_absolute_url(self):
-        """Return the URL for this document."""
-        return reverse("document", args=[str(self.id)])'''
-
-
 class ForensicDetailView(generic.DetailView):
     model = Image
     context_object_name = "forensic_page"
@@ -278,3 +248,15 @@ class ForensicDetailView(generic.DetailView):
         # context["fragments"] = self.object.fragment_set.order_by("line_number")
 
         return context
+
+
+class MusicListView(generic.View):
+    def get(self, request, *args, **kwargs):
+        hymnal_list = (
+            Document.objects.filter(doctype="music score").order_by("id").distinct()
+        )
+        return render(
+            request,
+            "music.html",
+            {"hymnal_list": hymnal_list},
+        )

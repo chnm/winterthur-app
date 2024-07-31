@@ -34,13 +34,15 @@
                                     {% for image in document.attached_images.all %}
                                         <li class="list-none">
                                             <a href="{% url 'manuscript_page' document.id %}">
-                                                <a href="{% url 'manuscript_page' document.slug %}">
-                                                    <img src="{{ image.thumbnail.url }}" class="w-60" alt="Document Image" load="lazy">
-                                                </a>
-                                                <p class="prose-figcaption font-sans">
-                                                    Page {{ document.page_range }} ({{document.docside}})
-                                                </p>
-                                            </li>
+                                                {% if image.image_type == "recto" or image.image_type == "verso" %}
+                                                    <a href="{% url 'manuscript_page' document.slug %}">
+                                                        <img src="{{ image.thumbnail.url }}" class="w-60" alt="Document Image" load="lazy">
+                                                    </a>
+                                                    <p class="prose-figcaption font-sans">
+                                                        Page {{ document.page_range }} ({{document.docside}})
+                                                    </p>
+                                                    </li>
+                                                {% endif %}
                                     {% endfor %}
                                 </ul>
                             {% else %}

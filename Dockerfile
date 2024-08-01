@@ -54,4 +54,3 @@ RUN poetry run python manage.py collectstatic --no-input
 # clean up
 RUN rm -rf /root/.volta
 RUN rm -rf /app/node_modules
-RUN rm -rf /app/static/*

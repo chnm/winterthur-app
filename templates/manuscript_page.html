@@ -78,12 +78,15 @@
                             </span>
                         </a>
                     </div>
-                    <br><br><br>
-                    <a href="{% url 'forensic_page' manuscript_page.attached_images.all.1.id %}">
-                        <img class="w-32 h-32 object-cover" src="{{ manuscript_page.attached_images.all.1.image.url }}"
-                             alt="First Forensic Image">
-                        <caption>View the forensic images for this page</caption>
-                    </a>
+                    {% if manuscript_page.attached_images.all.1 %}
+                        <hr class="mt-3 mb-3" />
+                        <div class="mt-4">
+                            <a class="underline hover:no-underline" href="{% url 'forensic_page' manuscript_page.attached_images.all.1.id %}">
+                                <img class="w-32 h-32 object-cover" src="{{ manuscript_page.attached_images.all.1.image.url }}" alt="First Forensic Image">
+                                <caption>View the forensic images for this page</caption>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

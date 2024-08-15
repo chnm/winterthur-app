@@ -196,63 +196,6 @@ class ForensicsListView(generic.View):
         )
 
 
-class ForensicDetailView(generic.DetailView):
-    model = Image
-    context_object_name = "forensic_page"
-    template_name = "forensic_page.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Get the current image
-        current_image = self.object
-
-        # Get previous and next pages
-        try:
-            previous_page = (
-                Image.objects.filter(id__lt=current_image.id).order_by("-id").first()
-            )
-        except Image.DoesNotExist:
-            previous_page = None
-
-        try:
-            next_page = (
-                Image.objects.filter(id__gt=current_image.id).order_by("id").first()
-            )
-        except Image.DoesNotExist:
-            next_page = None
-
-        # Get current page
-        try:
-            current_page = Document.objects.get(
-                document_id=current_image.related_document
-            )
-        except Document.DoesNotExist:
-            current_page = None
-
-        # Get the page number of the current document
-        try:
-            page_number = current_image.related_document.page_range.split("-")[0]
-        except AttributeError:
-            page_number = None
-
-        context["previous_image"] = previous_page
-        context["next_image"] = next_page
-        context["current_image"] = current_page
-        context["page_number"] = page_number
-        context["all_pages"] = Image.objects.filter(image_type="forensics").order_by(
-            "id"
-        )
-        context["documents"] = (
-            Document.objects.filter(attached_images__image_type="forensics")
-            .order_by("id")
-            .distinct()
-        )
-        # context["fragments"] = self.object.fragment_set.order_by("line_number")
-
-        return context
-
-
 class MusicListView(generic.View):
     def get(self, request, *args, **kwargs):
         hymnal_list = (

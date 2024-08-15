@@ -34,8 +34,9 @@
                                 <li class="flex space-x-4">
                                     <ul style="list-style-type:none;">
                                         <li>
-                                            <a href="{% url 'forensic_page' image.id %}"><img src="{{ image.thumbnail.url }}"
-                                                                                              alt="Document Image" load="lazy"></a>
+                                            <a href="{% url 'manuscript_page' document.slug %}"><img src="{{ image.thumbnail.url }}"
+                                                                                                     alt="Document Image" load="lazy"></a>
+
                                         </li>
                                     </ul>
                                 </li>

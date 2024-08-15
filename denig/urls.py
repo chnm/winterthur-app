@@ -7,11 +7,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("about/", views.about, name="about"),
     path("forensics/", views.ForensicsListView.as_view(), name="forensics"),
-    path(
-        "forensics/<int:pk>/",
-        views.ForensicDetailView.as_view(),
-        name="forensic_page",
-    ),
     path("music/", views.MusicListView.as_view(), name="music"),
     path("education/", views.education, name="education"),
     path("scholarship/", views.scholarship, name="scholarship"),

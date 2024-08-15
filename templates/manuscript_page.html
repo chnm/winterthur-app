@@ -58,10 +58,13 @@
                 <div class="row-span-1 p-4">
                     {% if next_page %}
                         <a href="{% url 'manuscript_page' next_page.slug %}">
-                            {% for image in next_page.attached_images.all %}
-                                <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" load="lazy">
-                            {% endfor %}
-                            <caption>Next Page &rarr;</caption>
+                        {# skip the image_type "fornesics" #}
+                            {% if image_type != "forensics" %}
+                                {% for image in next_page.attached_images.all %}
+                                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" load="lazy">
+                                {% endfor %}
+                                <caption>Next Page &rarr;</caption>
+                            {% endif %}
                         </a>
                     {% endif %}
 

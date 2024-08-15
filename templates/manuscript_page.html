@@ -59,12 +59,12 @@
                     {% if next_page %}
                         <a href="{% url 'manuscript_page' next_page.slug %}">
                         {# skip the image_type "fornesics" #}
-                            {% if image_type != "forensics" %}
-                                {% for image in next_page.attached_images.all %}
+                            {% for image in next_page.attached_images.all %}
+                                {% if image.image_type != "forensics" %}
                                     <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" load="lazy">
-                                {% endfor %}
-                                <caption>Next Page &rarr;</caption>
-                            {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <caption>Next Page &rarr;</caption>
                         </a>
                     {% endif %}
 
@@ -120,7 +120,7 @@
                                                     <div class="mt-2">
                                                         <div class="mt-2 grid grid-cols-3 gap-4">
                                                             {% for forensic_image in forensic_images %}
-                                                                <img @click="open = true" class="w-32 h-32 object-cover" src="{{ forensic_image.image.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
+                                                                <img @click="open = true" class="w-72 h-72 object-cover" src="{{ forensic_image.image.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
                                                             {% endfor %}
 
                                                             <p><a class="underline hover:no-underline" href="">Read the full forensics report</a>.</p>

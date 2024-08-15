@@ -4,30 +4,15 @@
 {% block content %}
     <nav class="relative bg-gray-800 overflow-hidden h-screen">
         <!-- Hero image -->
-        <img class="absolute inset-0 w-full h-full object-cover" src="https://rrchnm.org/wp-content/uploads/2022/07/2020-0011_19.jpg" alt="Hero Image">
+        <img class="absolute inset-0 w-full h-full object-cover" src="{% static "2020-0011_19.jpg" %}" alt="Denig manuscript">
         <!-- Overlay to darken the image -->
         <div class="absolute inset-0 bg-gray-900 opacity-80"></div>
         <!-- Hero content -->
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
             <p class="text-lg text-gray-300 max-w-2xl mb-12">Ludwig Denig was an eighteenth-century shoemaker and apothecary living in colonial and revolutionary Pennsylvania. Denig was a Pietist who drew on the devotional and biblical spirituality of the Lutheran and Dutch Reformed churches. He created a devotional text—an illuminated manuscript—by mixing an array of Christian elements with his own creativity. He copied passages from the Gospels in German with devotional reflections on the Passion. He painted watercolor scenes from the Passion that combined the stories of the Gospels with scenes from his own experience, including the brutal violence against the Conestoga Indians in Lancaster, Pennsylvania, and his own experiences of warfare in the Revolutionary War. And he added Christian hymns to his watercolors and biblical texts. This manuscript combines a number of devotional, theological and artistic traditions, but that combination created a manuscript and work of art that is unique to early America.        </p>
-            <a href="/manuscript/" class="bg-white text-gray-800 hover:bg-gray-100 py-3 px-6 rounded-full text-lg font-bold uppercase font-sans">Explore the manuscript</a>
-            <a href="https://rrchnm.org/news/rrchnm-partners-with-winterthur-museum-to-present-pennsylvania-illuminated-manuscript/" class="bg-white text-gray-800 hover:bg-gray-100 py-3 px-6 rounded-full text-lg font-bold uppercase ml-4 font-sans">Learn more</a>
+            <a href="{% url 'manuscript' %}" class="bg-white text-gray-800 hover:bg-gray-100 py-3 px-6 rounded-full text-lg font-bold uppercase font-sans">Explore the manuscript</a>
+            <a href="{% url 'about' %}" class="bg-white text-gray-800 hover:bg-gray-100 py-3 px-6 rounded-full text-lg font-bold uppercase ml-4 font-sans">Learn more</a>
         </div>
     </nav>
-
-    <!-- Content -->
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white p-8 rounded-lg shadow-lg">
-                <h2 class="text-2xl font-bold mb-4">Title</h2>
-                <p class="text-gray-700 font-sans">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-            <div class="bg-white p-8 rounded-lg shadow-lg">
-                <h2 class="text-2xl font-bold mb-4">Title</h2>
-                <p class="text-gray-700 font-sans">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-        </div>
-    </div>
-
     </div>
 {% endblock %}

@@ -165,18 +165,20 @@ class DocumentDetailView(generic.DetailView):
         else:
             forensic_images = None
 
-        context = {
-            "previous_page": previous_page,
-            "next_page": next_page,
-            "next_page_id": next_page_id,
-            "current_page": current_page,
-            "page_number": page_number,
-            "cleaned_url": cleaned_url,
-            "next_image_url": cleaned_next_image_url,
-            "all_pages": Document.objects.all().order_by("document_id"),
-            "fragments": self.object.fragment_set.order_by("line_number"),
-            "forensic_images": forensic_images,
-        }
+        context.update(
+            {
+                "previous_page": previous_page,
+                "next_page": next_page,
+                "next_page_id": next_page_id,
+                "current_page": current_page,
+                "page_number": page_number,
+                "cleaned_url": cleaned_url,
+                "next_image_url": cleaned_next_image_url,
+                "all_pages": Document.objects.all().order_by("document_id"),
+                "fragments": self.object.fragment_set.order_by("line_number"),
+                "forensic_images": forensic_images,
+            }
+        )
 
         return context
 

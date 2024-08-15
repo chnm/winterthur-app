@@ -1,7 +1,7 @@
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 
@@ -43,13 +43,10 @@ def education(request: HttpRequest):
 
 
 class DocumentListView(generic.ListView):
-    paginate_by = (
-        # to get the first page layout to work, we need to offset by an odd number
-        11
-    )
     model = Document
     context_object_name = "document_list"
     template_name = "manuscript.html"
+    paginate_by = 13
 
     def get_queryset(self):
         # This method ensures the documents are ordered by 'document_id'
@@ -63,6 +60,7 @@ class DocumentListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         page_obj = context.get("page_obj")
         context["is_first_page"] = page_obj and page_obj.number == 1
+
         return context
 
 
@@ -104,10 +102,7 @@ class DocumentDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
 
         # Get the current document
-        try:
-            current_document = self.get_queryset().get(slug=self.kwargs["slug"])
-        except Document.DoesNotExist:
-            current_document = None
+        current_document = get_object_or_404(Document, slug=self.kwargs["slug"])
 
         # Get previous and next pages
         try:
@@ -159,21 +154,29 @@ class DocumentDetailView(generic.DetailView):
         if next_page.attached_images.all().exists():
             next_image_url = next_page.attached_images.all()[0].image.url
             cleaned_next_image_url = self.clean_url(next_image_url)
-            print(
-                f"Next image URL: {next_image_url}, Cleaned next image URL: {cleaned_next_image_url}"
-            )
         else:
             cleaned_next_image_url = None
 
-        context["previous_page"] = previous_page
-        context["next_page"] = next_page
-        context["next_page_id"] = next_page_id
-        context["current_page"] = current_page
-        context["page_number"] = page_number
-        context["cleaned_url"] = cleaned_url
-        context["next_image_url"] = cleaned_next_image_url
-        context["all_pages"] = Document.objects.all().order_by("document_id")
-        context["fragments"] = self.object.fragment_set.order_by("line_number")
+        # Provide the forensic images if available
+        if current_document.attached_images.filter(image_type="forensics").exists():
+            forensic_images = current_document.attached_images.filter(
+                image_type="forensics"
+            )
+        else:
+            forensic_images = None
+
+        context = {
+            "previous_page": previous_page,
+            "next_page": next_page,
+            "next_page_id": next_page_id,
+            "current_page": current_page,
+            "page_number": page_number,
+            "cleaned_url": cleaned_url,
+            "next_image_url": cleaned_next_image_url,
+            "all_pages": Document.objects.all().order_by("document_id"),
+            "fragments": self.object.fragment_set.order_by("line_number"),
+            "forensic_images": forensic_images,
+        }
 
         return context
 

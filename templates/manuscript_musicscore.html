@@ -13,6 +13,29 @@
   <div class="relative max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-2">
     <div class="mt-12 grid grid-cols-4 gap-2">
       <div class="col-span-3">
+        <div id="loading-spinner" class="flex justify-center items-center h-full">
+          <svg class="h-32 w-32 animate-spin" viewBox="0 0 100 100">
+            <circle
+              fill="none"
+              stroke-width="10"
+              class="stroke-current opacity-40"
+              cx="50"
+              cy="50"
+              r="40"
+            />
+            <circle
+              fill="none"
+              stroke-width="10"
+              class="stroke-current"
+              stroke-dasharray="250"
+              stroke-dashoffset="210"
+              cx="50"
+              cy="50"
+              r="40"
+            />
+          </svg>
+        </div>
+
         <div id="viewer1" class="openseadragon">
           <script type="text/javascript">
           // remove the Signature and Expiration from the URL
@@ -30,6 +53,11 @@
               homeFillsViewer: false,
               visibilityRatio: 1,
             });
+            viewer.addHandler('open', function () {
+              document.getElementById('loading-spinner').style.display = 'none';
+              document.getElementById('openseadragon_viewer').classList.remove('hidden');
+            });
+
           </script>
         </div>
 

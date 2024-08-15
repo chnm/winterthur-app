@@ -15,24 +15,9 @@
             <div class="col-span-3">
                 <div id="loading-spinner" class="flex justify-center items-center h-full">
                     <svg class="h-32 w-32 animate-spin" viewBox="0 0 100 100">
-                        <circle
-                            fill="none"
-                            stroke-width="10"
-                            class="stroke-current opacity-40"
-                            cx="50"
-                            cy="50"
-                            r="40"
-                        />
-                        <circle
-                            fill="none"
-                            stroke-width="10"
-                            class="stroke-current"
-                            stroke-dasharray="250"
-                            stroke-dashoffset="210"
-                            cx="50"
-                            cy="50"
-                            r="40"
-                        />
+                        <circle fill="none" stroke-width="10" class="stroke-current opacity-40" cx="50" cy="50" r="40" />
+                        <circle fill="none" stroke-width="10" class="stroke-current" stroke-dasharray="250"
+                                stroke-dashoffset="210" cx="50" cy="50" r="40" />
                     </svg>
                 </div>
                 <div id="openseadragon_viewer" class="openseadragon">
@@ -105,17 +90,56 @@
                             </span>
                         </a>
                     </div>
-                    {% if manuscript_page.attached_images.all.1 %}
+                {# if page has forensic images, display them #}
+                    {% if forensic_images %}
                         <hr class="mt-3 mb-3" />
-                        <div class="mt-4">
-                            <a class="underline hover:no-underline"
-                               href="{% url 'forensic_page' manuscript_page.attached_images.all.1.id %}">
-                                <img class="w-32 h-32 object-cover" src="{{ manuscript_page.attached_images.all.1.image.url }}"
-                                     alt="First Forensic Image">
-                                <caption>View the forensic images for this page</caption>
-                            </a>
+                        <h3 class="mt-3 mb-3 text-3xl font-bold">Forensic Images</h3>
+                        <div id="forensic-images" class="mt-4" x-data="{ open: false }">
+                            {% with forensic_images|first as first_image %}
+                                {% if first_image %}
+                                    <img @click="open = true" class="w-32 h-32 object-cover" src="{{ first_image.thumbnail.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
+                                {% endif %}
+                            {% endwith %}
+
+                            <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+                                 aria-modal="true">
+                                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                                    <div
+                                        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+                                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                            <div class="sm:flex sm:items-start">
+                                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                        Forensic Images
+                                                    </h3>
+                                                    <div class="mt-2">
+                                                        <div class="mt-2 grid grid-cols-3 gap-4">
+                                                            {% for forensic_image in forensic_images %}
+                                                                <img @click="open = true" class="w-32 h-32 object-cover" src="{{ forensic_image.image.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
+                                                            {% endfor %}
+
+                                                            <p><a class="underline hover:no-underline" href="">Read the full forensics report</a>.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                            <button type="button" @click="open = false"
+                                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+
                     {% endif %}
+
                 </div>
             </div>
         </div>
@@ -197,10 +221,7 @@
 
             <hr class="mt-3 mb-3" />
             <h2 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Cite this page</h2>
-            <p><em>The Denig Manuscript</em>, Winterthur Museum, Garden & Library and the Roy Rosenzweig Center
-                for
-                History and New Media (2024--): p. {{ manuscript_page.page_range }}. <a href="{% url 'manuscript' %}"
-                                                                                        class="text-winterthur-dk-blue hover:underline">https://denig.rrchnm.org/manuscript/{{manuscript_page.id}}</a>
+            <p><em>The Denig Manuscript</em>, Winterthur Museum, Garden & Library and the Roy Rosenzweig Center for History and New Media (2024--): p. {{ manuscript_page.page_range }}. <a href="{% url 'manuscript' %}" class="text-winterthur-dk-blue hover:underline">https://denig.rrchnm.org/manuscript/{{manuscript_page.id}}</a>
             </p>
         </div>
     </div>

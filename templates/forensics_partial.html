@@ -1,0 +1,9 @@
+<div class="grid grid-cols-3 gap-4">
+    {% for image in forensic_images %}
+        <div class="forensic-image">
+            <a href="{{ image.url }}" target="_blank">
+                <img src="{{ image.thumbnail.url }}" alt="Forensic Image" class="thumbnail">
+            </a>
+        </div>
+    {% endfor %}
+</div>

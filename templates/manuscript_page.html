@@ -96,7 +96,7 @@
                 {# if page has forensic images, display them #}
                     {% if forensic_images %}
                         <hr class="mt-3 mb-3" />
-                        <h3 class="mt-3 mb-3 text-3xl font-bold">Forensic Images</h3>
+                        <h3 class="mt-3 mb-3 text-xl font-bold">Forensic Images</h3>
                         <div id="forensic-images" class="mt-4" x-data="{ open: false }">
                             {% with forensic_images|first as first_image %}
                                 {% if first_image %}

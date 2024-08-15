@@ -53,7 +53,7 @@
               homeFillsViewer: false,
               visibilityRatio: 1,
             });
-            viewer.addHandler('open', function () {
+            viewer1.addHandler('open', function () {
               document.getElementById('loading-spinner').style.display = 'none';
               document.getElementById('openseadragon_viewer').classList.remove('hidden');
             });
@@ -66,7 +66,7 @@
         <div id="viewer2" class="openseadragon">
           <script type="text/javascript">
             let second_page = encodeURI("{{ next_image_url }}");
-            let viewer = OpenSeadragon({
+            let viewer2 = OpenSeadragon({
               id: "viewer2",
               prefixUrl: "/static/openseadragon/images/",
               tileSources: [
@@ -84,7 +84,7 @@
         </div>
 
         {% if previous_page %}
-          <a href="{% url 'manuscript_page' previous_page.id %}">
+          <a href="{% url 'manuscript_page' previous_page.slug %}">
             <p>
               &larr; Previous Page &middot; viewing page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }})
             </p>

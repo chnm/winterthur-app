@@ -219,7 +219,6 @@ class Image(models.Model):
         choices=IMAGE_TYPES,
         default="recto",
     )
-
     thumbnail = ImageSpecField(
         source="image",
         processors=[ResizeToFill(400, 350)],
@@ -233,7 +232,8 @@ class Image(models.Model):
     def image_preview(self):
         if self.image:
             return mark_safe(
-                '<img src="%s" style="width:100px; height:100px;" />' % self.image.url
+                '<img src="%s" style="width:100px; height:100px;" />'
+                % self.thumbnail.url
             )
         else:
             return "No image attached"
@@ -348,15 +348,6 @@ class Document(ImportExportMixin, models.Model):
     def file_url(self):
         if self.item_file and hasattr(self.item_file, "url"):
             return self.item_file.url
-
-    # def admin_thumbnails(self):
-    #     """Return a thumbnail for the document."""
-    #     return Fragment.admin_thumbnails(
-    #         images=[image["image"].size(height=200) for image in self.images],
-    #         labels=[image["label"] for image in self.images],
-    #     )
-
-    # admin_thumbnails.short_description = "Images"
 
 
 class MusicScore(ImportExportMixin, models.Model):

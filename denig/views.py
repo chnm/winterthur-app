@@ -216,7 +216,9 @@ class ForensicsListView(generic.View):
 class MusicListView(generic.View):
     def get(self, request, *args, **kwargs):
         hymnal_list = (
-            Document.objects.filter(doctype="music score").order_by("id").distinct()
+            Document.objects.filter(doctype="music score")
+            .order_by("document_id")
+            .distinct()
         )
         return render(
             request,

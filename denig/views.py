@@ -46,15 +46,30 @@ class DocumentListView(generic.ListView):
     model = Document
     context_object_name = "document_list"
     template_name = "manuscript.html"
-    paginate_by = 13
+    paginate_by = 12
+
+    def paginate_queryset(self, queryset, page_size):
+        """
+        Custom paginate queryset to handle the offset on page 2.
+        """
+        paginator = super().get_paginator(queryset, page_size)
+        page = self.request.GET.get("page")
+        if page is None or page == "1":
+            # For the first page, we want 13 items (cover + 12 manuscript pages)
+            page_obj = paginator.page(1)
+            page_obj.object_list = queryset[:13]
+        else:
+            # For subsequent pages, ensure no overlap
+            page_number = paginator.validate_number(page)
+            start_index = 13 + (page_number - 2) * page_size
+            end_index = start_index + page_size
+            page_obj = paginator.page(page_number)
+            page_obj.object_list = queryset[start_index:end_index]
+        return (paginator, page_obj, page_obj.object_list, page_obj.has_other_pages())
 
     def get_queryset(self):
-        # This method ensures the documents are ordered by 'document_id'
+        # Ensures the documents are ordered by 'document_id'
         return Document.objects.all().order_by("document_id")
-
-    def get_absolute_url(self):
-        """Return the URL for this document."""
-        return reverse("document", args=[str(self.id)])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

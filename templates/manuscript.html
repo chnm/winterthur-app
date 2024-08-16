@@ -22,76 +22,35 @@
                 turpis egestas sed tempus urna et. Urna condimentum mattis pellentesque id nibh tortor id aliquet lectus.
                 Fermentum odio eu feugiat pretium nibh. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus.</p>
 
-            {% if page_obj %} <!--document_list-->
+        {# manuscript page grid #}
+            {% if page_obj %}
                 <div class="grid grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-2">
-                    {% if is_first_page %}
-                        <div></div> {# Empty element for the left side #}
-                        {% if page_obj|length > 0 %}
+                    {% if page_obj.number == 1 %}
+            <!-- Display the cover image separately -->
+                        <div></div> {# Empty element for grid layout #}
+                        <div>
+                            {% with document=page_obj.object_list.0 %}
+                                {% include 'partials/document_display.html' %}
+                            {% endwith %}
+                        </div>
+            <!-- Display the remaining 12 items on the first page -->
+                        {% for document in page_obj.object_list|slice:"1:" %}
                             <div>
-                                {% with document=page_obj.0 %}
-                                    {% if document.attached_images.all %}
-                                        {% for image in document.attached_images.all %}
-                                            {% if image.image_type == "recto" or image.image_type == "verso" %}
-                                                <a href="{% url 'manuscript_page' document.slug %}">
-                                                    <img src="{{ image.thumbnail.url }}" class="h-auto w-full" alt="Cover page {{document.page_range}}"
-                                                         loading="lazy" />
-                                                </a>
-                                                <p class="prose-figcaption font-sans">
-                                                    {{ document.page_range }} ({{document.docside}})
-                                                </p>
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% else %}
-                {# Handle case where no images are attached #}
-                                        <p>No images available</p>
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
-                        {% endif %}
-                        {% for document in page_obj|slice:"1:" %}
-                            <div>
-                                {% if document.attached_images.all %}
-                                    {% for image in document.attached_images.all %}
-                                        {% if image.image_type == "recto" or image.image_type == "verso" %}
-                                            <a href="{% url 'manuscript_page' document.slug %}">
-                                                <img src="{{ image.thumbnail.url }}" class="h-auto w-full"
-                                                     alt="Manuscript page {{document.page_range}}" loading="lazy" />
-                                            </a>
-                                            <p class="prose-figcaption font-sans">
-                                                Page {{ document.page_range }} ({{document.docside}})
-                                            </p>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                {# Handle case where no images are attached #}
-                                    <p>No images available</p>
-                                {% endif %}
+                                {% include 'partials/document_display.html' %}
                             </div>
                         {% endfor %}
                     {% else %}
-                        {% for document in page_obj %}
+            <!-- Display 12 items on subsequent pages -->
+                        {% for document in page_obj.object_list %}
                             <div>
-                                {% if document.attached_images.all %}
-                                    {% for image in document.attached_images.all %}
-                                        {% if image.image_type == "recto" or image.image_type == "verso" %}
-                                            <a href="{% url 'manuscript_page' document.slug %}">
-                                                <img src="{{ image.thumbnail.url }}" class="h-auto w-full"
-                                                     alt="Manuscript page {{document.page_range}}" loading="lazy" />
-                                            </a>
-                                            <p class="prose-figcaption font-sans">
-                                                Page {{ document.page_range }} ({{document.docside}})
-                                            </p>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                {# Handle case where no images are attached #}
-                                    <p>No images available</p>
-                                {% endif %}
+                                {% include 'partials/document_display.html' %}
                             </div>
                         {% endfor %}
                     {% endif %}
                 </div>
             {% endif %}
+
+
 
         </div>
 

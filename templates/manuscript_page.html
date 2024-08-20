@@ -41,27 +41,30 @@
                         });
                     </script>
                 </div>
-                {% if previous_page %}
-                    <a href="{% url 'manuscript_page' previous_page.slug %}">
-                        {% if "front" in manuscript_page.page_range or "back" in manuscript_page.page_range %}
-                            <p>&larr; Previous Page &middot; viewing {{ manuscript_page.page_range }}
-                        {% else %}
-                            <p>&larr; Previous Page &middot; viewing page {{ manuscript_page.page_range }}
-                                ({{ manuscript_page.docside }}) </p>
-                        {% endif %}
-                    </a>
-                {% endif %}
+                <figcaption>Viewing page {{ manuscript_page.page_range }} ({{manuscript_page.docside}})</figcaption>
 
             </div>
             <div class="col-span-1 grid gap-2">
 
                 <div class="row-span-1 p-4">
+                    {% if previous_page %}
+                        <a href="{% url 'manuscript_page' previous_page.slug %}">
+                        {# skip the image_type "fornesics" #}
+                            {% for image in previous_page.attached_images.all %}
+                                {% if image.image_type != "forensics" %}
+                                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Previous Page" loading="lazy">
+                                {% endif %}
+                            {% endfor %}
+                            <caption>&larr; Previous Page</caption>
+                        </a>
+                    {% endif %}
+
                     {% if next_page %}
                         <a href="{% url 'manuscript_page' next_page.slug %}">
                         {# skip the image_type "fornesics" #}
                             {% for image in next_page.attached_images.all %}
                                 {% if image.image_type != "forensics" %}
-                                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" load="lazy">
+                                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" loading="lazy">
                                 {% endif %}
                             {% endfor %}
                             <caption>Next Page &rarr;</caption>
@@ -89,7 +92,7 @@
                     <div class="mt-4" id="transcription-jump">
                         <a href="#transcription">
                             <span class="underline hover:no-underline">
-                                Jump to transcription
+                                Read the transcription
                             </span>
                         </a>
                     </div>

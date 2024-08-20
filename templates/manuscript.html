@@ -5,7 +5,7 @@
 {% block extrahead %}
 {% endblock extrahead %}
 {% block content %}
-    <div class="prose relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    <div class="prose relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1>The Manuscript.</h1>
         <div class="mt-12">
 
@@ -21,6 +21,8 @@
                 Imperdiet dui accumsan sit amet nulla facilisi morbi tempus. In ornare quam viverra orci. Malesuada fames ac
                 turpis egestas sed tempus urna et. Urna condimentum mattis pellentesque id nibh tortor id aliquet lectus.
                 Fermentum odio eu feugiat pretium nibh. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus.</p>
+
+            {% include 'partials/manuscript_pagination.html' %}
 
         {# manuscript page grid #}
             {% if page_obj %}
@@ -49,66 +51,11 @@
                     {% endif %}
                 </div>
             {% endif %}
-
-
-
         </div>
 
-        <nav aria-label="Page navigation">
-            <ul style="list-style-type: none;" class="inline-flex -space-x-px text-base h-10">
-            <!--Previous Button-->
-                {% if page_obj.has_previous %}
-                    <li><a href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none;"
-                           class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-                    </li>
-                {% endif %}
 
-            <!--displays button to first page-->
-                {% if page_obj.number > 3 %}
-                    <li><a href="?page=1" style="text-decoration: none;"
-                           class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                    </li>
-                    {% if page_obj.number > 4 %}
-                        <li><a style="text-decoration: none;"
-                               class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                        </li>
-                    {% endif %}
-                {% endif %}
-            <!--loops through pages, displays buffer of +/-2 pages-->
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                        <li><a href="?page={{ num }}" style="text-decoration: none;"
-                               class="bg-winterthur-dk-blue flex items-center justify-center px-4 h-10 leading-tight text-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            {{ num }}</a></li>
-                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li><a href="?page={{ num }}"
-                                                                                                       style="text-decoration: none;"
-                                                                                                       class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        {{ num }}</a></li>
-                    {% endif %}
-                {% endfor %}
+        {% include 'partials/manuscript_pagination.html' %}
 
-                {% if page_obj.has_next %}
-                <!--show ... and last page until 2 away from last page -->
-                    {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %} <li><a style="text-decoration: none;"
-                                                                                            class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                    </li>
-                        <li><a href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration: none;"
-                               class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                            {{ page_obj.paginator.num_pages }}</a>
-                        </li>
-                    {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %} <li><a
-                        href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration: none;"
-                        class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        {{ page_obj.paginator.num_pages }}</a>
-                    </li>
-                    {% endif %}
-                        <!--show next button if there is next page-->
-                    <li><a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none;"
-                           class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
     </div>
     </div>
 {% endblock content %}

@@ -178,9 +178,10 @@ if platform.system() == "Windows":
 
 # Wagtail configuration
 WAGTAILADMIN_BASE_URL = "localhost:8000"
-WAGTAIL_SITE_NAME = "Denig Essays"
+WAGTAIL_SITE_NAME = "Denig Scholarly Essays"
 TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
 TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
+SITE_ID = 1
 
 STORAGES = {
     "default": {

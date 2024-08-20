@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %}Denig Manuscript{% endblock title %}</title>
 
-        {# open graph metadata #}
+    {# open graph metadata #}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="{% translate " Denig Manuscript Project" %}" />
         <meta property="og:title" content="{{ meta_title|escape }}" />
@@ -16,13 +16,14 @@
 
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 
-        {# openseadragon #}
+    {# openseadragon #}
         <script type="text/javascript" src="/static/openseadragon/openseadragon.min.js"></script>
-        {# alpineJS #}
+    {# alpineJS #}
         <script src="//unpkg.com/alpinejs" defer></script>
 
         {% tailwind_css %}
         <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+        <script src="{% static 'js/denig.js' %}"></script>
         {% block extrahead %}{% endblock extrahead %}
     </head>
 
@@ -33,24 +34,25 @@
                 <div class="relative flex items-center justify-between h-16">
                 <!-- Hamburger menu for mobile devices -->
                     <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                        <button type="button"
+                        <button id="menu-toggle" type="button"
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-winterthur-dk-blue focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                                 aria-controls="mobile-menu" aria-expanded="false">
                             <span class="sr-only">Open main menu</span>
                         <!-- Hamburger menu icon -->
-                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor" aria-hidden="true">
+                            <svg id="hamburger-icon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         <!-- Close menu icon -->
-                            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor" aria-hidden="true">
+                            <svg id="close-icon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
+
                 <!-- Logo -->
                     <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                         <a href="{% url 'index' %}" class="text-white text-2xl font-semibold">The Denig Manuscript</a>
@@ -76,12 +78,21 @@
                 </div>
             </div>
         <!-- Mobile menu, toggle classNamees based on menu state -->
-            <div class="sm:hidden" id="mobile-menu">
+            <div class="sm:hidden hidden" id="mobile-menu">
                 <div class="px-2 pt-2 pb-3 space-y-1">
                     <a href="{% url 'manuscript' %}"
-                       class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Manuscript</a>
+                       class="text-gray-300 hover:bg-winterthur-dk-blue hover:text-white px-3 py-2 rounded-md text-sm font-medium">Manuscript</a>
+                    <a href="/essays/scholarship/"
+                       class="text-gray-300 hover:bg-winterthur-dk-blue hover:text-white px-3 py-2 rounded-md text-sm font-medium">Scholarship</a>
+                    <a href="{% url 'forensics' %}"
+                       class="text-gray-300 hover:bg-winterthur-dk-blue hover:text-white px-3 py-2 rounded-md text-sm font-medium">Forensics</a>
+                    <a href="{% url 'music' %}"
+                       class="text-gray-300 hover:bg-winterthur-dk-blue hover:text-white px-3 py-2 rounded-md text-sm font-medium">Music</a>
+                    <a href="https://dev.winterthur.rrchnm.org/essays/scholarship/exploring-the-paper-in-the-denig-illuminated-manuscript-a-lesson-plan/"
+                       class="text-gray-300 hover:bg-winterthur-dk-blue hover:text-white px-3 py-2 rounded-md text-sm font-medium">Education
+                        Resources</a>
                     <a href="{% url 'about' %}"
-                       class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                       class="text-gray-300 hover:bg-winterthur-dk-blue hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
                 </div>
             </div>
         </nav>
@@ -99,7 +110,8 @@
                     </div>
                     <div class="mt-8 md:mt-0 md:order-1">
                         <nav class="flex justify-center flex-wrap">
-                            <a href="{% url 'manuscript' %}" class="px-4 py-2 text-gray-300 hover:text-white font-sans">Manuscript</a>
+                            <a href="{% url 'manuscript' %}"
+                               class="px-4 py-2 text-gray-300 hover:text-white font-sans">Manuscript</a>
                             <a href="{% url 'about' %}" class="px-4 py-2 text-gray-300 hover:text-white font-sans">About</a>
                         </nav>
                     </div>

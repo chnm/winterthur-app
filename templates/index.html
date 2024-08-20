@@ -19,21 +19,21 @@
         <!-- Rectangular Areas -->
                 <div class="flex flex-col lg:items-start space-y-4">
                     <a href="{% url 'manuscript' %}" class="bg-white text-gray-800 hover:bg-gray-100 p-6 rounded-lg flex items-center space-x-4 w-full">
-                        <img src="https://picsum.photos/100" alt="Manuscript Image" class="w-14 h-14">
+                        <img src="{% static 'manuscript_preview.jpg' %}" alt="Manuscript" class="w-14 h-14">
                         <div>
                             <h2 class="text-lg font-bold uppercase font-sans">Explore the manuscript</h2>
                             <p class="text-sm text-gray-600">Discover the detailed manuscript created by Ludwig Denig, featuring watercolor scenes and devotional texts.</p>
                         </div>
                     </a>
                     <a href="/essays/scholarship/" class="bg-white text-gray-800 hover:bg-gray-100 p-6 rounded-lg flex items-center space-x-4 w-full">
-                        <img src="https://picsum.photos/100" alt="Manuscript Image" class="w-14 h-14">
+                        <img src="{% static 'denig_signed.jpg' %}" alt="Scholarly essays" class="w-14 h-14">
                         <div>
                             <h2 class="text-lg font-bold uppercase font-sans">Scholarly essays</h2>
                             <p class="text-sm text-gray-600">Learn more about the historical context of Ludwig Denig's work.</p>
                         </div>
                     </a>
                     <a href="{% url 'about' %}" class="bg-white text-gray-800 hover:bg-gray-100 p-6 rounded-lg flex items-center space-x-4 w-full">
-                        <img src="https://picsum.photos/100" alt="Manuscript Image" class="w-14 h-14">
+                        <img src="{% static 'about_preview.png' %}" alt="About" class="w-14 h-14">
                         <div>
                             <h2 class="text-lg font-bold uppercase font-sans">Learn more</h2>
                             <p class="text-sm text-gray-600">Find out more about the project.</p>

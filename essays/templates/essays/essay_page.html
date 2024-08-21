@@ -11,9 +11,10 @@
     </div>
 
     <div class="font-sans mt-0 bg-amber-50">
-        <div class="p-4 md:p-6 lg:p-10 mx-3 md:mx-14 lg:mx-32">
-            <p class="meta">By {{ page.author }} on {{ page.date }}</p>
-            <p>{{ page.author_bio|richtext }}</p>
+        <div class="p-4 md:p-6 lg:p-10 mx-3 md:mx-14 lg:mx-48">
+            <p class="meta">By <strong>{{ page.author }}</strong> </p>
+
+            <p class="mt-3">{{ page.author_bio|richtext }}</p>
 
             <hr class="mt-3 mb-3 border-black" />
 

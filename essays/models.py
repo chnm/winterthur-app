@@ -20,7 +20,7 @@ class EssayIndexPage(Page):
 class EssayPage(Page):
     date = models.DateField("Post date")
     author = models.CharField(max_length=250)
-    intro = models.CharField(max_length=250)
+    intro = models.CharField(max_length=250, blank=True, null=True)
     body = RichTextField(
         blank=True,
         features=[

@@ -75,6 +75,7 @@ class DocumentListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         page_obj = context.get("page_obj")
         context["is_first_page"] = page_obj and page_obj.number == 1
+        context["all_pages"] = Document.objects.all().order_by("document_id")
 
         return context
 

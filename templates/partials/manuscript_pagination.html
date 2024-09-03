@@ -1,0 +1,77 @@
+<div class="flex justify-between items-center space-x-2">
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="flex items-center">
+        <ul style="list-style-type: none;" class="inline-flex -space-x-px text-base">
+            <!-- Previous Button -->
+            {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none;"
+                       class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                </li>
+            {% endif %}
+
+            <!-- Displays button to first page -->
+            {% if page_obj.number > 3 %}
+                <li><a href="?page=1" style="text-decoration: none;"
+                       class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                </li>
+                {% if page_obj.number > 4 %}
+                    <li><a style="text-decoration: none;"
+                           class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+            <!-- Loops through pages, displays buffer of +/-2 pages -->
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li><a href="?page={{ num }}" style="text-decoration: none;"
+                           class="bg-winterthur-dk-blue flex items-center justify-center px-4 h-10 leading-tight text-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {{ num }}</a></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li><a href="?page={{ num }}" style="text-decoration: none;"
+                           class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <!-- Show ... and last page until 2 away from last page -->
+                {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                    <li><a style="text-decoration: none;"
+                           class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
+                    </li>
+                    <li><a href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration: none;"
+                           class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {{ page_obj.paginator.num_pages }}</a>
+                    </li>
+                {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                    <li><a href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration: none;"
+                           class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {{ page_obj.paginator.num_pages }}</a>
+                    </li>
+                {% endif %}
+            <!-- Show next button if there is next page -->
+                <li><a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none;"
+                       class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Page Selector -->
+    <div class="page-selector flex items-center">
+        <div class="relative">
+            <div class="inline-block relative">
+                <div class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">
+                    <select onchange="location = this.value;" class="appearance-none bg-transparent py-2 pr-8 pl-2">
+                        <option value="" disabled selected>Select a manuscript page</option>
+                        {% for page in all_pages %}
+                            <option value="{% url 'manuscript_page' page.slug %}">
+                                {{ page.page_range }} ({{page.docside}})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

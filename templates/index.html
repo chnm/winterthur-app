@@ -2,17 +2,59 @@
 {% load static %}
 
 {% block content %}
-    <nav class="relative bg-gray-800 overflow-hidden h-screen">
-        <!-- Hero image -->
+    <main class="relative bg-gray-800 overflow-scroll min-h-screen">
+    <!-- Hero image -->
         <img class="absolute inset-0 w-full h-full object-cover" src="{% static "2020-0011_19.jpg" %}" alt="Denig manuscript">
-        <!-- Overlay to darken the image -->
+    <!-- Overlay to darken the image -->
         <div class="absolute inset-0 bg-gray-900 opacity-80"></div>
-        <!-- Hero content -->
+    <!-- Hero content -->
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-            <p class="text-lg text-gray-300 max-w-2xl mb-12">Ludwig Denig was an eighteenth-century shoemaker and apothecary living in colonial and revolutionary Pennsylvania. Denig was a Pietist who drew on the devotional and biblical spirituality of the Lutheran and Dutch Reformed churches. He created a devotional text—an illuminated manuscript—by mixing an array of Christian elements with his own creativity. He copied passages from the Gospels in German with devotional reflections on the Passion. He painted watercolor scenes from the Passion that combined the stories of the Gospels with scenes from his own experience, including the brutal violence against the Conestoga Indians in Lancaster, Pennsylvania, and his own experiences of warfare in the Revolutionary War. And he added Christian hymns to his watercolors and biblical texts. This manuscript combines a number of devotional, theological and artistic traditions, but that combination created a manuscript and work of art that is unique to early America.        </p>
-            <a href="{% url 'manuscript' %}" class="bg-white text-gray-800 hover:bg-gray-100 py-3 px-6 rounded-full text-lg font-bold uppercase font-sans">Explore the manuscript</a>
-            <a href="{% url 'about' %}" class="bg-white text-gray-800 hover:bg-gray-100 py-3 px-6 rounded-full text-lg font-bold uppercase ml-4 font-sans">Learn more</a>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Intro Text -->
+                <div>
+                    <p class="text-lg text-gray-300 max-w-2xl mb-12">
+                        Ludwig Denig was an eighteenth-century shoemaker and apothecary living in colonial and revolutionary
+                        Pennsylvania. Denig was a Pietist who drew on the devotional and biblical spirituality of the
+                        Lutheran and Dutch Reformed churches. He created a devotional text—an illuminated manuscript—by
+                        mixing an array of Christian elements with his own creativity. He copied passages from the Gospels
+                        in German with devotional reflections on the Passion. He painted watercolor scenes from the Passion
+                        that combined the stories of the Gospels with scenes from his own experience, including the brutal
+                        violence against the Conestoga Indians in Lancaster, Pennsylvania, and his own experiences of
+                        warfare in the Revolutionary War. And he added Christian hymns to his watercolors and biblical
+                        texts. This manuscript combines a number of devotional, theological and artistic traditions, but
+                        that combination created a manuscript and work of art that is unique to early America.
+                    </p>
+                </div>
+            <!-- Rectangular Areas -->
+                <div class="flex flex-col lg:items-start space-y-4">
+                    <a href="{% url 'manuscript' %}"
+                       class="bg-slate-300 text-gray-800 hover:bg-zinc-200 p-6 rounded-lg flex items-center space-x-4 w-full">
+                        <img src="{% static 'manuscript_preview.jpg' %}" alt="Manuscript" class="w-14 h-14">
+                        <div>
+                            <h2 class="text-lg font-bold uppercase font-sans">Explore the manuscript</h2>
+                            <p class="text-sm text-black">Discover the detailed manuscript created by Ludwig Denig,
+                                featuring watercolor scenes and devotional texts.</p>
+                        </div>
+                    </a>
+                    <a href="/essays/scholarship/"
+                       class="bg-slate-300 text-gray-800 hover:bg-zinc-200 p-6 rounded-lg flex items-center space-x-4 w-full">
+                        <img src="{% static 'denig_signed.jpg' %}" alt="Scholarly essays" class="w-14 h-14">
+                        <div>
+                            <h2 class="text-lg font-bold uppercase font-sans">Scholarly essays</h2>
+                            <p class="text-sm text-black">Learn more about the historical context of Ludwig Denig's work.
+                            </p>
+                        </div>
+                    </a>
+                    <a href="{% url 'about' %}"
+                       class="bg-slate-300 text-gray-800 hover:bg-zinc-200 p-6 rounded-lg flex items-center space-x-4 w-full">
+                        <img src="{% static 'about_preview.png' %}" alt="About" class="w-14 h-14">
+                        <div>
+                            <h2 class="text-lg font-bold uppercase font-sans">Learn more</h2>
+                            <p class="text-sm text-black">Find out more about the project.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
-    </nav>
-    </div>
+    </main>
 {% endblock %}

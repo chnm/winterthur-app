@@ -38,6 +38,9 @@
                                                                                                      alt="Document Image" load="lazy"></a>
 
                                         </li>
+                                        {% if image.caption %}
+                                            <li>{{ image.caption }}</li>
+                                        {% endif %}
                                     </ul>
                                 </li>
                             {% endif %}

@@ -226,6 +226,13 @@ class Image(models.Model):
         options={"quality": 90},
     )
 
+    caption = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Image caption",
+        help_text="Captions for the images to provide extra context for the viewer.",
+    )
+
     def __str__(self):
         return f"{self.related_document} - {self.image}"
 

@@ -126,11 +126,15 @@
                                                     <div class="mt-2">
                                                         <div class="mt-2 grid grid-cols-3 gap-4">
                                                             {% for forensic_image in forensic_images %}
-                                                                <img @click="open = true" class="w-72 h-72 object-cover" src="{{ forensic_image.image.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
+                                                                <div>
+                                                                    <img @click="open = true" class="w-72 h-72 object-cover" src="{{ forensic_image.image.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
+                                                                    {% if forensic_image.caption %}
+                                                                        <p>{{ forensic_image.caption }}</p>
+                                                                    {% endif %}
+                                                                </div>
                                                             {% endfor %}
-
-                                                            <p><a class="underline hover:no-underline" href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Read the full forensics report</a>.</p>
                                                         </div>
+                                                        <p><a class="underline hover:no-underline" href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Read the full forensics report</a>.</p>
                                                     </div>
                                                 </div>
                                             </div>

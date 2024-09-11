@@ -174,9 +174,7 @@
                             {% for language in fragment.languages.all %}
                                 {% if language.display_name == 'English' %}
                                     <p>
-                                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                            {{ fragment.line_number }}
-                                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                        <span class="pl-4 font-sans">{{fragment.transcription }}</span>
                                     </p>
                                 {% endif %}
                             {% endfor %}

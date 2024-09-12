@@ -34,40 +34,6 @@ def manuscript(request: HttpRequest):
     return render(request, "manuscript.html", {"documents": sorted_documents})
 
 
-def scholarship(request: HttpRequest):
-    return render(request, "scholarship.html", {})
-
-
-# def essaypages(request: HttpRequest, slug: str):
-#     try:
-#         parent_page = Page.objects.get(slug="essays")
-#         print(f"Parent Page: {parent_page.title} (ID: {parent_page.id})")
-#     except Page.DoesNotExist:
-#         print("Parent page with slug 'essays' does not exist.")
-#         parent_page = None
-
-#     if parent_page:
-#         child_page = parent_page.get_children().filter(slug=slug).first()
-#         if child_page:
-#             print(f"Child Page Found: {child_page.title} (Slug: {child_page.slug})")
-#         else:
-#             print(f"No child page found with slug '{slug}' under parent page 'essays'.")
-#     else:
-#         child_page = None
-
-#     return render(
-#         request,
-#         "essay_index_page.html",
-#         {
-#             "child_page": child_page,
-#         },
-#     )
-
-
-def education(request: HttpRequest):
-    return render(request, "education.html", {})
-
-
 class DocumentListView(generic.ListView):
     model = Document
     context_object_name = "document_list"

@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     "theme",
     "import_export",
     "common",
-    "pages",
     "denig",
     "essays",
     "footnotes",

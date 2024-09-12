@@ -40,6 +40,13 @@ class EssayPage(Page):
         ],
     )
     author_bio = RichTextField(blank=True)
+    preview_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
 
     doi = RichTextField(blank=True)
     doi_url = RichTextField(blank=True)
@@ -54,6 +61,7 @@ class EssayPage(Page):
         FieldPanel("date"),
         FieldPanel("author"),
         FieldPanel("author_bio"),
+        FieldPanel("preview_image"),
         FieldPanel("doi"),
         FieldPanel("doi_url"),
         FieldPanel("intro"),

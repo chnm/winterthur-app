@@ -1,9 +1,10 @@
 ---
+name: winterthur
+
 services:
   app:
     build: .
     image: "rrchnm/winterthur"
-    container_name: "winterthur-app"
     ports:
       - 8000:8000
     volumes:
@@ -31,7 +32,6 @@ services:
         condition: service_healthy
   db:
     image: postgres:16
-    container_name: "winterthur-db"
     volumes:
       - pg-data:/var/lib/postgresql/data
     environment:

@@ -65,6 +65,7 @@ services:
     {% endfor %}
     {% endif %}
     {% endif %}
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U {{ template.env.db_user }}"]
       interval: 5s

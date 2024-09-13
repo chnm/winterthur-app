@@ -46,6 +46,8 @@ services:
       db:
         condition: service_healthy
 
+  {% set service = 'db' %}
+
   db:
     image: postgres:12
     restart: unless-stopped

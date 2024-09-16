@@ -1,8 +1,8 @@
 repos:
-    - repo: https://github.com/psf/black
-      rev: 24.4.2 # Replace by any tag/version: https://github.com/psf/black/tags
-      hooks:
-          - id: black
+    # - repo: https://github.com/psf/black
+    #   rev: 24.4.2 # Replace by any tag/version: https://github.com/psf/black/tags
+    #   hooks:
+    #       - id: black
     - repo: https://github.com/pycqa/isort
       rev: 5.13.2
       hooks:

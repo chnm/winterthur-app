@@ -89,13 +89,15 @@
                         </div>
                     </div>
 
-                    <div class="mt-4" id="transcription-jump">
-                        <a href="#transcription">
-                            <span class="underline hover:no-underline">
-                                Read the transcription
-                            </span>
-                        </a>
-                    </div>
+                    {% if fragments %}
+                        <div class="mt-4" id="transcription-jump">
+                            <a href="#transcription">
+                                <span class="underline hover:no-underline">
+                                    Read the transcription
+                                </span>
+                            </a>
+                        </div>
+                    {% endif %}
                 {# if page has forensic images, display them #}
                     {% if forensic_images %}
                         <hr class="mt-3 mb-3" />
@@ -150,53 +152,54 @@
             </div>
         </div>
 
+        {% if fragments %}
+            <div class="p-10 ml-10 mr-10">
+                <div class="row-span-1 p-4 border">
+                    <div x-data="{ tab: 'english' }">
+                        <div class="mb-2" id="transcription">
+                            <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                                  x-bind:class="{ 'underline': tab === 'english', 'text-winterthur-dk-blue': tab === 'english' }"
+                                  x-on:click="tab = 'english'">
+                                English
+                            </span>
+                            <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                                  x-bind:class="{ 'underline': tab === 'german', 'text-winterthur-dk-blue': tab === 'german' }"
+                                  x-on:click="tab = 'german'">
+                                German (old)
+                            </span>
+                        </div>
 
-        <div class="p-10 ml-10 mr-10">
-            <div class="row-span-1 p-4 border">
-                <div x-data="{ tab: 'english' }">
-                    <div class="mb-2" id="transcription">
-                        <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                              x-bind:class="{ 'underline': tab === 'english', 'text-winterthur-dk-blue': tab === 'english' }"
-                              x-on:click="tab = 'english'">
-                            English
-                        </span>
-                        <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                              x-bind:class="{ 'underline': tab === 'german', 'text-winterthur-dk-blue': tab === 'german' }"
-                              x-on:click="tab = 'german'">
-                            German (old)
-                        </span>
-                    </div>
+                        <hr class="w-full border-gray-300 mt-2 mb-2">
 
-                    <hr class="w-full border-gray-300 mt-2 mb-2">
-
-                    <div x-show="tab === 'english'">
-                        {% for fragment in fragments %}
-                            {% for language in fragment.languages.all %}
-                                {% if language.display_name == 'English' %}
-                                    <p>
-                                        <span id="transcription_text" class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                    </p>
-                                {% endif %}
+                        <div x-show="tab === 'english'">
+                            {% for fragment in fragments %}
+                                {% for language in fragment.languages.all %}
+                                    {% if language.display_name == 'English' %}
+                                        <p>
+                                            <span id="transcription_text" class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                        </p>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                    </div>
+                        </div>
 
-                    <div x-show="tab === 'german'">
-                        {% for fragment in fragments %}
-                            {% for language in fragment.languages.all %}
-                                {% if language.display_name == 'German (old)' %}
-                                    <p>
-                                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                            {{ fragment.line_number }}
-                                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                    </p>
-                                {% endif %}
+                        <div x-show="tab === 'german'">
+                            {% for fragment in fragments %}
+                                {% for language in fragment.languages.all %}
+                                    {% if language.display_name == 'German (old)' %}
+                                        <p>
+                                            <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                                                {{ fragment.line_number }}
+                                            </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                                        </p>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
     <div class="font-sans mt-4 bg-amber-50">

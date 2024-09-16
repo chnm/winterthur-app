@@ -1,8 +1,8 @@
 repos:
-    # - repo: https://github.com/psf/black
-    #   rev: 24.4.2 # Replace by any tag/version: https://github.com/psf/black/tags
-    #   hooks:
-    #       - id: black
+    - repo: https://github.com/psf/black
+      rev: 24.4.2 # Replace by any tag/version: https://github.com/psf/black/tags
+      hooks:
+          - id: black
     - repo: https://github.com/pycqa/isort
       rev: 5.13.2
       hooks:
@@ -14,7 +14,7 @@ repos:
           - id: prettier
             exclude: \.html$
             # exclude django templates, which prettier does not support
-    - repo: https://github.com/rtts/djhtml
-      rev: 3.0.6
-      hooks:
-          - id: djhtml
+    # - repo: https://github.com/rtts/djhtml
+    #   rev: 3.0.6
+    #   hooks:
+    #       - id: djhtml

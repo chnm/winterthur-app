@@ -15,33 +15,18 @@
       <div class="col-span-3">
         <div id="loading-spinner" class="flex justify-center items-center h-full">
           <svg class="h-32 w-32 animate-spin" viewBox="0 0 100 100">
-            <circle
-              fill="none"
-              stroke-width="10"
-              class="stroke-current opacity-40"
-              cx="50"
-              cy="50"
-              r="40"
-            />
-            <circle
-              fill="none"
-              stroke-width="10"
-              class="stroke-current"
-              stroke-dasharray="250"
-              stroke-dashoffset="210"
-              cx="50"
-              cy="50"
-              r="40"
-            />
+            <circle fill="none" stroke-width="10" class="stroke-current opacity-40" cx="50" cy="50" r="40" />
+            <circle fill="none" stroke-width="10" class="stroke-current" stroke-dasharray="250" stroke-dashoffset="210"
+                    cx="50" cy="50" r="40" />
           </svg>
         </div>
 
-        <div id="viewer1" class="openseadragon">
+        <div id="viewer" class="openseadragon">
           <script type="text/javascript">
           // remove the Signature and Expiration from the URL
             let page_url = encodeURI("{{ cleaned_url }}")
-            let viewer1 = OpenSeadragon({
-              id: "viewer1",
+            let viewer = OpenSeadragon({
+              id: "viewer",
               prefixUrl: "/static/openseadragon/images/",
               tileSources: [
                 {
@@ -53,33 +38,11 @@
               homeFillsViewer: false,
               visibilityRatio: 1,
             });
-            viewer1.addHandler('open', function () {
+            viewer.addHandler('open', function () {
               document.getElementById('loading-spinner').style.display = 'none';
               document.getElementById('openseadragon_viewer').classList.remove('hidden');
             });
 
-          </script>
-        </div>
-
-        <hr class="mt-4 mb-4 bg-gray-300" />
-
-        <div id="viewer2" class="openseadragon">
-          <script type="text/javascript">
-            let second_page = encodeURI("{{ next_image_url }}");
-            let viewer2 = OpenSeadragon({
-              id: "viewer2",
-              prefixUrl: "/static/openseadragon/images/",
-              tileSources: [
-                {
-                  type: "image",
-                  url: second_page,
-                },
-
-              ],
-              defaultZoomLevel: 1,
-              homeFillsViewer: false,
-              visibilityRatio: 1,
-            });
           </script>
         </div>
 
@@ -118,11 +81,64 @@
             </div>
           </div>
 
-          <div class="mt-4" id="transcription-jump">
-            <a href="#transcription">
-              <span class="underline hover:no-underline"> Jump to transcription</span>
-            </a>
-          </div>
+          {% if fragments %}
+            <div class="mt-4" id="transcription-jump">
+              <a href="#transcription">
+                <span class="underline hover:no-underline"> Read the to transcription</span>
+              </a>
+            </div>
+          {% endif %}
+
+        {# if page has forensic images, display them #}
+          {% if forensic_images %}
+            <hr class="mt-3 mb-3" />
+            <h3 class="mt-3 mb-3 text-xl font-bold">Forensic Images</h3>
+            <div id="forensic-images" class="mt-4" x-data="{ open: false }">
+              {% with forensic_images|first as first_image %}
+                {% if first_image %}
+                  <img @click="open = true" class="w-32 h-32 object-cover" src="{{ first_image.thumbnail.url }}"
+                       alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
+                {% endif %}
+              {% endwith %}
+
+              <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+                   aria-modal="true">
+                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                  <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                  <div
+                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                      <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                            Forensic Images
+                          </h3>
+                          <div class="mt-2">
+                            <div class="mt-2 grid grid-cols-3 gap-4">
+                              {% for forensic_image in forensic_images %}
+                                <img @click="open = true" class="w-72 h-72 object-cover" src="{{ forensic_image.image.url }}"
+                                     alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
+                              {% endfor %}
+
+                              <p><a class="underline hover:no-underline"
+                                    href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Read the full forensics report</a>.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                      <button type="button" @click="open = false"
+                              class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
 
           {% for music_score in manuscript_page.music_scores.all %}
             {% if music_score.audio_recording_file %}
@@ -174,56 +190,61 @@
       </div>
     </div>
 
-    <div class="p-10 ml-10 mr-10">
-      <div class="row-span-1 p-4 border">
-        <div x-data="{ tab: 'english' }">
-          <div class="mb-2" id="transcription">
-            <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                  x-bind:class="{ 'underline': tab === 'english', 'text-winterthur-dk-blue': tab === 'english' }"
-                  x-on:click="tab = 'english'">
-              English
-            </span>
-            <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                  x-bind:class="{ 'underline': tab === 'german', 'text-winterthur-dk-blue': tab === 'german' }"
-                  x-on:click="tab = 'german'">
-              German
-            </span>
-          </div>
+    {% if fragments %}
+      <div class="mt-4 bg-amber-50">
+        <div class="p-10 ml-10 mr-10">
+          <div class=" p-10 ml-10 mr-10">
+            <div class="row-span-1 p-4 border">
+              <div x-data="{ tab: 'english' }">
+                <div class="mb-2" id="transcription">
+                  <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                        x-bind:class="{ 'underline': tab === 'english', 'text-winterthur-dk-blue': tab === 'english' }"
+                        x-on:click="tab = 'english'">
+                    English
+                  </span>
+                  <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                        x-bind:class="{ 'underline': tab === 'german', 'text-winterthur-dk-blue': tab === 'german' }"
+                        x-on:click="tab = 'german'">
+                    German
+                  </span>
+                </div>
 
-          <hr class="w-full border-gray-300 mt-2 mb-2" />
+                <hr class="w-full border-gray-300 mt-2 mb-2" />
+                <hr class="w-full border-gray-300 mt-2 mb-2" />
 
-          <div x-show="tab === 'english'">
-            {% for fragment in fragments %}
-              {% for language in fragment.languages.all %}
-                {% if language.display_name == 'English' %}
-                  <p>
-                    <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                      {{ fragment.line_number }}
-                    </span>
-                    <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                  </p>
-                {% endif %}
-              {% endfor %}
-            {% endfor %}
-          </div>
+                <div x-show="tab === 'english'">
+                  {% for fragment in fragments %}
+                    {% for language in fragment.languages.all %}
+                      {% if language.display_name == 'English' %}
+                        <p>
+                          <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                            {{ fragment.line_number }}
+                          </span>
+                          <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                        </p>
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+                </div>
 
-          <div x-show="tab === 'german'">
-            {% for fragment in fragments %}
-              {% for language in fragment.languages.all %}
-                {% if language.display_name == 'German (old)' %}
-                  <p>
-                    <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                      {{ fragment.line_number }}
-                    </span>
-                    <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                  </p>
-                {% endif %}
-              {% endfor %}
-            {% endfor %}
+                <div x-show="tab === 'german'">
+                  {% for fragment in fragments %}
+                    {% for language in fragment.languages.all %}
+                      {% if language.display_name == 'German (old)' %}
+                        <p>
+                          <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                            {{ fragment.line_number }}
+                          </span>
+                          <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                        </p>
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+    {% endif %}
   </div>
 
   <div class="font-sans mt-4 bg-amber-50">
@@ -261,7 +282,7 @@
         <em>The Denig Manuscript</em>, Winterthur Museum, Garden & Library and the
         Roy Rosenzweig Center for History and New Media (2024): p. {{ manuscript_page.page_range }}.
         <a href="{% url 'manuscript' %}"
-           class="text-winterthur-dk-blue hover:underline">https://denig.rrchnm.org/manuscript/{{manuscript_page.id}}</a>
+           class="text-winterthur-dk-blue hover:underline">https://denig.rrchnm.org/manuscript/{{manuscript_page.slug}}</a>
       </p>
     </div>
   </div>

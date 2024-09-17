@@ -2,237 +2,247 @@
 {% load static %}
 
 {% block extrahead %}
-    <script src="{% static 'js/denig.js' %}"></script>
+<script src="{% static 'js/denig.js' %}"></script>
 {% endblock extrahead %}
 
 {% block title %}
-    Denig Manuscript page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }})
+Denig Manuscript page {{ manuscript_page.page_range }} ({{ manuscript_page.docside }})
 {% endblock title %}
 
 {% block content %}
-    <div class="relative max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-2">
-        <div class="mt-12 grid grid-cols-4 gap-2">
-            <div class="col-span-3 border p-2">
-                <div id="loading-spinner" class="flex justify-center items-center h-full">
-                    <svg class="h-32 w-32 animate-spin" viewBox="0 0 100 100">
-                        <circle fill="none" stroke-width="10" class="stroke-current opacity-40" cx="50" cy="50" r="40" />
-                        <circle fill="none" stroke-width="10" class="stroke-current" stroke-dasharray="250"
-                                stroke-dashoffset="210" cx="50" cy="50" r="40" />
-                    </svg>
-                </div>
-                <div id="openseadragon_viewer" class="openseadragon">
-                    <script type="text/javascript">
-                        let page_url = encodeURI("{{ cleaned_url }}")
-                        let viewer = OpenSeadragon({
-                            id: "openseadragon_viewer",
-                            prefixUrl: "/static/openseadragon/images/",
-                            tileSources: {
-                                type: "image",
-                                url: page_url,
-                            },
-                            defaultZoomLevel: 1,
-                            homeFillsViewer: false,
-                            visibilityRatio: 1,
-                        })
-
-                        viewer.addHandler('open', function () {
-                            document.getElementById('loading-spinner').style.display = 'none';
-                            document.getElementById('openseadragon_viewer').classList.remove('hidden');
-                        });
-                    </script>
-                </div>
-                <figcaption>Viewing page {{ manuscript_page.page_range }} ({{manuscript_page.docside}})</figcaption>
-
+<div class="relative max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-2">
+    <div class="mt-12 grid grid-cols-4 gap-2">
+        <div class="col-span-3 border p-2">
+            <div id="loading-spinner" class="flex justify-center items-center h-full">
+                <svg class="h-32 w-32 animate-spin" viewBox="0 0 100 100">
+                    <circle fill="none" stroke-width="10" class="stroke-current opacity-40" cx="50" cy="50" r="40" />
+                    <circle fill="none" stroke-width="10" class="stroke-current" stroke-dasharray="250"
+                        stroke-dashoffset="210" cx="50" cy="50" r="40" />
+                </svg>
             </div>
-            <div class="col-span-1 grid gap-2">
+            <div id="openseadragon_viewer" class="openseadragon">
+                <script type="text/javascript">
+                    let page_url = encodeURI("{{ cleaned_url }}")
+                    let viewer = OpenSeadragon({
+                        id: "openseadragon_viewer",
+                        prefixUrl: "/static/openseadragon/images/",
+                        tileSources: {
+                            type: "image",
+                            url: page_url,
+                        },
+                        defaultZoomLevel: 1,
+                        homeFillsViewer: false,
+                        visibilityRatio: 1,
+                    })
 
-                <div class="row-span-1 p-4">
-                    {% if previous_page %}
-                        <a href="{% url 'manuscript_page' previous_page.slug %}">
+                    viewer.addHandler('open', function () {
+                        document.getElementById('loading-spinner').style.display = 'none';
+                        document.getElementById('openseadragon_viewer').classList.remove('hidden');
+                    });
+                </script>
+            </div>
+            <figcaption>Viewing page {{ manuscript_page.page_range }} ({{manuscript_page.docside}})</figcaption>
+
+        </div>
+        <div class="col-span-1 grid gap-2">
+
+            <div class="row-span-1 p-4">
+                {% if previous_page %}
+                <a href="{% url 'manuscript_page' previous_page.slug %}">
                     {# skip the image_type "fornesics" #}
-                            {% for image in previous_page.attached_images.all %}
-                                {% if image.image_type != "forensics" %}
-                                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Previous Page"
-                                         loading="lazy">
-                                {% endif %}
-                            {% endfor %}
-                            <caption>&larr; Previous Page</caption>
-                        </a>
+                    {% for image in previous_page.attached_images.all %}
+                    {% if image.image_type != "forensics" %}
+                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Previous Page"
+                        loading="lazy">
                     {% endif %}
+                    {% endfor %}
+                    <caption>&larr; Previous Page</caption>
+                </a>
+                {% endif %}
 
-                    {% if next_page %}
-                        <a href="{% url 'manuscript_page' next_page.slug %}">
+                {% if next_page %}
+                <a href="{% url 'manuscript_page' next_page.slug %}">
                     {# skip the image_type "fornesics" #}
-                            {% for image in next_page.attached_images.all %}
-                                {% if image.image_type != "forensics" %}
-                                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" loading="lazy">
-                                {% endif %}
-                            {% endfor %}
-                            <caption>Next Page &rarr;</caption>
-                        </a>
+                    {% for image in next_page.attached_images.all %}
+                    {% if image.image_type != "forensics" %}
+                    <img class="w-32 h-32 object-cover" src="{{ image.thumbnail.url }}" alt="Next Page" loading="lazy">
                     {% endif %}
+                    {% endfor %}
+                    <caption>Next Page &rarr;</caption>
+                </a>
+                {% endif %}
 
-                    <div class="page-selector mt-6">
-                        <div class="relative">
-                            <div class="inline-block relative">
-                                <div
-                                    class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">
-                                    <select onchange="location = this.value;"
-                                            class="appearance-none bg-transparent py-2 pr-8 pl-2">
-                                        {% for page in all_pages %}
-                                            <option value="{% url 'manuscript_page' page.slug %}" {% if page.id == current_page.id %}selected{% endif %}>
-                                                {{ page.page_range }} ({{page.docside}})
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                <div class="page-selector mt-6">
+                    <div class="relative">
+                        <div class="inline-block relative">
+                            <div
+                                class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">
+                                <select onchange="location = this.value;"
+                                    class="appearance-none bg-transparent py-2 pr-8 pl-2">
+                                    {% for page in all_pages %}
+                                    <option value="{% url 'manuscript_page' page.slug %}" {% if page.id == current_page.id %}selected{% endif %}>
+                                        {{ page.page_range }} ({{page.docside}})
+                                    </option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {% if fragments %}
-                        <div class="mt-4" id="transcription-jump">
-                            <a href="#transcription">
-                                <span class="underline hover:no-underline">
-                                    Read the transcription
-                                </span>
-                            </a>
-                        </div>
+                {% if fragments %}
+                <div class="mt-4" id="transcription-jump">
+                    <a href="#transcription">
+                        <span class="underline hover:no-underline">
+                            Read the transcription
+                        </span>
+                    </a>
+                </div>
+                {% endif %}
+
+                {# if page has forensic images, display them #}
+                {% if forensic_images %}
+                <hr class="mt-3 mb-3" />
+                <h3 class="mt-3 mb-3 text-xl font-bold">Forensic Images</h3>
+                <div id="forensic-images" class="mt-4" x-data="{ open: false }">
+                    {% with forensic_images|first as first_image %}
+                    {% if first_image %}
+                    <img @click="open = true" class="w-32 h-32 object-cover" src="{{ first_image.thumbnail.url }}"
+                        alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
                     {% endif %}
+                    {% endwith %}
 
-            {# if page has forensic images, display them #}
-                    {% if forensic_images %}
-                        <hr class="mt-3 mb-3" />
-                        <h3 class="mt-3 mb-3 text-xl font-bold">Forensic Images</h3>
-                        <div id="forensic-images" class="mt-4" x-data="{ open: false }">
-                            {% with forensic_images|first as first_image %}
-                                {% if first_image %}
-                                    <img @click="open = true" class="w-32 h-32 object-cover" src="{{ first_image.thumbnail.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
-                                {% endif %}
-                            {% endwith %}
-
-                            <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                                    <div
-                                        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
-                                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                            <div class="sm:flex sm:items-start">
-                                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                                        Forensic Images
-                                                    </h3>
-                                                    <div class="mt-2">
-                                                        <div class="mt-2 grid grid-cols-3 gap-4">
-                                                            {% for forensic_image in forensic_images %}
-                                                                <div>
-                                                                    <img @click="open = true" class="w-72 h-72 object-cover" src="{{ forensic_image.image.url }}" alt="Thumbnail for forensic image {{ current_page }}" class="thumbnail" loading="lazy">
-                                                                    {% if forensic_image.caption %}
-                                                                        <p class="text-sm">{{ forensic_image.caption }}</p>
-                                                                    {% endif %}
-                                                                </div>
-                                                            {% endfor %}
-                                                            <p><a class="underline hover:no-underline" href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Read the full forensics report</a>.</p>
-                                                        </div>
+                    <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                        <div
+                            class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
+                            </div>
+                            <span class="hidden sm:inline-block sm:align-middle sm:h-screen"
+                                aria-hidden="true">&#8203;</span>
+                            <div
+                                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+                                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                    <div class="sm:flex sm:items-start">
+                                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                Forensic Images
+                                            </h3>
+                                            <div class="mt-2">
+                                                <div class="mt-2 grid grid-cols-3 gap-4">
+                                                    {% for forensic_image in forensic_images %}
+                                                    <div>
+                                                        <img @click="open = true" class="w-72 h-72 object-cover"
+                                                            src="{{ forensic_image.image.url }}"
+                                                            alt="Thumbnail for forensic image {{ current_page }}"
+                                                            class="thumbnail" loading="lazy">
+                                                        {% if forensic_image.caption %}
+                                                        <p class="text-sm">{{ forensic_image.caption }}</p>
+                                                        {% endif %}
                                                     </div>
+                                                    {% endfor %}
+                                                    <p><a class="underline hover:no-underline"
+                                                            href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Read
+                                                            the full forensics report</a>.</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                            <button type="button" @click="open = false"
-                                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                                Close
-                                            </button>
-                                        </div>
                                     </div>
+                                </div>
+                                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                    <button type="button" @click="open = false"
+                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+        </div>
+                {% endif %}
 
+            </div>
+        </div>
+    </div>
 
+    {% if fragments %}
+    <div class="p-10 ml-10 mr-10">
+        <div class="row-span-1 p-4 border">
+            <div x-data="{ tab: 'english' }">
+                <div class="mb-2" id="transcription">
+                    <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                        x-bind:class="{ 'underline': tab === 'english', 'text-winterthur-dk-blue': tab === 'english' }"
+                        x-on:click="tab = 'english'">
+                        English
+                    </span>
+                    <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
+                        x-bind:class="{ 'underline': tab === 'german', 'text-winterthur-dk-blue': tab === 'german' }"
+                        x-on:click="tab = 'german'">
+                        German (old)
+                    </span>
+                </div>
+
+                <hr class="w-full border-gray-300 mt-2 mb-2">
+
+                <div x-show="tab === 'english'">
+                    {% for fragment in fragments %}
+                    {% for language in fragment.languages.all %}
+                    {% if language.display_name == 'English' %}
+                    <p>
+                        <span id="transcription_text" class="pl-4 font-sans">{{fragment.transcription }}</span>
+                    </p>
                     {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                </div>
 
+                <div x-show="tab === 'german'">
+                    {% for fragment in fragments %}
+                    {% for language in fragment.languages.all %}
+                    {% if language.display_name == 'German (old)' %}
+                    <p>
+                        <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
+                            {{ fragment.line_number }}
+                        </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
+                    </p>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
+    </div>
 
-        {% if fragments %}
-            <div class="p-10 ml-10 mr-10">
-                <div class="row-span-1 p-4 border">
-                    <div x-data="{ tab: 'english' }">
-                        <div class="mb-2" id="transcription">
-                            <span class="cursor-pointer mr-4 hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                                  x-bind:class="{ 'underline': tab === 'english', 'text-winterthur-dk-blue': tab === 'english' }"
-                                  x-on:click="tab = 'english'">
-                                English
-                            </span>
-                            <span class="cursor-pointer hover:text-winterthur-dk-blue hover:underline m-0 p-0"
-                                  x-bind:class="{ 'underline': tab === 'german', 'text-winterthur-dk-blue': tab === 'german' }"
-                                  x-on:click="tab = 'german'">
-                                German (old)
-                            </span>
-                        </div>
+    {% endif %}
 
-                        <hr class="w-full border-gray-300 mt-2 mb-2">
+    <div class="font-sans mt-4 bg-amber-50">
+        <div class="p-10 ml-10 mr-10">
+            <h3 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Document Details</h3>
+            <ul>
+                <li><strong>Description</strong>: {{ manuscript_page.description }}</li>
+                <li><strong>Document type</strong>: {{ manuscript_page.doctype }}</li>
+                <li><strong>Document side</strong>: {{ manuscript_page.docside }}</li>
+                <li><strong>Page</strong>: {{ manuscript_page.page_range }}</li>
+                <li><strong>Page tagged with</strong>:
+                    {% for tag in manuscript_page.tags.all %}
+                    <span
+                        class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-winterthur-dk-blue ring-1 ring-inset ring-blue-700/10">{{ tag.name }}</span>
+                    {% endfor %}
+                </li>
+            </ul>
 
-                        <div x-show="tab === 'english'">
-                            {% for fragment in fragments %}
-                                {% for language in fragment.languages.all %}
-                                    {% if language.display_name == 'English' %}
-                                        <p>
-                                            <span id="transcription_text" class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                        </p>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                        </div>
+            <p class="mt-4">
+                <a href="{% url 'manuscript' %}" class="text-winterthur-dk-blue hover:underline">Browse all manuscript pages</a>
+            </p>
 
-                        <div x-show="tab === 'german'">
-                            {% for fragment in fragments %}
-                                {% for language in fragment.languages.all %}
-                                    {% if language.display_name == 'German (old)' %}
-                                        <p>
-                                            <span class="font-bold font-serif text-sm text-winterthur-dk-blue">
-                                                {{ fragment.line_number }}
-                                            </span> <span class="pl-4 font-sans">{{fragment.transcription }}</span>
-                                        </p>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        {% endif %}
-
-        <div class="font-sans mt-4 bg-amber-50">
-            <div class="p-10 ml-10 mr-10">
-                <h3 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Document Details</h3>
-                <ul>
-                    <li><strong>Description</strong>: {{ manuscript_page.description }}</li>
-                    <li><strong>Document type</strong>: {{ manuscript_page.doctype }}</li>
-                    <li><strong>Document side</strong>: {{ manuscript_page.docside }}</li>
-                    <li><strong>Page</strong>: {{ manuscript_page.page_range }}</li>
-                    <li><strong>Page tagged with</strong>:
-                        {% for tag in manuscript_page.tags.all %}
-                            <span
-                                class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-winterthur-dk-blue ring-1 ring-inset ring-blue-700/10">{{ tag.name }}</span>
-                        {% endfor %}
-                    </li>
-                </ul>
-
-                <p class="mt-4">
-                    <a href="{% url 'manuscript' %}" class="text-winterthur-dk-blue hover:underline">Browse all manuscript pages</a>
-                </p>
-
-                <hr class="mt-3 mb-3" />
-                <h2 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Cite this page</h2>
-                <p><em>The Denig Manuscript</em>, Winterthur Museum, Garden & Library and the Roy Rosenzweig Center for History
-                    and New Media (2024): p. {{ manuscript_page.page_range }}. <a
-                        href="{% url 'manuscript_page' manuscript_page.slug %}" class="text-winterthur-dk-blue hover:underline">https://dev.winterthur.rrchnm.org{% url 'manuscript_page' manuscript_page.slug %}</a></p>
+            <hr class="mt-3 mb-3" />
+            <h2 class="text-center font-semibold text-1xl pb-4 mb-4 uppercase">Cite this page</h2>
+            <p><em>The Denig Manuscript</em>, Winterthur Museum, Garden & Library and the Roy Rosenzweig Center for
+                History
+                and New Media (2024): p. {{ manuscript_page.page_range }}. <a
+                    href="{% url 'manuscript_page' manuscript_page.slug %}"
+                    class="text-winterthur-dk-blue hover:underline">https://dev.winterthur.rrchnm.org{% url 'manuscript_page' manuscript_page.slug %}</a></p>
             </p>
         </div>
     </div>
-{% endblock content %}
+    {% endblock content %}

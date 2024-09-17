@@ -228,7 +228,8 @@ class Image(models.Model):
     caption = models.TextField(
         blank=True,
         null=True,
-        help_text="Caption for the image.",
+        verbose_name="Image caption",
+        help_text="Captions for the images to provide extra context for the viewer.",
     )
 
     def __str__(self):

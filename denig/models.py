@@ -225,6 +225,11 @@ class Image(models.Model):
         format="JPEG",
         options={"quality": 90},
     )
+    caption = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Caption for the image.",
+    )
 
     def __str__(self):
         return f"{self.related_document} - {self.image}"

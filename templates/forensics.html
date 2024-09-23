@@ -23,12 +23,38 @@
                 Imperdiet dui accumsan sit amet nulla facilisi morbi tempus. In ornare quam viverra orci. Malesuada fames ac
                 turpis egestas sed tempus urna et. Urna condimentum mattis pellentesque id nibh tortor id aliquet lectus.
                 Fermentum odio eu feugiat pretium nibh. Ipsum faucibus vitae aliquet nec ullamcorper sit amet risus.
-                <a href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Learn more about the forensic images here.</a></p>
+                <a href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Learn
+                    more about the forensic images here.</a>
+            </p>
+
+            {% if image_list %}
+                {% for document in document_list %}
+                    <h3 class="text-lg font-semibold mb-4">Forensic images for page {{ document.page_range }}</h3>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for image in image_list %}
+                            {% if document.page_range == image.related_document.page_range %}
+                                <li class="flex flex-col space-y-4">
+                                    <ul class="list-none">
+                                        <li>
+                                            <a href="{% url 'manuscript_page' document.slug %}">
+                                                <img src="{{ image.thumbnail.url }}" alt="Document Image" class="w-full h-auto" loading="lazy">
+                                            </a>
+                                        </li>
+                                        {% if image.caption %}
+                                            <li class="p-4 text-gray-700 text-justify">{{ image.caption }}</li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endif %}
 
             {% if image_list %}
                 {% for document in document_list %}
                     <h3>Forensic images for page {{ document.page_range }}</h3>
-                    <ul class="grid grid-cols-2 gap-4">
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {% for image in image_list %}
                             {% if document.page_range == image.related_document.page_range %}
                                 <li class="flex space-x-4">

@@ -165,6 +165,14 @@ class DocumentDetailView(generic.DetailView):
         else:
             cleaned_next_image_url = None
 
+        # Provide the forensic images if available
+        if current_document.attached_images.filter(image_type="forensics").exists():
+            forensic_images = current_document.attached_images.filter(
+                image_type="forensics"
+            )
+        else:
+            forensic_images = None
+
         context.update(
             {
                 "previous_page": previous_page,
@@ -176,6 +184,7 @@ class DocumentDetailView(generic.DetailView):
                 "next_image_url": cleaned_next_image_url,
                 "all_pages": Document.objects.all().order_by("document_id"),
                 "fragments": self.object.fragment_set.order_by("line_number"),
+                "forensic_images": forensic_images,
             }
         )
 

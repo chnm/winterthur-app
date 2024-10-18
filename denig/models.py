@@ -338,8 +338,7 @@ class Document(ImportExportMixin, models.Model):
 
     def get_absolute_url(self):
         """Return the URL for this document."""
-        """changed from return reverse("document", args=[str(self.id)]) """
-        return reverse("document", kwargs={"slug": self.slug})
+        return reverse("manuscript_page", kwargs={"slug": self.slug})
 
     @property
     def permalink(self):

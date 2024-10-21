@@ -20,10 +20,13 @@
                             <div class="w-full h-48 overflow-hidden">
                                 {% image post.specific.preview_image width-400 %}
                             </div>
+                        {% else %}
+                            <div class="w-full h-48 overflow-hidden">
+                                {% image post.specific.gallery_images.first.image width-400 %}
+                            </div>
                         {% endif %}
                         <div class="p-4">
-                            <h2 class="text-xl font-semibold mb-2"><a href="{% pageurl post %}"
-                                                                      class="text-black underline hover:no-underline">{{ post.title }}</a></h2>
+                            <h2 class="text-xl font-semibold mb-2"><a href="{% pageurl post %}" class="text-black underline hover:no-underline">{{ post.title }}</a></h2>
                             {% if post.specific.author %}
                                 <p class="text-gray-700 mb-2">by {{ post.specific.author }}</p>
                             {% endif %}
@@ -35,6 +38,5 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
     </div>
 {% endblock content %}

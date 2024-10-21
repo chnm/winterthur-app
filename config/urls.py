@@ -9,9 +9,10 @@ from wagtail.admin import urls as wagtailadmin_urls
 urlpatterns = [
     path("", include("denig.urls")),
     path("admin/", admin.site.urls),
-    path("cms/", include(wagtailadmin_urls)),
-    path("essays/", include(wagtail_urls)),
     path("accounts/", include("authuser.urls")),
     path("prose/", include("prose.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
+    # Wagtial URLs
+    path("cms/", include(wagtailadmin_urls)),
+    path("essays/", include(wagtail_urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

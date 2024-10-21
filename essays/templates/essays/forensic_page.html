@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+{% block body_class %}essay-page top{% endblock %}
+
+{% block content %}
+    <div x-data="{
+                 modalOpen: false,
+                 modalImage: '',
+                 modalCaption: ''
+                 }">
+
+        <div class="prose relative max-w-4xl mx-auto py-12">
+            <h1>{{ page.title }}</h1>
+        </div>
+
+        <div class="prose relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+
+            {% if page.intro %}
+                <div class="intro text-xl">{{ page.intro }}</div>
+            {% endif %}
+
+            {{ page.body|richtext }}
+            {% if page.related_manuscript_page %}
+                <a href="{{ page.related_manuscript_page.get_absolute_url }}" class="link hover:no-underline">&larr;
+                    View manuscript page</a>
+                &middot; Click an image below to view a larger version.
+            {% endif %}
+
+
+            {% if page.gallery_images %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {% for item in page.gallery_images.all %}
+                        {% image item.image width-1200 as large_img %}
+                        <div class="relative overflow-hidden cursor-pointer"
+                             @click="modalOpen = true; modalImage = '{{ large_img.url }}'; modalCaption = '{{ item.caption|escapejs }}'">
+                            {% image item.image fill-400x300 as img %}
+                            <img src="{{ img.url }}" alt="{{ item.image.title }}"
+                                 class="w-full h-full object-cover transition duration-300 ease-in-out transform hover:scale-105" />
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+
+    <!-- Modal -->
+        <div x-show="modalOpen"
+             class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-90 flex items-center justify-center"
+             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click.away="modalOpen = false">
+            <div class="relative bg-white rounded-lg max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl">
+                <button @click="modalOpen = false"
+                        class="absolute top-0 right-0 m-4 p-2 bg-winterthur-dk-blue text-white hover:bg-winterthur-dker-blue rounded-full shadow-lg z-10">
+                    <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+                <div class="flex items-center justify-center w-full h-full">
+                    <img :src="modalImage" alt="Large version" class="max-w-full max-h-full object-contain">
+                </div>
+                <div x-show="modalCaption" class="p-4 bg-white bg-opacity-75 absolute bottom-0 left-0 right-0">
+                    <p x-text="modalCaption" class="text-gray-800 text-lg"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

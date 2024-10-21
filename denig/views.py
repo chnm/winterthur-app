@@ -191,21 +191,6 @@ class DocumentDetailView(generic.DetailView):
         return context
 
 
-class ForensicsListView(generic.View):
-    def get(self, request, *args, **kwargs):
-        image_list = Image.objects.filter(image_type="forensics").order_by("id")
-        document_list = (
-            Document.objects.filter(attached_images__image_type="forensics")
-            .order_by("id")
-            .distinct()
-        )
-        return render(
-            request,
-            "forensics.html",
-            {"image_list": image_list, "document_list": document_list},
-        )
-
-
 class MusicListView(generic.View):
     def get(self, request, *args, **kwargs):
         hymnal_list = (

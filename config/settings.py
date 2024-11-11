@@ -178,6 +178,8 @@ if platform.system() == "Windows":
 # Wagtail configuration
 WAGTAILADMIN_BASE_URL = "localhost:8000"
 WAGTAIL_SITE_NAME = "Denig Scholarly Essays"
+AWS_S3_FILE_OVERWRITE = False
+WAGTAILIMAGES_RENDITION_STORAGE_OPTIONS = {"file_overwrite": False}
 TAGGIT_TAGS_FROM_STRING = "taggit_selectize.utils.parse_tags"
 TAGGIT_STRING_FROM_TAGS = "taggit_selectize.utils.join_tags"
 SITE_ID = 1

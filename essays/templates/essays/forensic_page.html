@@ -32,12 +32,8 @@
             {% if page.gallery_images %}
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {% for item in page.gallery_images.all %}
-                        <!-- Image: {{ item.image.id }} -->
                         {% image item.image width-1200 as item_large_img %}
                         {% image item.image fill-400x300 as item_thumb %}
-      <!-- Image thumb url: {{item_thumb}} -->
-      <!-- Image url: {{item_large_img}} -->
-
                         <div class="relative overflow-hidden cursor-pointer"
                              @click="modalOpen = true; modalImage = '{{ item_large_img.url }}'; modalCaption = '{{ item.caption|escapejs }}'">
                             <img src="{{ item_thumb.url }}" alt="{{ item.image.title }}"

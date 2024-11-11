@@ -29,21 +29,19 @@
                 &middot; Click an image below to view a larger version.
             {% endif %}
 
-
             {% if page.gallery_images %}
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {% for item in page.gallery_images.all %}
-                        {% image item.image width-1200 as large_img %}
+                        {% image item.image width-1200 as item_large_img %}
+                        {% image item.image fill-400x300 as item_thumb %}
                         <div class="relative overflow-hidden cursor-pointer"
-                             @click="modalOpen = true; modalImage = '{{ large_img.url }}'; modalCaption = '{{ item.caption|escapejs }}'">
-                            {% image item.image fill-400x300 as img %}
-                            <img src="{{ img.url }}" alt="{{ item.image.title }}"
+                             @click="modalOpen = true; modalImage = '{{ item_large_img.url }}'; modalCaption = '{{ item.caption|escapejs }}'">
+                            <img src="{{ item_thumb.url }}" alt="{{ item.image.title }}"
                                  class="w-full h-full object-cover transition duration-300 ease-in-out transform hover:scale-105" />
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
-
         </div>
 
     <!-- Modal -->
@@ -62,7 +60,7 @@
                     </svg>
                 </button>
                 <div class="flex items-center justify-center w-full h-full">
-                    <img :src="modalImage" alt="Large version" class="max-w-full max-h-full object-contain">
+                    <img :src="modalImage" alt="Large version" class="max-w-full max-h-[90vh] object-contain">
                 </div>
                 <div x-show="modalCaption" class="p-4 bg-white bg-opacity-75 absolute bottom-0 left-0 right-0">
                     <p x-text="modalCaption" class="text-gray-800 text-lg"></p>

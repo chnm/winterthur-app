@@ -35,6 +35,9 @@
                         <!-- Image: {{ item.image.id }} -->
                         {% image item.image width-1200 as item_large_img %}
                         {% image item.image fill-400x300 as item_thumb %}
+      <!-- Image thumb url: {{item_thumb}} -->
+      <!-- Image url: {{item_large_img}} -->
+
                         <div class="relative overflow-hidden cursor-pointer"
                              @click="modalOpen = true; modalImage = '{{ item_large_img.url }}'; modalCaption = '{{ item.caption|escapejs }}'">
                             <img src="{{ item_thumb.url }}" alt="{{ item.image.title }}"

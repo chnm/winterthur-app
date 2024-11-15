@@ -10,7 +10,7 @@
         <h1>{{ page.title }}.</h1>
         <div class="mt-12">
 
-            <div class="intro">{{ page.intro|richtext }}</div>
+            <div class="text-xl pb-8">{{ page.intro|richtext }}</div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                 {% for post in page.get_children %}

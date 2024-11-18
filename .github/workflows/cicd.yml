@@ -20,7 +20,7 @@ jobs:
       django-context-root: "."
 
       website-devl-fqdn: "dev.winterthur.rrchnm.org"
-      website-prod-fqdn: "dev.winterthur.rrchnm.org"
+      website-prod-fqdn: "denigmanuscript.org"
       
   deploy:
     uses: chnm/.github/.github/workflows/django--deploy.yml@main
@@ -28,4 +28,4 @@ jobs:
     secrets: inherit
     with:
       website-devl-fqdn: "dev.winterthur.rrchnm.org"
-      website-prod-fqdn: "dev.winterthur.rrchnm.org"
+      website-prod-fqdn: "denigmanuscript.org"

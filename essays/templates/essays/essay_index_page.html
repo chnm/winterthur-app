@@ -13,7 +13,7 @@
             <div class="text-xl pb-8">{{ page.intro|richtext }}</div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                {% for post in page.get_children %}
+                {% for post in page.get_children.live %}
                     <div
                         class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
                         {% if post.specific.preview_image %}
@@ -26,7 +26,8 @@
                             </div>
                         {% endif %}
                         <div class="p-4">
-                            <h2 class="text-xl font-semibold mb-2"><a href="{% pageurl post %}" class="text-black underline hover:no-underline">{{ post.title }}</a></h2>
+                            <h2 class="text-xl font-semibold mb-2"><a href="{% pageurl post %}"
+                                                                      class="text-black underline hover:no-underline">{{ post.title }}</a></h2>
                             {% if post.specific.author %}
                                 <p class="text-gray-700 mb-2">by {{ post.specific.author }}</p>
                             {% endif %}

@@ -141,7 +141,7 @@
                                                                 </div>
                                                             {% endfor %}
                                                             <p><a class="underline hover:no-underline"
-                                                                  href="https://dev.winterthur.rrchnm.org/essays/scholarship/re-examining-the-denig-picture-bible/">Read
+                                                                  href="https://denigmanuscript.org/essays/scholarship/re-examining-the-denig-picture-bible/">Read
                                                                 the full forensics report</a>.</p>
                                                         </div>
                                                     </div>
@@ -161,52 +161,52 @@
                         </div>
                     {% endif %}
 
-        {% for music_score in manuscript_page.music_scores.all %}
-          {% if music_score.audio_recording_file %}
-            <hr class="mt-4 mb-4 border-gray-300" />
-            <div id="audio_controls" class="mt-4">
-              <audio controls>
-                <source src="{{ music_score.audio_recording_file.url }}" type="audio/wav" />
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          {% endif %}
-          {% if music_score.sheet_music %}
-            <hr class="mt-4 mb-4 border-gray-300" />
-            <div id="sheet_music" class="mt-4" x-data="{ open: false }">
-              <button @click="open = true" class="underline hover:no-underline">View sheet music PDF</button>
-              <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
-                   aria-modal="true">
-                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                  <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                  <div
-                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                      <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                            Sheet Music
-                          </h3>
-                          <div class="mt-2">
-                            <iframe src="{{ music_score.sheet_music.url }}" style="width: 800px; height: 500px"
-                                    frameborder="0"></iframe>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                      <button type="button" @click="open = false"
-                              class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Close
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
+                    {% for music_score in manuscript_page.music_scores.all %}
+                        {% if music_score.audio_recording_file %}
+                            <hr class="mt-4 mb-4 border-gray-300" />
+                            <div id="audio_controls" class="mt-4">
+                                <audio controls>
+                                    <source src="{{ music_score.audio_recording_file.url }}" type="audio/wav" />
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        {% endif %}
+                        {% if music_score.sheet_music %}
+                            <hr class="mt-4 mb-4 border-gray-300" />
+                            <div id="sheet_music" class="mt-4" x-data="{ open: false }">
+                                <button @click="open = true" class="underline hover:no-underline">View sheet music PDF</button>
+                                <div x-show="open" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+                                     aria-modal="true">
+                                    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                                        <div
+                                            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+                                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                                <div class="sm:flex sm:items-start">
+                                                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                            Sheet Music
+                                                        </h3>
+                                                        <div class="mt-2">
+                                                            <iframe src="{{ music_score.sheet_music.url }}" style="width: 800px; height: 500px"
+                                                                    frameborder="0"></iframe>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                                <button type="button" @click="open = false"
+                                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
 
 
                 </div>
@@ -290,7 +290,7 @@
                 History
                 and New Media (2024): p. {{ manuscript_page.page_range }}. <a
                     href="{% url 'manuscript_page' manuscript_page.slug %}"
-                    class="text-winterthur-dk-blue hover:underline">https://dev.winterthur.rrchnm.org{% url 'manuscript_page' manuscript_page.slug %}</a></p>
+                    class="text-winterthur-dk-blue hover:underline">https://denigmanuscript.org{% url 'manuscript_page' manuscript_page.slug %}</a></p>
         </p>
     </div>
     </div>

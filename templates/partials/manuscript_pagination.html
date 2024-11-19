@@ -1,4 +1,4 @@
-<div class="flex justify-between items-center space-x-2">
+<div class="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-2 justify-between items-center">
     <!-- Pagination -->
     <nav aria-label="Page navigation" class="flex items-center">
         <ul style="list-style-type: none;" class="inline-flex -space-x-px text-base">
@@ -26,30 +26,29 @@
                     <li><a href="?page={{ num }}" style="text-decoration: none;"
                            class="bg-winterthur-dk-blue flex items-center justify-center px-4 h-10 leading-tight text-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                         {{ num }}</a></li>
-                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                    <li><a href="?page={{ num }}" style="text-decoration: none;"
-                           class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        {{ num }}</a></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li><a href="?page={{ num }}"
+                                                                                                   style="text-decoration: none;"
+                                                                                                   class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    {{ num }}</a></li>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-            <!-- Show ... and last page until 2 away from last page -->
-                {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
-                    <li><a style="text-decoration: none;"
-                           class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                    </li>
+                <!-- Show ... and last page until 2 away from last page -->
+                {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %} <li><a style="text-decoration: none;"
+                                                                                        class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
+                </li>
                     <li><a href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration: none;"
                            class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                         {{ page_obj.paginator.num_pages }}</a>
                     </li>
-                {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
-                    <li><a href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration: none;"
-                           class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        {{ page_obj.paginator.num_pages }}</a>
-                    </li>
+                {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %} <li><a
+                    href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration: none;"
+                    class="bg-white flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    {{ page_obj.paginator.num_pages }}</a>
+                </li>
                 {% endif %}
-            <!-- Show next button if there is next page -->
+                        <!-- Show next button if there is next page -->
                 <li><a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none;"
                        class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
                 </li>
@@ -58,7 +57,7 @@
     </nav>
 
     <!-- Page Selector -->
-    <div class="page-selector flex items-center">
+    <div class="page-selector flex items-center mt-4 md:mt-0">
         <div class="relative">
             <div class="inline-block relative">
                 <div class="flex justify-between items-center border border-gray-300 rounded overflow-hidden">

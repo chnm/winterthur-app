@@ -17,8 +17,6 @@ from imagekit.processors import ResizeToFill
 from import_export.admin import ImportExportMixin
 from taggit_selectize.managers import TaggableManager
 
-from footnotes.models import Footnote
-
 logger = logging.getLogger(__name__)
 
 

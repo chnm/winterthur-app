@@ -173,6 +173,15 @@ class DocumentDetailView(generic.DetailView):
         else:
             forensic_images = None
 
+        fragments = self.object.fragment_set.prefetch_related(
+            "footnote_set", "languages"
+        ).order_by("line_number")
+        has_modern_german = any(
+            language.display_name == "German (modern)"
+            for fragment in fragments
+            for language in fragment.languages.all()
+        )
+
         context.update(
             {
                 "previous_page": previous_page,
@@ -183,7 +192,8 @@ class DocumentDetailView(generic.DetailView):
                 "cleaned_url": cleaned_url,
                 "next_image_url": cleaned_next_image_url,
                 "all_pages": Document.objects.all().order_by("document_id"),
-                "fragments": self.object.fragment_set.order_by("line_number"),
+                "fragments": fragments,
+                "has_modern_german": has_modern_german,
                 "forensic_images": forensic_images,
             }
         )

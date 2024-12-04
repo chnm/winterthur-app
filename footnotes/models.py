@@ -3,7 +3,6 @@ from django.db.models.functions import NullIf
 from multiselectfield import MultiSelectField
 
 
-# Create your models here.
 class Footnote(models.Model):
     """a footnote that links from a denig.models.Document to a class:Fragment"""
 

@@ -9,9 +9,9 @@
 
     {# open graph metadata #}
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="{% translate " Denig Manuscript Project" %}" />
-        <meta property="og:title" content="{{ meta_title|escape }}" />
-        <meta property="og:description" content="{{ meta_description|escape }}" />
+        <meta property="og:site_name" content="The Denig Manuscript" />
+        <meta property="og:title" content="The Denig Manuscript" />
+        <meta property="og:description" content="The Denig Manuscript Project brings an eighteenth-century, Pennsylvania-made manuscript and watercolors to life through a collaborative multimedia digital project." />
         <meta property="og:url" content="{{ request.build_absolute_uri }}" />
 
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
@@ -25,7 +25,7 @@
         <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
         <script src="{% static 'js/denig.js' %}"></script>
         {% block extrahead %}{% endblock extrahead %}
-      
+
         <!-- Matomo -->
         <script>
             var _paq = window._paq = window._paq || [];

@@ -14,6 +14,11 @@
         <meta property="og:description" content="The Denig Manuscript Project brings an eighteenth-century, Pennsylvania-made manuscript and watercolors to life through a collaborative multimedia digital project." />
         <meta property="og:url" content="{{ request.build_absolute_uri }}" />
 
+    {# twitter cards #}
+        <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock %}" />
+        <meta name="twitter:title" content="The Denig Manuscript" />
+        <meta name="twitter:description" content="The Denig Manuscript Project brings an eighteenth-century, Pennsylvania-made manuscript and watercolors to life through a collaborative multimedia digital project." />
+
         <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 
     {# openseadragon #}

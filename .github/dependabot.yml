@@ -11,6 +11,6 @@ updates:
           - "*"
     schedule:
       interval: "monthly"
-    target-branch: "dependabot"
+    target-branch: "main"
     reviewers:
       - "chnm/systems"

@@ -6,8 +6,8 @@ on:
     branches:
       - "**"
     paths:
-      - "!.github/**"
       - "**"
+      - "!.github/**"
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true

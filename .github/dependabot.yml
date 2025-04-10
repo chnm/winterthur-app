@@ -1,0 +1,16 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    versioning-strategy: "increase"
+    directories:
+      - "/"
+    groups:
+      all-django-dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
+    reviewers:
+      - "chnm/systems"

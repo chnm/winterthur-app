@@ -14,3 +14,15 @@ updates:
     target-branch: "main"
     reviewers:
       - "chnm/systems"
+  - package-ecosystem: "npm"
+    directories:
+      - "/"
+    groups:
+      all-npm-dependencies:
+        patterns:
+          - "*"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
+    reviewers:
+      - "chnm/systems"

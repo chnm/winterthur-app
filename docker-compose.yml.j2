@@ -22,8 +22,8 @@ services:
     {% endif %}
 
     command: >
-        sh -c "uv run manage.py migrate &&
-               uv run manage.py runserver 0.0.0.0:8000"
+        sh -c "poetry run python3 manage.py migrate &&
+               poetry run python3 manage.py runserver 0.0.0.0:8000"
     {% if service.volumes | default([]) | length > 0 %}
 
     volumes:

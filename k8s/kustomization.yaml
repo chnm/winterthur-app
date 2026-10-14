@@ -1,0 +1,79 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: winterthur
+
+resources:
+- app-deploy.yaml
+- https-redirect.yaml
+- www-redirect.yaml
+
+components:
+- https://forge.rrchnm.internal/rrchnm-systems/k8s-django//components/app?ref=4d6ca2e4c09b0ecea04262a77d41d22518de840b
+- https://forge.rrchnm.internal/rrchnm-systems/k8s-django//components/postgres?ref=4d6ca2e4c09b0ecea04262a77d41d22518de840b
+- https://forge.rrchnm.internal/rrchnm-systems/k8s-django//components/backup?ref=4d6ca2e4c09b0ecea04262a77d41d22518de840b
+- https://forge.rrchnm.internal/rrchnm-systems/k8s-django//components/media-garage?ref=4d6ca2e4c09b0ecea04262a77d41d22518de840b
+
+configMapGenerator:
+- literals:
+  - OBJ_STORAGE=True
+  - OBJ_STORAGE_ENDPOINT_URL=http://obj.rrchnm.internal:3900
+  - OBJ_STORAGE_REGION=rrchnm
+  - OBJ_STORAGE_BUCKET_NAME=denigmanuscript.org
+  - WAGTAIL_BASE_URL=https://denigmanuscript.org
+  name: app-env
+  options:
+    annotations:
+      argocd.argoproj.io/sync-wave: "-2"
+
+patches:
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata: { name: app }
+    spec:
+      template:
+        spec:
+          containers:
+            - name: app
+              resources:
+                requests: { cpu: 100m, memory: 256Mi }
+                limits: { cpu: "1", memory: 1Gi }
+  target:
+    kind: Deployment
+    name: app
+- patch: |-
+    - op: replace
+      path: /spec/volumeClaimTemplates/0/spec/resources/requests/storage
+      value: 5Gi
+  target:
+    kind: StatefulSet
+    name: postgres
+- patch: |-
+    - op: replace
+      path: /spec/schedule
+      value: "0 4 * * *"
+  target:
+    kind: CronJob
+    name: postgres-backup
+
+replacements:
+- source:
+    fieldPath: spec.template.spec.containers.[name=app].image
+    kind: Deployment
+    name: app
+    options:
+      delimiter: '@'
+      index: 1
+  targets:
+  - fieldPaths:
+    - spec.template.spec.containers.[name=app].env.[name=IMAGE_DIGEST].value
+    select:
+      kind: Deployment
+      name: app
+
+images:
+- name: app
+  newName: oci.rrchnm.internal/rrchnm/winterthur-django
+- digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+  name: oci.rrchnm.internal/rrchnm/winterthur-django

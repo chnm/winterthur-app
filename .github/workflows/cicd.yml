@@ -1,35 +1,28 @@
-name: "Build and Publish, Deploy Docker Image"
+name: Django CI and k0s deployment
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - "**"
-    paths:
-      - "**"
-      - "!.github/**"
+    branches: [main]
+    paths-ignore: [k8s/kustomization.yaml]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
 concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  build-publish:
-    uses: chnm/.github/.github/workflows/django--build-publish.yml@main
-    secrets: inherit
+  deployment:
+    permissions:
+      contents: write
+    uses: chnm/.github/.github/workflows/django--k0s.yml@33481c3e14d9ca408396865acec1ca1b3664110d
     with:
-
-      container-registry: "ghcr.io"
-      container-image-name: "winterthur"
-      
-      django-context-root: "."
-
-      website-devl-fqdn: "dev.winterthur.rrchnm.org"
-      website-prod-fqdn: "denigmanuscript.org"
-      
-  deploy:
-    uses: chnm/.github/.github/workflows/django--deploy.yml@main
-    needs: [build-publish]
-    secrets: inherit
-    with:
-      website-devl-fqdn: "dev.winterthur.rrchnm.org"
-      website-prod-fqdn: "denigmanuscript.org"
+      image: rrchnm/winterthur-django
+      ref: main
+    secrets:
+      ZOT_TOKEN: ${{ secrets.ZOT_TOKEN }}
+      PIN_APP_PRIVATE_KEY: ${{ secrets.PIN_APP_PRIVATE_KEY }}

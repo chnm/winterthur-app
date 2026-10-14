@@ -1,11 +1,9 @@
+import importlib.util
 import os
 import platform
 from pathlib import Path
 
 import environ
-from dotenv import load_dotenv
-
-load_dotenv(verbose=True, override=True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -30,11 +28,25 @@ SECRET_KEY = env(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
+APPLICATION_REVISION = env("APPLICATION_REVISION", default="").strip()
+APP_FQDN = env("APP_FQDN", default="localhost")
 
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
+ALLOWED_HOSTS += [h for h in ("localhost", "127.0.0.1") if h not in ALLOWED_HOSTS]
 CSRF_TRUSTED_ORIGINS = env.list(
     "DJANGO_CSRF_TRUSTED_ORIGINS", default=["http://localhost"]
 )
+
+# TLS terminates at the trusted public Gateway.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_REDIRECT_EXEMPT = [r"^health/$"]
+SECURE_HSTS_SECONDS = 0 if DEBUG else 3600
+# The parent domain controls subdomain/preload policy; the site intentionally
+# permits same-origin framing.
+SILENCED_SYSTEM_CHECKS = ["security.W005", "security.W019", "security.W021"]
 
 # Application definition
 
@@ -92,12 +104,12 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # DEBUG
 # ------------------------------------------------------------------------------
-# django-debug-toolbar
-# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
-INSTALLED_APPS += ["debug_toolbar"]  # noqa: F405
-# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#middleware
-MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]  # noqa: F405
-# https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
+# The production image installs no development dependencies.
+DEBUG_TOOLBAR = DEBUG and importlib.util.find_spec("debug_toolbar") is not None
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += ["debug_toolbar"]
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+
 DEBUG_TOOLBAR_CONFIG = {
     "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
     "SHOW_TEMPLATE_CONTEXT": True,
@@ -135,8 +147,12 @@ DATABASES = {
         "NAME": env("DB_NAME", default="denig"),
         "USER": env("DB_USER", default="denig"),
         "PASSWORD": env("DB_PASS", default="password"),
+        "CONN_MAX_AGE": 60,
+        "CONN_HEALTH_CHECKS": True,
     }
 }
+if DB_LOCK_TIMEOUT := env("DB_LOCK_TIMEOUT", default=""):
+    DATABASES["default"]["OPTIONS"] = {"options": f"-c lock_timeout={DB_LOCK_TIMEOUT}"}
 
 AUTH_USER_MODEL = "authuser.User"
 
@@ -177,7 +193,10 @@ if platform.system() == "Windows":
     NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"  # needed for windows
 
 # Wagtail configuration
-WAGTAILADMIN_BASE_URL = "localhost:8000"
+WAGTAILADMIN_BASE_URL = env(
+    "WAGTAIL_BASE_URL",
+    default=f"{'http' if DEBUG else 'https'}://{APP_FQDN}",
+)
 WAGTAIL_SITE_NAME = "Denig Scholarly Essays"
 AWS_S3_FILE_OVERWRITE = False
 WAGTAILIMAGES_RENDITION_STORAGE_OPTIONS = {"file_overwrite": False}
@@ -201,21 +220,23 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Media files
-OBJ_STORAGE = env("OBJ_STORAGE", default=False)
+MEDIA_URL = "/media/"
+OBJ_STORAGE = env.bool("OBJ_STORAGE", default=False)
 if OBJ_STORAGE:
     AWS_ACCESS_KEY_ID = env("OBJ_STORAGE_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = env("OBJ_STORAGE_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = env("OBJ_STORAGE_BUCKET_NAME")
     AWS_S3_ENDPOINT_URL = env("OBJ_STORAGE_ENDPOINT_URL")
+    AWS_S3_REGION_NAME = env("OBJ_STORAGE_REGION", default=None)
+    AWS_S3_ADDRESSING_STYLE = "path"
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_CUSTOM_DOMAIN = f"{APP_FQDN}/media"
 
-    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
-
-    # override default storage backend for media
+    # The media-garage sidecar serves the public bucket at the app's /media/ URL.
     STORAGES["default"] = {
         "BACKEND": "storages.backends.s3.S3Storage",
     }
 else:
-    MEDIA_URL = "media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Default primary key field type

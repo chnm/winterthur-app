@@ -18,15 +18,15 @@ services:
       - DB_PORT=5432
       - DB_NAME=winterthur
       - DB_USER=winterthur
-      - DB_PASSWORD=password
+      - DB_PASS=password
       - OBJ_STORAGE=True
       - OBJ_STORAGE_ACCESS_KEY_ID=test-key-id
       - OBJ_STORAGE_SECRET_ACCESS_KEY=test-secret-key
       - OBJ_STORAGE_BUCKET_NAME=test
       - OBJ_STORAGE_ENDPOINT_URL=http://10.112.113.212:8000
     command: >
-        sh -c "poetry run python3 manage.py migrate &&
-               poetry run python3 manage.py runserver 0.0.0.0:8000"
+        sh -c "python manage.py migrate &&
+               exec daphne -b 0.0.0.0 -p 8000 config.asgi:application"
     depends_on:
       db:
         condition: service_healthy

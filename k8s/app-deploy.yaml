@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-deploy
+  annotations: { argocd.argoproj.io/sync-wave: "-2" }
+data:
+  APP: winterthur-django
+  FQDN: denigmanuscript.org
+  DB_NAME: winterthur
+  DB_USER: winterthur
+  APP_SECRET: eso/winterthur-django
+  RESTIC_REPO: denigmanuscript.org
+  RESTIC_SECRET: eso/restic-winterthur
+  MEDIA_BUCKET: denigmanuscript.org

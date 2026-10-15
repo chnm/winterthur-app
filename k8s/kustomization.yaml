@@ -75,5 +75,5 @@ replacements:
 images:
 - name: app
   newName: oci.rrchnm.internal/rrchnm/winterthur-django
-- digest: sha256:46fce1a3b861aad4c19db7af74b995ea2f46161efd3ce550b64441e20d750381
+- digest: sha256:cb307a85c7486c19c055e3e7d0d48f66af594e30ec75844f90ba086c57b3e41a
   name: oci.rrchnm.internal/rrchnm/winterthur-django

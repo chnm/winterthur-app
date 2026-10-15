@@ -14,7 +14,9 @@ spec:
   hostnames:
     - www.denigmanuscript.org
   rules:
-    - filters:
+    - matches:
+        - path: { type: PathPrefix, value: / }
+      filters:
         - type: RequestRedirect
           requestRedirect:
             scheme: https
